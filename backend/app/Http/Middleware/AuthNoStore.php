@@ -11,7 +11,7 @@ final class AuthNoStore
     public function handle(Request $request, Closure $next): Response
     {
         $response = $next($request);
-        if ($request->is('api/v1/auth/*', 'api/v1/admin/history', 'api/v1/admin/history/*', 'api/v1/admin/company')) {
+        if ($request->is('api/v1/auth/*', 'api/v1/admin/history', 'api/v1/admin/history/*', 'api/v1/admin/company', 'api/v1/quotes/*/official-pdf')) {
             $response->headers->set('Cache-Control', 'no-store, private');
         }
 

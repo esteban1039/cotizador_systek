@@ -18,6 +18,9 @@ final class CompanyVersion extends Model
 
     protected $guarded = [];
 
+    /** @var array<string, mixed> */
+    protected $attributes = ['emission_requires_authorization' => true];
+
     /**
      * La cuenta bancaria nunca sale de este modelo por serialización: los
      * repositorios construyen arreglos públicos explícitos (nunca
@@ -34,6 +37,7 @@ final class CompanyVersion extends Model
     {
         return [
             'version' => 'integer',
+            'emission_requires_authorization' => 'boolean',
             // JSON cifrado con APP_KEY: {bank_name, account_type, account_number, account_holder|null}.
             'bank_account' => 'encrypted:array',
         ];

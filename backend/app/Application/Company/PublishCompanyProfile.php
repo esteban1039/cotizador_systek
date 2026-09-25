@@ -37,6 +37,10 @@ final class PublishCompanyProfile
 
             $bankAccount = $this->resolveBankAccount($input, $current);
             $bankAccountAction = $this->bankAccountAction($current, $bankAccount);
+            $previousAuthorization = (bool) ($current['emission_requires_authorization'] ?? true);
+            $requiresAuthorization = array_key_exists('emission_requires_authorization', $input) && $input['emission_requires_authorization'] !== null
+                ? filter_var($input['emission_requires_authorization'], FILTER_VALIDATE_BOOLEAN)
+                : $previousAuthorization;
 
             $attributes = [
                 'legal_name' => $input['legal_name'],
@@ -49,6 +53,7 @@ final class PublishCompanyProfile
                 'signer_name' => $input['signer_name'] ?? null,
                 'signer_title' => $input['signer_title'] ?? null,
                 'bank_account' => $bankAccount,
+                'emission_requires_authorization' => $requiresAuthorization,
                 'origin' => $origin,
                 'reason' => $input['reason'],
                 'published_by' => $actor?->id,
@@ -62,6 +67,9 @@ final class PublishCompanyProfile
                 'version' => $profile['version'], 'origin' => $origin,
                 'changed_fields' => $changedFields, 'reason' => $input['reason'],
             ];
+            if ($requiresAuthorization !== $previousAuthorization) {
+                $details['emission_requires_authorization'] = ['from' => $previousAuthorization, 'to' => $requiresAuthorization];
+            }
             if ($bankAccountAction !== null) {
                 $details['bank_account'] = $bankAccountAction === 'updated' ? 'Datos bancarios actualizados' : 'Datos bancarios eliminados';
             }

@@ -31,6 +31,17 @@ final class EloquentCompanyRepository implements CompanyRepository
         return $version ? $this->internalArray($version) : null;
     }
 
+    public function lockedCurrentForEmission(): ?array
+    {
+        $company = Company::query()->where('code', self::CODE)->sharedLock()->first();
+        if (! $company) {
+            return null;
+        }
+        $version = CompanyVersion::query()->where('company_id', $company->id)->where('status', 'current')->sharedLock()->first();
+
+        return $version ? $this->internalArray($version) : null;
+    }
+
     public function appendVersion(array $attributes): array
     {
         $company = $this->lockedCompany();
@@ -94,6 +105,7 @@ final class EloquentCompanyRepository implements CompanyRepository
             'signer_name' => $version->signer_name,
             'signer_title' => $version->signer_title,
             'bank_account' => $version->bank_account,
+            'emission_requires_authorization' => (bool) $version->emission_requires_authorization,
         ];
     }
 
@@ -132,6 +144,7 @@ final class EloquentCompanyRepository implements CompanyRepository
             'website' => $version->website,
             'signer_name' => $version->signer_name,
             'signer_title' => $version->signer_title,
+            'emission_requires_authorization' => (bool) $version->emission_requires_authorization,
             'bank_account_configured' => $configured,
             'bank_account_summary' => $summary,
             'updated_at' => $version->updated_at?->toIso8601String(),

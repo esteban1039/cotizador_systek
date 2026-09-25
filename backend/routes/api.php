@@ -9,6 +9,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\MfaController;
 use App\Http\Controllers\QuoteController;
+use App\Http\Controllers\QuoteEmissionController;
 use App\Http\Controllers\QuotePdfController;
 use App\Http\Controllers\QuoteReviewController;
 use App\Http\Controllers\UserController;
@@ -32,6 +33,10 @@ Route::prefix('v1')->group(function () {
         Route::get('quotes', [QuoteController::class, 'index']);
         Route::get('quotes/{id}/pdf', [QuotePdfController::class, 'show'])->whereUuid('id');
         Route::get('quotes/{id}', [QuoteController::class, 'show'])->whereUuid('id');
+        Route::middleware('role:admin,approver,quoter')->group(function () {
+            Route::post('quotes/{id}/issue', [QuoteEmissionController::class, 'issue'])->whereUuid('id')->middleware('throttle:10,1,quote-issue');
+            Route::get('quotes/{id}/official-pdf', [QuoteEmissionController::class, 'officialPdf'])->whereUuid('id');
+        });
         Route::middleware('role:admin,quoter')->group(function () {
             Route::post('clients', [ClientController::class, 'store']);
             Route::post('clients/{id}/sites', [ClientController::class, 'site'])->whereUuid('id');

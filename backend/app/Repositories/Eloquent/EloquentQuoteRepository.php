@@ -22,6 +22,21 @@ final class EloquentQuoteRepository implements QuoteRepository
         return (int) Quote::query()->where(fn ($query) => $query->where('id', $rootId)->orWhere('root_quote_id', $rootId))->max('revision_number') + 1;
     }
 
+    public function latestRevisionNumber(string $rootId): int
+    {
+        return $this->nextRevisionNumber($rootId) - 1;
+    }
+
+    public function approvingReview(string $id): ?object
+    {
+        return DB::table('quote_reviews')->where('quote_id', $id)->where('decision', 'approve')->orderByDesc('id')->first(['id', 'user_id']);
+    }
+
+    public function markIssued(string $id): void
+    {
+        Quote::query()->whereKey($id)->update(['status' => 'issued', 'updated_at' => now()]);
+    }
+
     public function rootNumber(string $rootId): ?string
     {
         return Quote::query()->whereKey($rootId)->value('quote_number');

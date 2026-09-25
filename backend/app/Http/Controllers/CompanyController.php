@@ -50,6 +50,7 @@ final class CompanyController extends Controller
             'version' => $profile['version'] ?? null,
             'origin' => $profile['origin'] ?? null,
         ], $publicFields, [
+            'emission_requires_authorization' => $profile['emission_requires_authorization'] ?? true,
             'bank_account_configured' => $profile['bank_account_configured'] ?? false,
             'bank_account_summary' => $profile['bank_account_summary'] ?? null,
             'updated_at' => $profile['updated_at'] ?? null,

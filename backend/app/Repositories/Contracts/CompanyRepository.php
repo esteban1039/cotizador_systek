@@ -31,5 +31,15 @@ interface CompanyRepository
      */
     public function appendVersion(array $attributes): array;
 
+    /**
+     * Dentro de transacción, al final de la cadena de bloqueos de emisión:
+     * bloqueo compartido de la empresa (espera a `PublishCompanyProfile`) y
+     * versión vigente completa con `bank_account` descifrado, solo para el
+     * caso de uso. No crea filas. Null si no hay versión.
+     *
+     * @return array<string, mixed>|null
+     */
+    public function lockedCurrentForEmission(): ?array;
+
     public function hasAnyVersion(): bool;
 }

@@ -12,6 +12,17 @@ interface QuoteRepository
 
     public function nextRevisionNumber(string $rootId): int;
 
+    /** Mayor número de revisión del linaje (raíz incluida). */
+    public function latestRevisionNumber(string $rootId): int;
+
+    /**
+     * Última decisión `approve` de la cotización (id y user_id), o null.
+     */
+    public function approvingReview(string $id): ?object;
+
+    /** Pasa a `issued`; solo `IssueQuote`, bajo bloqueo. */
+    public function markIssued(string $id): void;
+
     public function rootNumber(string $rootId): ?string;
 
     public function visibleRevisions(string $rootId, User $user): Collection;

@@ -38,6 +38,7 @@ final class PublishCompanyRequest extends FormRequest
             'bank_account.account_number_confirmation' => ['required_with:bank_account', 'string'],
             'bank_account.account_holder' => ['nullable', 'string', 'max:200'],
             'clear_bank_account' => ['sometimes', 'boolean'],
+            'emission_requires_authorization' => ['sometimes', 'boolean'],
             'reason' => ['required', 'string', 'min:5', 'max:1000'],
         ];
     }
@@ -77,6 +78,7 @@ final class PublishCompanyRequest extends FormRequest
             'signer_name' => 'nombre del firmante', 'signer_title' => 'cargo del firmante',
             'bank_account.bank_name' => 'banco', 'bank_account.account_type' => 'tipo de cuenta',
             'bank_account.account_number' => 'número de cuenta', 'bank_account.account_holder' => 'titular',
+            'emission_requires_authorization' => 'autorización de emisión',
             'reason' => 'motivo',
         ];
     }

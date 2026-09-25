@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Application\Quotes\CreateQuote;
 use App\Domain\CompanyProfile;
 use App\Domain\Quotes\ApprovalValidation;
+use App\Domain\Quotes\EmissionPolicy;
 use App\Domain\Quotes\QuotePricer;
 use App\Domain\Quotes\QuoteVisibility;
 use App\Domain\Quotes\SnapshotCompatibility;
@@ -13,6 +14,7 @@ use App\Http\Requests\CalculateQuoteRequest;
 use App\Http\Requests\PreviewQuoteRequest;
 use App\Repositories\Contracts\ClientRepository;
 use App\Repositories\Contracts\CompanyRepository;
+use App\Repositories\Contracts\QuoteEmissionRepository;
 use App\Repositories\Contracts\QuoteRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -22,7 +24,7 @@ use Illuminate\Validation\ValidationException;
 
 final class QuoteController extends Controller
 {
-    public function __construct(private QuoteRepository $quotes, private CompanyRepository $companies) {}
+    public function __construct(private QuoteRepository $quotes, private CompanyRepository $companies, private QuoteEmissionRepository $emissions, private EmissionPolicy $policy) {}
 
     public function store(CalculateQuoteRequest $request, CreateQuote $create): JsonResponse
     {
@@ -132,6 +134,22 @@ final class QuoteController extends Controller
             $blockers[] = 'Empresa emisora incompleta: faltan '.implode(', ', $missingCompany).'. La emisión oficial seguirá bloqueada.';
         }
         $snapshot['blockers'] = $blockers;
+
+        $rootId = $quote->root_quote_id ?? $quote->id;
+        $approval = $quote->status === 'approved' ? $this->quotes->approvingReview($id) : null;
+        $issueBlockers = $this->policy->blockers([
+            'status' => $quote->status, 'role' => $request->user()->role, 'actor_id' => $request->user()->id,
+            'author_id' => $quote->created_by === null ? null : (int) $quote->created_by,
+            'requires_authorization' => (bool) ($profile['emission_requires_authorization'] ?? true),
+            'is_latest' => (int) $quote->revision_number >= $this->quotes->latestRevisionNumber($rootId),
+            'company_missing' => $missingCompany, 'valid_until' => $snapshot['valid_until'],
+            'today' => now('America/Bogota')->toDateString(),
+            'approver_id' => $approval === null ? null : (int) $approval->user_id, 'quote_number' => $quote->quote_number,
+        ]);
+        $snapshot['can_issue'] = $issueBlockers === [];
+        $snapshot['issue_blockers'] = $issueBlockers;
+        $snapshot['emission_allowed'] = $snapshot['can_issue'];
+        $snapshot['emission'] = $this->emissions->forQuote($id);
 
         return response()->json(['data' => QuoteVisibility::redact($snapshot, $request->user())]);
     }
