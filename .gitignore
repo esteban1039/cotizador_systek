@@ -1,0 +1,16 @@
+.DS_Store
+.env
+**/vendor/
+**/node_modules/
+**/.nuxt/
+**/.output/
+**/.env
+**/.phpunit.result.cache
+**/database/*.sqlite
+**/database/*.sqlite-shm
+**/database/*.sqlite-wal
+**/test-results/
+**/playwright-report/
+**/local-admin-access.txt
+**/.claude/.state/
+**/.claude/settings.local.json

@@ -1,0 +1,1 @@
+- [Decisiones de usuario de la Iteración 11](project_iteracion11_decisiones_usuario.md): ReteIVA 15 %, datos oficiales de la empresa por seeder, banco nunca en código, cláusulas redactadas

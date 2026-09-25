@@ -1,0 +1,13 @@
+{
+  "records": [
+    {
+      "source_id": "demostracion-historico-001",
+      "title": "Ejemplo ficticio: mantenimiento CCTV 2024",
+      "client_name": "Cliente ficticio de ejemplo",
+      "client_nit": "900000000-0",
+      "family": "cctv",
+      "issued_on": "2024-06-15",
+      "source_text": "Documento ficticio para probar la bandeja histórica. Servicio de mantenimiento de cámaras realizado en 2024. La información requiere revisión humana y no representa precios vigentes."
+    }
+  ]
+}

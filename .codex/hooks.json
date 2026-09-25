@@ -1,0 +1,40 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node '/Users/estebancastano/Proyectos/CotizadorSystek/.codex/hooks/guard-bash.mjs'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node '/Users/estebancastano/Proyectos/CotizadorSystek/.codex/hooks/track-changes.mjs'",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node '/Users/estebancastano/Proyectos/CotizadorSystek/.codex/hooks/validate-changes.mjs'",
+            "timeout": 300,
+            "statusMessage": "Validando archivos modificados (Pint / typecheck)..."
+          }
+        ]
+      }
+    ]
+  }
+}

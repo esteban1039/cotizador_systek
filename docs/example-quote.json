@@ -1,0 +1,16 @@
+{
+  "client_id": "00000000-0000-4000-8000-000000000001",
+  "site_id": "00000000-0000-4000-8000-000000000002",
+  "lines": [
+    {
+      "price_version_id": "00000000-0000-4000-8000-000000000004",
+      "quantity": "8",
+      "discount_bps": 0
+    }
+  ],
+  "scope": "Instalación de ocho cámaras IP de demostración.",
+  "exclusions": "No incluye obra civil.",
+  "payment_terms": "50 % anticipo y 50 % contra entrega; ejemplo pendiente de validar.",
+  "warranty": "Por definir con Systek antes de emitir.",
+  "validity_days": 15
+}

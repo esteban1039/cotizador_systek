@@ -1,0 +1,46 @@
+name: systek-e2e
+
+services:
+  api:
+    build: ./backend
+    ports:
+      - '127.0.0.1:8002:8000'
+    volumes:
+      - ./backend:/app
+      - e2e_cache:/app/storage/framework/cache
+      - e2e_logs:/app/storage/logs
+    environment:
+      APP_ENV: local
+      APP_CONFIG_CACHE: /tmp/systek-e2e-config.php
+      DB_URL: ''
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: systek_e2e
+      DB_USERNAME: systek_e2e
+      DB_PASSWORD: isolated-e2e-only
+      CACHE_STORE: file
+      SESSION_DRIVER: array
+      QUEUE_CONNECTION: sync
+      MAIL_MAILER: array
+    depends_on:
+      postgres:
+        condition: service_healthy
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: systek_e2e
+      POSTGRES_USER: systek_e2e
+      POSTGRES_PASSWORD: isolated-e2e-only
+    volumes:
+      - e2e_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U systek_e2e -d systek_e2e']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  e2e_postgres_data:
+  e2e_cache:
+  e2e_logs:
