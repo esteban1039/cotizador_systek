@@ -20,7 +20,8 @@ Fuente: código actual, `README.md`, `docs/arquitectura.md`, `backend/CLAUDE.md`
 - `Application/*`: casos de uso; dueños de las transacciones que abarcan varios repositorios y la auditoría.
 - `Domain/*`: reglas puras; obtienen datos solo vía contratos.
 - `Repositories/Contracts` específicos por módulo; `Repositories/Eloquent` los implementa; se registran en `app/Providers/*RepositoryServiceProvider.php`. No hay repositorio CRUD genérico ni query builders expuestos.
-- Bloqueos dentro de repositorios, invocados dentro de transacción, en orden: ítem → precio; usuario → tokens; cotización → estado.
+- Bloqueos dentro de repositorios, invocados dentro de transacción, en orden: ítem → precio; usuario → tokens; cotización → estado. Emisión: cotización raíz → cotización → cliente → ítem → precio → regla → cláusula → versión de cláusula → empresa (compartido).
+- Emisión oficial: solo desde `approved`, con revalidación estricta; el PDF oficial se archiva cifrado con su SHA-256 y nunca se regenera; la cuenta bancaria completa solo vive dentro de ese PDF. Que un segundo actor autorice la emisión es configurable (`emission_requires_authorization`); la aprobación interna nunca lo es.
 - `tests/Feature/RepositoryArchitectureTest.php` vigila estas reglas: no lo debilites.
 
 ## Seguridad y acceso

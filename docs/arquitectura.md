@@ -9,7 +9,7 @@ El proyecto usa el patrón repositorio para aislar la persistencia de los contro
 - `app/Http/Controllers`: validación HTTP, coordinación de operaciones y respuestas. Inyectan contratos por constructor.
 - `app/Providers`: asociaciones entre interfaces e implementaciones mediante el contenedor de Laravel.
 
-Las transacciones que abarcan varios repositorios y auditoría permanecen en el coordinador de la operación. Los bloqueos se ejecutan dentro de los repositorios y conservan su orden: ítem antes de precio; usuario antes de emitir o revocar tokens; cotización antes de cambiar su estado. Los métodos de lectura con bloqueo deben invocarse dentro de una transacción.
+Las transacciones que abarcan varios repositorios y auditoría permanecen en el coordinador de la operación. Los bloqueos se ejecutan dentro de los repositorios y conservan su orden: ítem antes de precio; usuario antes de emitir o revocar tokens; cotización antes de cambiar su estado. La emisión oficial añade, tras cliente, ítem, precio, regla y cláusula, un bloqueo compartido de la versión vigente de la empresa. Los métodos de lectura con bloqueo deben invocarse dentro de una transacción.
 
 Las reglas estándar de validación de referencias de Laravel (`exists`) pueden verificar existencia desde los Form Requests; no sustituyen la validación del dominio ni las comprobaciones bajo bloqueo. Migraciones, seeders y pruebas pueden acceder directamente a la base de datos.
 
