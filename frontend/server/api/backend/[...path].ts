@@ -7,9 +7,9 @@ export default defineEventHandler(async (event) => {
   const method = getMethod(event)
   const uuid = '[0-9a-f-]{36}'
   const allowed = method === 'GET'
-    ? new RegExp(`^(dashboard|clients|catalog|clauses|quotes|quotes/${uuid}|quotes/${uuid}/pdf|admin/catalog|admin/history|admin/history/${uuid}|admin/clauses|admin/clauses/${uuid}|admin/company|users|audit|rules|auth/me|auth/mfa)$`).test(path)
+    ? new RegExp(`^(dashboard|clients|catalog|clauses|quotes|quotes/${uuid}|quotes/${uuid}/(pdf|official-pdf)|admin/catalog|admin/history|admin/history/${uuid}|admin/clauses|admin/clauses/${uuid}|admin/company|users|audit|rules|auth/me|auth/mfa)$`).test(path)
     : method === 'POST'
-      ? new RegExp(`^(admin/history/import|admin/history/${uuid}/review|clients|clients/${uuid}/(sites|contacts)|admin/catalog|admin/catalog/${uuid}/prices|admin/clauses|admin/clauses/${uuid}/versions|admin/company|rules|users|quotes/preview|quotes|quotes/${uuid}/(submit|review|revisions)|auth/(login|logout|password|mfa/(setup|confirm|disable)))$`).test(path)
+      ? new RegExp(`^(admin/history/import|admin/history/${uuid}/review|clients|clients/${uuid}/(sites|contacts)|admin/catalog|admin/catalog/${uuid}/prices|admin/clauses|admin/clauses/${uuid}/versions|admin/company|rules|users|quotes/preview|quotes|quotes/${uuid}/(submit|review|revisions|issue)|auth/(login|logout|password|mfa/(setup|confirm|disable)))$`).test(path)
       : method === 'PATCH' && new RegExp(`^(admin/catalog/${uuid}/active|admin/clauses/${uuid}|clients/${uuid}/tax-profile|users/[0-9]+)$`).test(path)
   if (!allowed) throw createError({ statusCode: 404 })
   if (['POST', 'PATCH', 'PUT'].includes(method)) {
@@ -26,7 +26,8 @@ export default defineEventHandler(async (event) => {
   const token = getCookie(event, cookie)
   if (path !== 'auth/login' && !token) throw createError({ statusCode: 401, message: 'Inicia sesión para continuar.' })
   try {
-    if (method === 'GET' && path.endsWith('/pdf')) {
+    if (method === 'GET' && new RegExp(`^quotes/${uuid}/(pdf|official-pdf)$`).test(path)) {
+      const official = path.endsWith('/official-pdf')
       const pdf = await $fetch.raw<ArrayBuffer>(`${config.apiBase}/${path}`, {
         headers: { Authorization: `Bearer ${token}`, Accept: 'application/pdf, application/json' },
         responseType: 'arrayBuffer', timeout: 45000, retry: 0,
@@ -36,7 +37,9 @@ export default defineEventHandler(async (event) => {
       setHeader(event, 'Content-Type', 'application/pdf')
       const quoteId = path.split('/')[1]
       const disposition = pdf.headers.get('content-disposition') ?? ''
-      const safeName = disposition.match(new RegExp(`filename="?((?:quote-${quoteId}-v[0-9]+|COT-[0-9]{4}-[0-9]{4,6}-V[0-9]+)-borrador\\.pdf)"?(?:;|$)`))?.[1] ?? `borrador-${quoteId}.pdf`
+      const safeName = official
+        ? disposition.match(/filename="?(COT-[0-9]{4}-[0-9]{4,6}-V[0-9]+\.pdf)"?(?:;|$)/)?.[1] ?? `oficial-${quoteId}.pdf`
+        : disposition.match(new RegExp(`filename="?((?:quote-${quoteId}-v[0-9]+|COT-[0-9]{4}-[0-9]{4,6}-V[0-9]+)-borrador\\.pdf)"?(?:;|$)`))?.[1] ?? `borrador-${quoteId}.pdf`
       setHeader(event, 'Content-Disposition', `attachment; filename="${safeName}"`)
       setHeader(event, 'X-Content-Type-Options', 'nosniff')
       return new Uint8Array(pdf._data)

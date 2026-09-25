@@ -18,7 +18,7 @@ const pending = ref(false)
 
 const form = reactive({
   legal_name: '', trade_name: '', nit: '', address: '', phone: '', email: '', website: '',
-  signer_name: '', signer_title: '', reason: '',
+  signer_name: '', signer_title: '', reason: '', emission_requires_authorization: true,
 })
 function syncForm() {
   const current = profile.value
@@ -26,7 +26,7 @@ function syncForm() {
     legal_name: current?.legal_name ?? '', trade_name: current?.trade_name ?? '', nit: current?.nit ?? '',
     address: current?.address ?? '', phone: current?.phone ?? '', email: current?.email ?? '',
     website: current?.website ?? '', signer_name: current?.signer_name ?? '', signer_title: current?.signer_title ?? '',
-    reason: '',
+    reason: '', emission_requires_authorization: current?.emission_requires_authorization ?? true,
   })
 }
 watch(profile, syncForm, { immediate: true })
@@ -43,6 +43,7 @@ async function savePublicData() {
         legal_name: form.legal_name, trade_name: form.trade_name || null, nit: form.nit,
         address: form.address || null, phone: form.phone || null, email: form.email || null,
         website: form.website || null, signer_name: form.signer_name || null, signer_title: form.signer_title || null,
+        emission_requires_authorization: form.emission_requires_authorization,
         reason: form.reason,
       },
     })
@@ -131,6 +132,8 @@ async function clearBankAccount() {
             <label>Sitio web (https)<input v-model="form.website" type="url" maxlength="255" placeholder="https://…"></label>
             <label>Nombre del firmante<input v-model="form.signer_name" maxlength="150"></label>
             <label>Cargo del firmante<input v-model="form.signer_title" maxlength="150"></label>
+            <label class="admin-check"><input v-model="form.emission_requires_authorization" type="checkbox" role="switch"> Exigir autorización adicional al emitir</label>
+            <p class="admin-muted">La aprobación interna siempre es obligatoria. Activado: solo administradores y aprobadores emiten, y nunca el autor de la cotización. Desactivado: emiten el administrador y el cotizador dueño.</p>
             <label>Motivo<textarea v-model="form.reason" required minlength="5" maxlength="1000" /></label>
             <p class="admin-muted">Publicar crea una versión nueva; las anteriores quedan como histórico.</p>
             <button class="button primary" :disabled="pending">Publicar versión</button>

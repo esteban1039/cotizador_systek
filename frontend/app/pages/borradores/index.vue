@@ -4,7 +4,7 @@ import { money, dateLabel } from '~/utils/format'
 useHead({ title: 'Borradores · JARVIS' })
 const page = ref(1)
 const { user } = useAuth()
-const statusNames: Record<string, string> = { draft: 'Borrador', in_review: 'En revisión', approved: 'Aprobada internamente' }
+const statusNames: Record<string, string> = { draft: 'Borrador', in_review: 'En revisión', approved: 'Aprobada internamente', issued: 'Emitida' }
 const { data, error, status, refresh } = await useFetch<PaginatedQuotes>('/api/backend/quotes', { query: { page } })
 </script>
 <template>

@@ -18,7 +18,8 @@ export interface Dashboard { scope: 'own' | 'all'; as_of: string; counts: { tota
 
 export interface QuoteReview { decision: string; reason: string; user_name: string; created_at: string }
 export interface QuoteRevision { id: string; revision_number: number; status: string; created_at: string }
-export interface ReviewedQuote extends Quote { can_revise: boolean; root_quote_id: string; previous_quote_id: string | null; revision_number: number; revisions: QuoteRevision[]; created_by: number | null; can_submit: boolean; can_review: boolean; approval_errors: string[]; review_flags: string[]; reviews: QuoteReview[] }
+export interface QuoteEmission { id: string; quote_number: string; revision_number: number; version_label: string; issued_at: string; issued_by: string | null; filename: string; pdf_sha256: string; snapshot_sha256: string; company_version: number | null; superseded_at: string | null; superseded_by_revision: number | null }
+export interface ReviewedQuote extends Quote { can_issue: boolean; issue_blockers: string[]; emission: QuoteEmission | null; can_revise: boolean; root_quote_id: string; previous_quote_id: string | null; revision_number: number; revisions: QuoteRevision[]; created_by: number | null; can_submit: boolean; can_review: boolean; approval_errors: string[]; review_flags: string[]; reviews: QuoteReview[] }
 
 // Empresa emisora y cláusulas (iteración 11).
 export interface ClauseOption { clause_id: string; clause_version_id: string; family: string; type: string; title: string; is_default: boolean; version: number; origin: 'initial_draft' | 'admin'; body: string }
@@ -30,6 +31,6 @@ export interface CompanyProfile {
   configured: boolean; complete: boolean; missing: string[]; version: number | null; origin: 'initial_load' | 'admin' | null
   legal_name: string | null; trade_name: string | null; nit: string | null; address: string | null; phone: string | null
   email: string | null; website: string | null; signer_name: string | null; signer_title: string | null
-  bank_account_configured: boolean; bank_account_summary: BankAccountSummary | null
+  emission_requires_authorization: boolean; bank_account_configured: boolean; bank_account_summary: BankAccountSummary | null
   updated_at: string | null; updated_by_name: string | null
 }
