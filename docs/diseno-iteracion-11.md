@@ -1,6 +1,6 @@
 # Diseño — Iteración 11: base para la emisión oficial (sin emitir)
 
-Estado: **propuesta de arquitectura**, pendiente de confirmar las decisiones de la sección 9. No habilita emisión, envío ni PDF oficial. Nada de este documento cambia la regla "nadie aprueba su propia cotización" ni la de "aprobación interna ≠ emisión".
+Estado: **implementada** (ver [undecima-iteracion.md](undecima-iteracion.md)); las decisiones de la sección 9 se aplicaron con su valor provisional. No habilita emisión, envío ni PDF oficial. Nada de este documento cambia la regla "nadie aprueba su propia cotización" ni la de "aprobación interna ≠ emisión".
 
 Alcance:
 

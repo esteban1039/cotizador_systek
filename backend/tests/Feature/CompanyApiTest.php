@@ -108,6 +108,22 @@ final class CompanyApiTest extends TestCase
             ->assertJsonPath('data.bank_account_summary', null);
     }
 
+    public function test_clear_bank_account_accepts_numeric_boolean_and_empty_bank_account_is_rejected(): void
+    {
+        $this->asAdmin();
+        $this->postJson('/api/v1/admin/company', [
+            'legal_name' => 'Systek Company S.A.S.', 'reason' => 'Configurar cuenta', 'bank_account' => $this->fakeBankAccount('1111222233'),
+        ])->assertCreated();
+
+        $this->postJson('/api/v1/admin/company', [
+            'legal_name' => 'Systek Company S.A.S.', 'reason' => 'Cuenta vacía', 'bank_account' => [],
+        ])->assertUnprocessable();
+
+        $this->postJson('/api/v1/admin/company', [
+            'legal_name' => 'Systek Company S.A.S.', 'reason' => 'Eliminar con uno', 'clear_bank_account' => 1,
+        ])->assertCreated()->assertJsonPath('data.bank_account_configured', false);
+    }
+
     public function test_bank_account_and_clear_together_are_rejected(): void
     {
         $this->asAdmin();

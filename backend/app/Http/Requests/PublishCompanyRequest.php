@@ -31,7 +31,7 @@ final class PublishCompanyRequest extends FormRequest
             'website' => ['nullable', 'url:https', 'max:255'],
             'signer_name' => ['nullable', 'string', 'max:150'],
             'signer_title' => ['nullable', 'string', 'max:150'],
-            'bank_account' => ['nullable', 'array'],
+            'bank_account' => ['nullable', 'array', 'required_array_keys:bank_name,account_type,account_number,account_number_confirmation'],
             'bank_account.bank_name' => ['required_with:bank_account', 'string', 'min:2', 'max:100'],
             'bank_account.account_type' => ['required_with:bank_account', Rule::in(['savings', 'checking'])],
             'bank_account.account_number' => ['required_with:bank_account', 'regex:/^[0-9][0-9 -]{3,28}[0-9]$/', 'confirmed'],

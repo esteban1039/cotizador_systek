@@ -78,7 +78,7 @@ final class PublishCompanyProfile
      */
     private function resolveBankAccount(array $input, ?array $current): ?array
     {
-        if (($input['clear_bank_account'] ?? false) === true) {
+        if (filter_var($input['clear_bank_account'] ?? false, FILTER_VALIDATE_BOOLEAN)) {
             return null;
         }
         if (array_key_exists('bank_account', $input) && $input['bank_account'] !== null) {

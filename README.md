@@ -52,7 +52,7 @@ Nadie puede aprobar su propia cotización. Los cambios de acceso se serializan p
 - **PDF de borrador:** descarga autenticada de la versión guardada, con avisos en todas las páginas, sin costos ni márgenes. No cambia el estado ni habilita emisión oficial.
 - **Auditoría:** registro de acceso, cambios administrativos, publicación de precios y revisiones.
 
-La aprobación interna **no habilita emitir o compartir**. Todavía faltan datos legales/cláusulas oficiales, emisión definitiva de PDF, activación de la política MFA para el piloto y preparación de producción. Los borradores anteriores a usuarios no tienen autor: solo administradores/aprobadores pueden consultarlos y pueden utilizarse como origen de una nueva revisión identificada para llevarlos a aprobación.
+La aprobación interna **no habilita emitir o compartir**. Todavía faltan datos bancarios (los ingresa el administrador), validación legal de las cláusulas, emisión definitiva de PDF, activación de la política MFA para el piloto y preparación de producción. Los borradores anteriores a usuarios no tienen autor: solo administradores/aprobadores pueden consultarlos y pueden utilizarse como origen de una nueva revisión identificada para llevarlos a aprobación.
 
 ## Dinero y demostración
 
@@ -71,6 +71,10 @@ Inicio de sesión: `POST /api/v1/auth/login` con correo y contraseña; cuando MF
 | GET | `/admin/history`, `/admin/history/{id}` | Bandeja y detalle de antecedentes |
 | POST | `/admin/history/import`, `/admin/history/{id}/review` | Importar lote JSON / decidir revisión humana |
 | GET | `/dashboard` | Resumen de estados y cinco pendientes recientes visibles |
+| GET / POST | `/admin/company` | Empresa emisora versionada (cuenta bancaria solo escritura) |
+| GET / POST / PATCH | `/admin/clauses`, `/admin/clauses/{id}`, `/admin/clauses/{id}/versions` | Cláusulas por familia versionadas |
+| GET | `/clauses?family=` | Cláusulas vigentes para cotizar |
+| PATCH | `/clients/{id}/tax-profile` | Indicador de agente retenedor (ReteIVA), solo administrador |
 | GET / POST | `/clients` | Consultar / crear clientes |
 | POST | `/clients/{id}/sites`, `/clients/{id}/contacts` | Añadir sedes/contactos |
 | GET | `/catalog` | Catálogo vigente para cotizar |
@@ -122,7 +126,7 @@ Ejecuta build y navegador secuencialmente. Laravel arranca con `--no-reload` par
 
 ## Pendiente
 
-Emisión definitiva y archivo inmutable de PDF, datos legales y cláusulas verificadas, configuración de impuestos con contabilidad, activación operativa de MFA obligatorio en el piloto, importación histórica de Drive, asistente IA y seguimiento/envío con confirmación. No hay operación sin conexión ni integración externa activa.
+Emisión definitiva y archivo inmutable de PDF, validación legal de cláusulas y datos bancarios, configuración de impuestos con contabilidad, activación operativa de MFA obligatorio en el piloto, asistente IA (la importación de Drive se descartó) y seguimiento/envío con confirmación. No hay operación sin conexión ni integración externa activa.
 
 Las decisiones históricas están en `docs/primera-iteracion.md` y `docs/segunda-iteracion.md`; este README describe el estado actual.
 
@@ -141,3 +145,5 @@ La configuración MFA y la copia privada de la base local se describen en [docs/
 La importación JSON y sus límites se describen en [docs/novena-iteracion.md](docs/novena-iteracion.md). La conexión directa con Drive permanece pendiente.
 
 La política de MFA por rol se documenta en [docs/decima-iteracion.md](docs/decima-iteracion.md).
+
+La base de la emisión (empresa, cláusulas, numeración y ReteIVA) se documenta en [docs/undecima-iteracion.md](docs/undecima-iteracion.md).
