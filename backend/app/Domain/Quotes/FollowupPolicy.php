@@ -63,13 +63,16 @@ final class FollowupPolicy
     }
 
     /** Fecha del evento dentro de rango; devuelve el mensaje de error o null. */
-    public function dateError(\DateTimeInterface $occurredAt, \DateTimeInterface $issuedAt, \DateTimeInterface $now): ?string
+    public function dateError(\DateTimeInterface $occurredAt, \DateTimeInterface $issuedAt, \DateTimeInterface $now, ?\DateTimeInterface $lastEventAt = null): ?string
     {
         if ($occurredAt->getTimestamp() > $now->getTimestamp()) {
             return 'La fecha del evento no puede ser futura.';
         }
         if ($occurredAt->getTimestamp() < $issuedAt->getTimestamp()) {
             return 'La fecha del evento no puede ser anterior a la emisión.';
+        }
+        if ($lastEventAt !== null && $occurredAt->getTimestamp() < $lastEventAt->getTimestamp()) {
+            return 'La fecha del evento no puede ser anterior a la del último evento registrado.';
         }
 
         return null;

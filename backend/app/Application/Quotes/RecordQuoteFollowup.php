@@ -42,12 +42,14 @@ final class RecordQuoteFollowup
             $emission = $this->emissions->forQuote($id);
             abort_unless($emission !== null, 409, 'La cotización no tiene emisión.');
 
-            $existing = $this->followups->forQuote($id)->pluck('type')->all();
+            $events = $this->followups->forQuote($id);
+            $existing = $events->pluck('type')->all();
+            $last = $events->last();
             $conflict = $this->policy->conflict($data['type'], $existing);
             abort_if($conflict !== null, 409, (string) $conflict);
 
             $occurredAt = CarbonImmutable::parse($data['occurred_at']);
-            $dateError = $this->policy->dateError($occurredAt, CarbonImmutable::parse($emission['issued_at'])->startOfSecond(), now());
+            $dateError = $this->policy->dateError($occurredAt, CarbonImmutable::parse($emission['issued_at'])->startOfSecond(), now(), $last === null ? null : CarbonImmutable::parse($last['occurred_at'])->startOfSecond());
             if ($dateError !== null) {
                 throw ValidationException::withMessages(['occurred_at' => $dateError]);
             }

@@ -182,6 +182,17 @@ final class QuoteFollowupTest extends TestCase
         $this->record($id, 'bogus')->assertUnprocessable()->assertJsonValidationErrors('type');
     }
 
+    public function test_notes_cannot_smuggle_account_numbers_and_events_keep_chronological_order(): void
+    {
+        $id = $this->issued();
+        Sanctum::actingAs($this->author);
+        foreach (['1234/5678', '１２３４５６７８', "1234\u{00A0}5678", '1234–5678', '1234_5678', '1234,5678', "1234\u{200B}5678"] as $note) {
+            $this->record($id, 'note', ['note' => $note])->assertUnprocessable()->assertJsonValidationErrors('note');
+        }
+        $this->record($id, 'sent')->assertCreated();
+        $this->record($id, 'accepted', ['occurred_at' => now()->subMinutes(30)->toIso8601String()])->assertUnprocessable()->assertJsonValidationErrors('occurred_at');
+    }
+
     public function test_append_only_and_audit_without_note(): void
     {
         $id = $this->issued();

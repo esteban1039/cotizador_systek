@@ -23,11 +23,11 @@
 
 ## Verificación
 
-Pint aprobado; PHPUnit 216 aprobadas y 2 omitidas en SQLite en memoria, 218 en PostgreSQL `systek_test` (según el agente); typecheck y build de Nuxt aprobados. Migración aplicada en desarrollo con respaldo previo verificado.
+Pint aprobado; PHPUnit 217 aprobadas y 2 omitidas en SQLite en memoria, PostgreSQL `systek_test` aprobado; typecheck y build de Nuxt aprobados. Migración aplicada en desarrollo con respaldo previo verificado.
 
 ## Pendiente / no verificado
 
-- Revisión de seguridad (Opus) del backend en curso al redactar; ver el resultado en la sesión.
+- Revisión de seguridad (Opus) sin hallazgos bloqueantes. Corregidos: el filtro de 8+ dígitos ahora reconoce dígitos Unicode y separadores `/ _ , ·`, NBSP, guiones largos e invisibles (afecta también a las cláusulas); la fecha del evento no puede ser anterior al último evento registrado. Aceptado: el carácter append-only lo impone la aplicación, sin trigger en PostgreSQL; el filtro sigue siendo heurístico y no una frontera fuerte.
 - E2E no ejecutado (`followups.spec.ts` solo cubre el proxy); sin revisión visual en 1440 y 390.
 - Concurrencia de dos registros simultáneos solo probada de forma secuencial.
 - Sin filtro por estado comercial en el listado de cotizaciones.

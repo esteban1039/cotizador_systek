@@ -43,11 +43,14 @@ final class ClauseText
         return $errors;
     }
 
-    /** Secuencia de 8 o más dígitos (ignorando espacios, puntos y guiones). */
+    /**
+     * Secuencia de 8 o más dígitos (cualquier sistema numérico Unicode), ignorando
+     * separadores habituales (espacios, invisibles, guiones, puntos, barras, comas, guion bajo).
+     */
     public static function looksLikeBankAccount(string $text): bool
     {
-        $digitsOnly = preg_replace('/[\s.\-]/', '', $text) ?? $text;
+        $digitsOnly = preg_replace('/[\p{Z}\p{Pd}\p{Cf}\s.\/_,·]/u', '', $text) ?? $text;
 
-        return (bool) preg_match('/\d{8,}/', $digitsOnly);
+        return (bool) preg_match('/\p{Nd}{8,}/u', $digitsOnly);
     }
 }
