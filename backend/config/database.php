@@ -97,6 +97,9 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'prefer'),
+            // Sin esto, PostgreSQL (UTC) interpreta como UTC la hora local que escribe Laravel
+            // y los timestamptz se leen desfasados. Debe coincidir con app.timezone.
+            'timezone' => env('DB_TIMEZONE', 'America/Bogota'),
         ],
 
         'sqlsrv' => [

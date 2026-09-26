@@ -32,3 +32,7 @@ Pint aprobado; PHPUnit 217 aprobadas y 2 omitidas en SQLite en memoria, PostgreS
 - Concurrencia de dos registros simultáneos solo probada de forma secuencial.
 - Sin filtro por estado comercial en el listado de cotizaciones.
 - `datetime-local` usa la zona horaria del navegador; sin tolerancia de reloj en fechas futuras.
+
+## Corrección de zona horaria en PostgreSQL
+
+La conexión `pgsql` no fijaba zona horaria: PostgreSQL (UTC) interpretaba como UTC la hora local de Bogotá que escribe Laravel y todos los `timestamptz` se leían 5 horas antes de lo real (por ejemplo `issued_at` de la emisión). Se agrega `timezone` (`DB_TIMEZONE`, por defecto `America/Bogota`) a la conexión. Los registros ya guardados en desarrollo antes de este cambio (sesiones, auditoría, usuarios) conservan el desfase; no hay cotizaciones ni emisiones previas.
