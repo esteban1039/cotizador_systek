@@ -115,10 +115,14 @@ final class AnthropicQuoteDraftClient implements QuoteDraftAssistantClient
             try {
                 $response = Http::withHeaders(['x-api-key' => $key, 'anthropic-version' => self::VERSION])
                     ->connectTimeout((int) config('ai_assistant.connect_timeout'))
-                    ->timeout((int) config('ai_assistant.timeout'))
+                    ->timeout(min(15, (int) config('ai_assistant.timeout')))
                     ->acceptJson()->asJson()->post(self::ENDPOINT, $body);
             } catch (ConnectionException $e) {
-                $last = str_contains($e->getMessage(), 'timed out') || str_contains($e->getMessage(), 'cURL error 28') ? 'timeout' : 'provider_error';
+                // Un timeout de lectura no se reintenta: el proveedor pudo procesar (y cobrar) la primera llamada.
+                if (str_contains($e->getMessage(), 'timed out') || str_contains($e->getMessage(), 'cURL error 28')) {
+                    throw new AssistantFailed('timeout');
+                }
+                $last = 'provider_error';
 
                 continue;
             } catch (Throwable) {

@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Models\User;
 use Database\Seeders\DemoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\Factory;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\DB;
@@ -256,6 +257,33 @@ final class QuoteAssistTest extends TestCase
         Http::fake([self::URL => Http::response(['error' => 'bad'], 400)]);
         $this->postJson('/api/v1/quotes/assist', ['text' => self::TEXT])->assertStatus(502);
         Http::assertSentCount(1);
+    }
+
+    public function test_dirty_catalog_descriptions_are_not_sent_to_the_provider(): void
+    {
+        $this->item('SUCIO-1', description: 'Camara para Bodega XYZ NIT 900123456');
+        $this->item('SUCIO-2', description: 'Contacto ventas@cliente.co');
+        $this->item('SUCIO-3', description: 'Camara a $ 500');
+        $this->fakeOk();
+        $this->postJson('/api/v1/quotes/assist', ['text' => self::TEXT])->assertOk();
+        Http::assertSent(function ($request): bool {
+            $body = json_encode($request->data());
+
+            return ! str_contains($body, '900123456') && ! str_contains($body, 'ventas@cliente.co') && ! str_contains($body, '$ 500') && str_contains($body, 'SUCIO-1');
+        });
+    }
+
+    public function test_read_timeout_is_not_retried(): void
+    {
+        $this->resetHttp();
+        $calls = 0;
+        Http::fake([self::URL => function () use (&$calls) {
+            $calls++;
+
+            throw new ConnectionException('cURL error 28: Operation timed out');
+        }]);
+        $this->postJson('/api/v1/quotes/assist', ['text' => self::TEXT])->assertStatus(502);
+        $this->assertSame(1, $calls);
     }
 
     public function test_user_quota_returns_429_without_calling_the_provider(): void

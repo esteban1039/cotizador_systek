@@ -21,7 +21,7 @@ function warningText(warning: QuoteAssistWarning) {
 }
 async function submit() {
   if (loading.value || !valid.value) return
-  if (props.hasContent && !window.confirm('El editor ya tiene partidas o alcance. La propuesta de la IA reemplazará las partidas, el alcance y las exclusiones actuales. ¿Continuar?')) return
+  if (props.hasContent && !window.confirm('El editor ya tiene partidas o alcance. La propuesta de la IA reemplazará las partidas, el alcance y las exclusiones actuales y, si cambia la familia, también las cláusulas seleccionadas. ¿Continuar?')) return
   const result = await propose(text.value.trim(), props.family || undefined)
   if (!result) return
   proposal.value = result

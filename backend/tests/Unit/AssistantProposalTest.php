@@ -67,6 +67,15 @@ final class AssistantProposalTest extends TestCase
         $this->assertSame([['code' => 'family_mismatch', 'sku' => 'UPS-1']], $mismatch['warnings']);
     }
 
+    public function test_invisible_and_bidi_control_characters_are_stripped_from_texts(): void
+    {
+        $result = (new AssistantProposal)->validate([
+            'family' => null, 'lines' => [], 'scope' => "Alcance\u{202E}invertido\u{200B}oculto", 'exclusions' => null, 'missing_information' => [],
+        ], $this->catalog());
+
+        $this->assertSame('Alcanceinvertidooculto', $result['scope']);
+    }
+
     public function test_texts_with_bank_account_sequences_are_removed_and_long_texts_cut(): void
     {
         $result = (new AssistantProposal)->validate([

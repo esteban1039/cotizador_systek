@@ -106,7 +106,7 @@ final class AssistantProposal
         if (! is_string($value)) {
             return null;
         }
-        $clean = trim(preg_replace(['/[^\P{Cc}\n]+/u', '/[ \t]+/', '/\n{3,}/'], [' ', ' ', "\n\n"], $value) ?? '');
+        $clean = trim(preg_replace(['/\p{Cf}+/u', '/[^\P{Cc}\n]+/u', '/[ \t]+/', '/\n{3,}/'], ['', ' ', ' ', "\n\n"], $value) ?? '');
         $clean = trim(mb_substr($clean, 0, $max));
         if ($clean === '') {
             return null;

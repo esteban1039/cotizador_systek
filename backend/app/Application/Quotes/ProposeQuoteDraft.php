@@ -4,6 +4,7 @@ namespace App\Application\Quotes;
 
 use App\Domain\Audit;
 use App\Domain\Quotes\AssistantProposal;
+use App\Domain\Quotes\ClauseText;
 use App\Models\User;
 use App\Repositories\Contracts\CatalogRepository;
 use Illuminate\Support\Str;
@@ -46,7 +47,7 @@ final class ProposeQuoteDraft
 
         try {
             $result = $this->client->propose(
-                array_map(fn (array $i): array => ['sku' => $i['sku'], 'description' => $i['description'], 'family' => $i['family'], 'unit' => $i['unit']], $items),
+                array_map(fn (array $i): array => ['sku' => $i['sku'], 'description' => $this->safeDescription($i['description']), 'family' => $i['family'], 'unit' => $i['unit']], $items),
                 $text,
                 $family,
             );
@@ -76,5 +77,15 @@ final class ProposeQuoteDraft
             'lines' => $proposal['lines'], 'missing_information' => $proposal['missing_information'],
             'warnings' => $proposal['warnings'], 'catalog_truncated' => $snapshot['truncated'],
         ];
+    }
+
+    /** Una descripción con cuentas, correos o montos no sale hacia el proveedor (datos sucios del catálogo). */
+    private function safeDescription(string $description): string
+    {
+        if (ClauseText::looksLikeBankAccount($description) || preg_match('/[^\s@]+@[^\s@]+|\$/u', $description) === 1) {
+            return '(descripción omitida)';
+        }
+
+        return $description;
     }
 }
