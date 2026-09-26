@@ -9,7 +9,7 @@ export default defineEventHandler(async (event) => {
   const allowed = method === 'GET'
     ? new RegExp(`^(dashboard|clients|catalog|clauses|quotes|quotes/${uuid}|quotes/${uuid}/(pdf|official-pdf|followups)|admin/catalog|admin/history|admin/history/${uuid}|admin/clauses|admin/clauses/${uuid}|admin/company|users|audit|rules|auth/me|auth/mfa)$`).test(path)
     : method === 'POST'
-      ? new RegExp(`^(admin/history/import|admin/history/${uuid}/review|clients|clients/${uuid}/(sites|contacts)|admin/catalog|admin/catalog/${uuid}/prices|admin/clauses|admin/clauses/${uuid}/versions|admin/company|rules|users|quotes/preview|quotes|quotes/${uuid}/(submit|review|revisions|issue|followups)|auth/(login|logout|password|mfa/(setup|confirm|disable)))$`).test(path)
+      ? new RegExp(`^(admin/history/import|admin/history/${uuid}/review|clients|clients/${uuid}/(sites|contacts)|admin/catalog|admin/catalog/${uuid}/prices|admin/clauses|admin/clauses/${uuid}/versions|admin/company|rules|users|quotes/preview|quotes/assist|quotes|quotes/${uuid}/(submit|review|revisions|issue|followups)|auth/(login|logout|password|mfa/(setup|confirm|disable)))$`).test(path)
       : method === 'PATCH' && new RegExp(`^(admin/catalog/${uuid}/active|admin/clauses/${uuid}|clients/${uuid}/tax-profile|users/[0-9]+)$`).test(path)
   if (!allowed) throw createError({ statusCode: 404 })
   if (['POST', 'PATCH', 'PUT'].includes(method)) {
@@ -49,7 +49,7 @@ export default defineEventHandler(async (event) => {
       headers: { ...(token && path !== 'auth/login' ? { Authorization: `Bearer ${token}` } : {}), Accept: 'application/json' },
       query: method === 'GET' ? getQuery(event) : undefined,
       body: method !== 'GET' ? (historyImportBody ?? await readBody(event)) : undefined,
-      timeout: 15000, retry: 0,
+      timeout: path === 'quotes/assist' && method === 'POST' ? 35000 : 15000, retry: 0,
     })
     const result = response._data ?? {}
     setResponseStatus(event, response.status)
@@ -67,8 +67,9 @@ export default defineEventHandler(async (event) => {
       try { details = JSON.parse(new TextDecoder().decode(failure.data)) } catch { /* Return the sanitized default for non-JSON upstream errors. */ }
     } else details = failure.data
     const code = failure.statusCode ?? failure.status
-    const status = code && [400, 401, 403, 404, 409, 413, 422, 429].includes(code) ? code : 502
+    const assist = path === 'quotes/assist' && method === 'POST'
+    const status = code && ([400, 401, 403, 404, 409, 413, 422, 429].includes(code) || (assist && code === 503)) ? code : 502
     if (status === 401 && path !== 'auth/login') deleteCookie(event, cookie, { path: '/' })
-    throw createError({ statusCode: status, message: status === 502 ? 'No se pudo conectar con el cotizador. Vuelve a intentar.' : details?.message ?? 'No se pudo completar la solicitud.', data: { errors: details?.errors, ...(status === 403 && details?.code === 'mfa_enrollment_required' ? { code: details.code } : {}) } })
+    throw createError({ statusCode: status, message: status === 502 ? 'No se pudo conectar con el cotizador. Vuelve a intentar.' : details?.message ?? 'No se pudo completar la solicitud.', data: { errors: details?.errors, ...(status === 403 && details?.code === 'mfa_enrollment_required' ? { code: details.code } : {}), ...(assist && status === 503 && details?.code === 'assistant_disabled' ? { code: details.code } : {}) } })
   }
 })

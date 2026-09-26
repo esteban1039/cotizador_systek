@@ -41,3 +41,9 @@ export type FollowupType = 'sent' | 'response' | 'accepted' | 'rejected' | 'note
 export type FollowupChannel = 'whatsapp' | 'email' | 'in_person' | 'other'
 export interface QuoteFollowup { id: string; type: FollowupType; channel: FollowupChannel | null; occurred_at: string; note: string | null; created_by: string | null; created_at: string }
 export interface FollowupOverview { commercial_status: CommercialStatus | null; can_record_followup: boolean; followups: QuoteFollowup[] }
+
+// Asistente IA: borrador desde texto libre (sin campos monetarios; los totales salen de quotes/preview).
+export type QuoteAssistWarningCode = 'unknown_sku' | 'duplicate_sku' | 'invalid_quantity' | 'invalid_family' | 'family_mismatch' | 'sensitive_text_removed'
+export interface QuoteAssistWarning { code: QuoteAssistWarningCode | string; sku?: string }
+export interface QuoteAssistLine { sku: string; price_version_id: string; description: string; unit: string; family: string; quantity: string; discount_bps: number }
+export interface QuoteAssistProposal { request_id: string; generated_by: 'ai'; model: string; family: string | null; scope: string | null; exclusions: string | null; lines: QuoteAssistLine[]; missing_information: string[]; warnings: QuoteAssistWarning[]; catalog_truncated: boolean }

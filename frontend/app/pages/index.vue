@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { Calculation, CatalogItem, Client, ClauseOption, ClauseVersionSelection, LineInput, Quote, ReviewedQuote } from '../../shared/types'
+import type { QuoteAssistProposal, Calculation, CatalogItem, Client, ClauseOption, ClauseVersionSelection, LineInput, Quote, ReviewedQuote } from '../../shared/types'
 import { families, clauseTypes } from '#shared/admin'
 import { cents, errorMessages } from '~/utils/format'
 
@@ -224,6 +224,41 @@ onBeforeRouteUpdate(confirmLeave)
 function confirmUnload(event: BeforeUnloadEvent) { if (dirty.value) event.preventDefault() }
 onMounted(() => window.addEventListener('beforeunload', confirmUnload))
 onBeforeUnmount(() => window.removeEventListener('beforeunload', confirmUnload))
+const { user: authUser } = useAuth()
+const assistAllowed = computed(() => !revising && ['admin', 'quoter'].includes(authUser.value?.role ?? ''))
+const assistHasContent = computed(() => rows.value.length > 0 || !!terms.scope.trim() || !!terms.exclusions.trim())
+const assistSkipped = ref(0)
+// Instantánea de lo propuesto por la IA: la etiqueta desaparece cuando el usuario edita el campo.
+const aiProposed = reactive<{ family: string | null; scope: string | null; exclusions: string | null; quantities: Record<number, string> }>({ family: null, scope: null, exclusions: null, quantities: {} })
+const aiFamily = computed(() => aiProposed.family !== null && family.value === aiProposed.family)
+const aiScope = computed(() => aiProposed.scope !== null && terms.scope === aiProposed.scope)
+const aiExclusions = computed(() => aiProposed.exclusions !== null && terms.exclusions === aiProposed.exclusions)
+function aiLine(row: { key: number; quantity: string; discount: string }) { return aiProposed.quantities[row.key] === row.quantity && row.discount === '0' }
+async function applyAssist(proposal: QuoteAssistProposal) {
+  const nextRows: typeof rows.value = []
+  let skipped = 0
+  for (const line of proposal.lines) {
+    const item = catalog.value.find(candidate => candidate.price_version_id === line.price_version_id)
+    if (!item || nextRows.length >= 100) { skipped++; continue }
+    nextRows.push({ key: nextKey++, item: { ...item }, quantity: line.quantity, discount: '0' })
+  }
+  assistSkipped.value = skipped
+  aiProposed.family = null; aiProposed.scope = null; aiProposed.exclusions = null; aiProposed.quantities = {}
+  const target = proposal.family && Object.keys(families).includes(proposal.family) ? proposal.family : family.value
+  if (target && target !== family.value) {
+    familyLoading = true
+    if (family.value) for (const type of clauseTypeKeys) { clauseSelection[type] = null; versionChanged[type] = null }
+    family.value = target
+    await nextTick()
+    familyLoading = false
+    await loadClausesForFamily(target)
+    aiProposed.family = target
+  }
+  if (proposal.scope) { terms.scope = proposal.scope; clauseSelection.scope_base = null; aiProposed.scope = proposal.scope }
+  if (proposal.exclusions) { terms.exclusions = proposal.exclusions; clauseSelection.exclusions = null; aiProposed.exclusions = proposal.exclusions }
+  rows.value = nextRows
+  for (const row of nextRows) aiProposed.quantities[row.key] = row.quantity
+}
 const exampleAvailable = computed(() => clients.value.some(client => client.is_demo) && catalog.value.some(item => item.sku === 'DEMO-CAM-IP'))
 </script>
 
@@ -236,6 +271,7 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
   <div v-if="revising && !sourceReady" class="notice error" role="alert"><strong>No pudimos abrir la cotización para revisarla.</strong><p>Comprueba el enlace y que tengas permiso para crear una nueva revisión.</p><button v-if="validSource" class="button secondary" @click="retrySource">Reintentar revisión</button></div>
   <div v-if="revising && sourceReady" class="notice"><strong>Revisión de la versión {{ source?.revision_number }}.</strong> Los datos originales se conservarán. Esta copia se guardará como un nuevo borrador y requerirá su propia revisión comercial. <NuxtLink :to="`/borradores/${sourceId}`">Ver original</NuxtLink></div>
   <div class="demo-notice"><span class="notice-symbol">i</span><p><strong>Estás en un espacio de prueba.</strong> Los precios de demostración no tienen validez comercial.</p></div>
+  <QuoteAssistPanel v-if="assistAllowed" :has-content="assistHasContent" :family="family" :skipped="assistSkipped" @apply="applyAssist" />
   <form class="editor-layout" @submit.prevent="save">
     <fieldset class="editor-fields" :disabled="!editorReady || saving || !sourceReady">
       <section class="panel" aria-labelledby="client-title">
@@ -243,7 +279,7 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
         <div class="field-grid">
           <label>Cliente <span class="required">*</span><select v-model="clientId" required><option value="" disabled>Selecciona un cliente</option><option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option></select></label>
           <label>Sede <span class="required">*</span><select v-model="siteId" required :disabled="!clientId"><option value="" disabled>Selecciona una sede</option><option v-for="site in sites" :key="site.id" :value="site.id">{{ site.name }} · {{ site.city }}</option></select></label>
-          <label>Familia <span class="required">*</span><select v-model="family" required><option value="" disabled>Selecciona una familia</option><option v-for="(label, key) in families" :key="key" :value="key">{{ label }}</option></select></label>
+          <label>Familia <span class="required">*</span><span v-if="aiFamily" class="draft-badge">Propuesto por IA</span><select v-model="family" required><option value="" disabled>Selecciona una familia</option><option v-for="(label, key) in families" :key="key" :value="key">{{ label }}</option></select></label>
         </div>
         <p v-if="!clients.length && !clientsError" class="empty-message">Aún no hay clientes registrados. Carga los datos de demostración para comenzar.</p>
         <p v-else-if="clientId && !sites.length" class="empty-message">Este cliente todavía no tiene sedes registradas.</p>
@@ -255,7 +291,7 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
         <div v-if="!rows.length" class="empty-lines"><span class="empty-icon"><AppIcon name="document" :size="28" /></span><h3>Una buena propuesta empieza aquí</h3><p>{{ catalog.length ? 'Añade la primera partida desde el catálogo.' : 'No hay precios vigentes. Actualiza el catálogo para continuar.' }}</p></div>
         <div v-if="otherFamilyLines" class="notice">{{ otherFamilyLines }} {{ otherFamilyLines === 1 ? 'partida es' : 'partidas son' }} de una familia distinta a la seleccionada.</div>
         <div v-for="(row, index) in rows" :key="row.key" class="line-card">
-          <div class="line-description"><span class="line-index">{{ String(index + 1).padStart(2, '0') }}</span><div><strong>{{ row.item.description }}</strong><span>{{ row.item.sku }} <b>·</b> {{ row.item.unit }} <b>·</b> Impuesto {{ row.item.tax_bps / 100 }} % <b v-if="family && row.item.family !== family">· Otra familia</b></span></div><button type="button" class="icon-button danger" :aria-label="`Eliminar partida ${index + 1}`" @click="rows.splice(index, 1)"><AppIcon name="trash" :size="18" /></button></div>
+          <div class="line-description"><span class="line-index">{{ String(index + 1).padStart(2, '0') }}</span><div><strong>{{ row.item.description }}</strong><span>{{ row.item.sku }} <b>·</b> {{ row.item.unit }} <b>·</b> Impuesto {{ row.item.tax_bps / 100 }} % <b v-if="family && row.item.family !== family">· Otra familia</b> <b v-if="aiLine(row)" class="draft-badge">Propuesto por IA</b></span></div><button type="button" class="icon-button danger" :aria-label="`Eliminar partida ${index + 1}`" @click="rows.splice(index, 1)"><AppIcon name="trash" :size="18" /></button></div>
           <div v-if="unavailable(row)" class="notice error"><p>El precio original de {{ cents(row.item.price_cents) }} ya no está disponible para una nueva cotización. La versión original se conserva sin cambios.</p><button v-if="replacement(row)" type="button" class="button secondary" :aria-label="`Usar precio actual partida ${index + 1}`" @click="replacePrice(row)">Usar precio actual · {{ cents(replacement(row)!.price_cents) }}</button><p v-else>No hay un precio vigente para este ítem. Puedes eliminar la partida y elegir otro producto del catálogo.</p></div>
           <div class="line-fields"><label :for="`quantity-${row.key}`">Cantidad<input :id="`quantity-${row.key}`" v-model="row.quantity" :aria-label="`Cantidad partida ${index + 1}`" inputmode="decimal" required maxlength="9"></label><label :for="`discount-${row.key}`">Descuento %<input :id="`discount-${row.key}`" v-model="row.discount" :aria-label="`Descuento partida ${index + 1}`" inputmode="decimal" required maxlength="6"></label><div class="unit-price"><span>Precio unitario</span><strong>{{ cents(row.item.price_cents) }}</strong></div></div>
         </div>
@@ -265,7 +301,7 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
       <section class="panel" aria-labelledby="terms-title">
         <div class="section-heading"><span class="step-number" :class="{ complete: termsComplete }"><AppIcon v-if="termsComplete" name="check" :size="16" /><template v-else>03</template></span><div><h2 id="terms-title">Alcance y condiciones</h2><p>Deja claro qué incluye tu propuesta. Elige la familia para precargar cláusulas.</p></div></div>
         <div v-for="type in clauseTypeKeys" :key="type" class="field-stack">
-          <label>{{ clauseTypes[type] }} <span v-if="type !== 'observations'" class="required">*</span>
+          <label>{{ clauseTypes[type] }} <span v-if="type !== 'observations'" class="required">*</span> <span v-if="(type === 'scope_base' && aiScope) || (type === 'exclusions' && aiExclusions)" class="draft-badge">Propuesto por IA</span>
             <textarea v-model="terms[clauseFieldMap[type]]" :required="type !== 'observations'" :maxlength="type === 'scope_base' || type === 'exclusions' || type === 'observations' ? 5000 : 1000" rows="3" :disabled="!family" />
           </label>
           <div class="add-line">
