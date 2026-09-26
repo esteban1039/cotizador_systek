@@ -14,7 +14,7 @@ const actions = computed<FollowupType[]>(() => isFinal.value ? ['note'] : status
 function localNow(): string {
   const now = new Date()
   now.setMinutes(now.getMinutes() - now.getTimezoneOffset())
-  return now.toISOString().slice(0, 16)
+  return now.toISOString().slice(0, 19)
 }
 const type = ref<FollowupType>('sent')
 const channel = ref<FollowupChannel>('whatsapp')
@@ -68,7 +68,7 @@ async function save() {
       <p v-if="isFinal" class="muted">La cotización tiene un resultado final; solo se admiten notas.</p>
       <label>Acción<select v-model="type"><option v-for="action in actions" :key="action" :value="action">{{ actionNames[action] }}</option></select></label>
       <label v-if="type === 'sent'">Canal del envío<select v-model="channel" required><option v-for="(name, key) in channelNames" :key="key" :value="key">{{ name }}</option></select></label>
-      <label>Fecha y hora del evento<input v-model="occurredAt" type="datetime-local" required :max="maxAt"></label>
+      <label>Fecha y hora del evento<input v-model="occurredAt" type="datetime-local" step="1" required :max="maxAt"></label>
       <label>Nota{{ noteRequired ? ' (obligatoria)' : ' (opcional)' }}<textarea v-model="note" maxlength="1000" rows="3" :required="noteRequired" placeholder="Qué pasó, qué acordaron…" /></label>
       <small class="muted">{{ note.length }}/1000</small>
       <p class="notice" role="note">La nota no admite números largos (8 o más dígitos seguidos, incluidas fechas numéricas pegadas como 20260925). No incluyas datos bancarios.</p>

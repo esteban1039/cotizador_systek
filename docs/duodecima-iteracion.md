@@ -27,7 +27,7 @@ Pint aprobado; PHPUnit 207 aprobadas y 2 omitidas en SQLite en memoria, 209 en P
 ## Pendiente / no verificado
 
 - **Migración de desarrollo**: no aplicada; requiere `scripts/backup-local-db.sh` antes.
-- **E2E**: `emission.spec.ts` no se ejecutó y no hay E2E del flujo completo (exige un segundo usuario). Sin revisión visual en 1440 y 390.
+- **E2E**: suite completa aprobada (62 casos, escritorio y móvil) incluido `emission-flow.spec.ts`: aprobación por un segundo usuario, emisión desde la interfaz, descarga del PDF oficial, 409 del borrador y registro de seguimiento. Revisión visual en 1440 y 390 hecha; se corrigió el encabezado de una cotización emitida (decía «Tu borrador está listo»).
 - Con la autorización activada, el aprobador que aprobó también puede emitir (solo se exige ≠ autor); exigir ≠ aprobador es una decisión abierta.
 - Diferencia menor de zona horaria: `can_issue` usa Bogotá y `ApprovalValidation` usa `now()`; falla del lado seguro.
 - Inmutabilidad a nivel de aplicación (sin triggers en BD). Respaldar `APP_KEY`: sin ella los PDF archivados son ilegibles.
