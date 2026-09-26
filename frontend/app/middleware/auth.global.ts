@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware(async (to) => {
   const auth = useAuth()
-  if (to.path === '/login') return
+  if (['/login', '/olvide-contrasena', '/restablecer'].includes(to.path)) return
   try { await auth.load() } catch { return }
   if (!auth.user.value) return navigateTo('/login')
   if (auth.user.value.mfa_enrollment_required && to.path !== '/cuenta') return navigateTo('/cuenta')

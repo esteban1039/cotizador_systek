@@ -38,6 +38,7 @@ async function submit() {
       <label v-if="needsCode">Código de verificación<input ref="codeInput" v-model="code" type="text" autocomplete="one-time-code" autocapitalize="off" spellcheck="false" maxlength="64" required aria-describedby="mfa-login-help"><span id="mfa-login-help" class="muted">Ingresa el código de tu aplicación autenticadora o un código de recuperación.</span></label>
       <p v-if="error" class="notice error" role="alert">{{ error }}</p>
       <button class="button primary full-width" :disabled="busy">{{ busy ? 'Ingresando…' : 'Iniciar sesión' }}</button>
+      <NuxtLink class="muted" to="/olvide-contrasena">¿Olvidaste tu contraseña?</NuxtLink>
     </form>
   </section>
 </template>

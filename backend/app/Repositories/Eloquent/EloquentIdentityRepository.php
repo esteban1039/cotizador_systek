@@ -66,6 +66,7 @@ final class EloquentIdentityRepository implements IdentityRepository
         $user->role = $role;
         $user->active = $active;
         $user->save();
+        $this->discardResetLink($user);
     }
 
     public function saveMfa(User $user, array $attributes): void
@@ -79,6 +80,7 @@ final class EloquentIdentityRepository implements IdentityRepository
         $user->mfa_pending_expires_at = null;
         $user->password = $password;
         $user->save();
+        $this->discardResetLink($user);
     }
 
     public function issueToken(User $user, DateTimeInterface $expiresAt): string
@@ -94,5 +96,11 @@ final class EloquentIdentityRepository implements IdentityRepository
     public function revokeAllTokens(User $user): void
     {
         $user->tokens()->delete();
+    }
+
+    /** Un cambio de contraseña o de acceso deja sin efecto cualquier enlace de recuperación ya emitido. */
+    private function discardResetLink(User $user): void
+    {
+        DB::table('password_reset_tokens')->where('email', $user->email)->delete();
     }
 }

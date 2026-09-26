@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
   const allowed = method === 'GET'
     ? new RegExp(`^(dashboard|clients|catalog|clauses|quotes|quotes/${uuid}|quotes/${uuid}/(pdf|official-pdf|followups)|admin/catalog|admin/history|admin/history/${uuid}|admin/clauses|admin/clauses/${uuid}|admin/company|users|audit|rules|auth/me|auth/mfa)$`).test(path)
     : method === 'POST'
-      ? new RegExp(`^(admin/history/import|admin/history/${uuid}/review|clients|clients/${uuid}/(sites|contacts)|admin/catalog|admin/catalog/${uuid}/prices|admin/clauses|admin/clauses/${uuid}/versions|admin/company|rules|users|quotes/preview|quotes/assist|quotes|quotes/${uuid}/(submit|review|revisions|issue|followups)|auth/(login|logout|password|mfa/(setup|confirm|disable)))$`).test(path)
+      ? new RegExp(`^(admin/history/import|admin/history/${uuid}/review|clients|clients/${uuid}/(sites|contacts)|admin/catalog|admin/catalog/${uuid}/prices|admin/clauses|admin/clauses/${uuid}/versions|admin/company|rules|users|quotes/preview|quotes/assist|quotes|quotes/${uuid}/(submit|review|revisions|issue|followups)|auth/(login|logout|password|password/(forgot|reset)|mfa/(setup|confirm|disable)))$`).test(path)
       : method === 'PATCH' && new RegExp(`^(admin/catalog/${uuid}/active|admin/clauses/${uuid}|clients/${uuid}/tax-profile|users/[0-9]+)$`).test(path)
   if (!allowed) throw createError({ statusCode: 404 })
   if (['POST', 'PATCH', 'PUT'].includes(method)) {
@@ -32,8 +32,10 @@ export default defineEventHandler(async (event) => {
   }
   setHeader(event, 'Cache-Control', 'no-store')
   const cookie = 'systek_session'
-  const token = getCookie(event, cookie)
-  if (path !== 'auth/login' && !token) throw createError({ statusCode: 401, message: 'Inicia sesión para continuar.' })
+  // Rutas sin sesión: iniciar sesión y recuperar contraseña (nunca reenvían el token de la cookie).
+  const anonymous = ['auth/login', 'auth/password/forgot', 'auth/password/reset'].includes(path)
+  const token = anonymous ? undefined : getCookie(event, cookie)
+  if (!anonymous && !token) throw createError({ statusCode: 401, message: 'Inicia sesión para continuar.' })
   try {
     if (method === 'GET' && new RegExp(`^quotes/${uuid}/(pdf|official-pdf)$`).test(path)) {
       const official = path.endsWith('/official-pdf')
@@ -55,7 +57,7 @@ export default defineEventHandler(async (event) => {
     }
     const response = await $fetch.raw<Record<string, any>>(`${config.apiBase}/${path}`, {
       method: method as 'GET' | 'POST' | 'PATCH',
-      headers: upstream({ ...(token && path !== 'auth/login' ? { Authorization: `Bearer ${token}` } : {}), Accept: 'application/json' }),
+      headers: upstream({ ...(token ? { Authorization: `Bearer ${token}` } : {}), Accept: 'application/json' }),
       query: method === 'GET' ? getQuery(event) : undefined,
       body: method !== 'GET' ? (historyImportBody ?? await readBody(event)) : undefined,
       timeout: path === 'quotes/assist' && method === 'POST' ? 35000 : 15000, retry: 0,
@@ -78,7 +80,7 @@ export default defineEventHandler(async (event) => {
     const code = failure.statusCode ?? failure.status
     const assist = path === 'quotes/assist' && method === 'POST'
     const status = code && ([400, 401, 403, 404, 409, 413, 422, 429].includes(code) || (assist && code === 503)) ? code : 502
-    if (status === 401 && path !== 'auth/login') deleteCookie(event, cookie, { path: '/' })
+    if (status === 401 && !anonymous) deleteCookie(event, cookie, { path: '/' })
     throw createError({ statusCode: status, message: status === 502 ? 'No se pudo conectar con el cotizador. Vuelve a intentar.' : details?.message ?? 'No se pudo completar la solicitud.', data: { errors: details?.errors, ...(status === 403 && details?.code === 'mfa_enrollment_required' ? { code: details.code } : {}), ...(assist && status === 503 && details?.code === 'assistant_disabled' ? { code: details.code } : {}) } })
   }
 })

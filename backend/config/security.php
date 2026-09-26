@@ -10,4 +10,7 @@ return [
     // `X-BFF-Secret` o se responde 404; y solo entonces se confía en `X-Forwarded-For` para la IP real.
     // En producción sin secreto la API responde 503 (falla cerrada en lugar de quedar expuesta).
     'bff_secret' => (string) env('BFF_SHARED_SECRET', ''),
+    // Recuperación de contraseña: URL pública del frontend (base del enlace del correo) y vigencia en minutos.
+    'frontend_url' => rtrim((string) env('FRONTEND_URL', ''), '/'),
+    'password_reset_minutes' => 30,
 ];

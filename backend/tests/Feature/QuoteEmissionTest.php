@@ -14,6 +14,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
@@ -266,6 +267,50 @@ final class QuoteEmissionTest extends TestCase
         $this->assertDatabaseHas('audit_logs', ['action' => 'quote.emission_integrity_failed', 'subject_id' => $id]);
         DB::table('quote_emission_files')->where('emission_id', $emission['id'])->update(['content' => 'no-es-cifrado']);
         $this->get("/api/v1/quotes/{$id}/official-pdf")->assertStatus(500);
+    }
+
+    public function test_official_pdf_is_stored_in_s3_and_served_with_integrity_check(): void
+    {
+        Storage::fake('official_pdfs');
+        config(['quotes.official_pdf_storage' => 's3']);
+        $id = $this->approved();
+        $emission = $this->issue($id, $this->author)->assertCreated()->json('data.emission');
+
+        $file = DB::table('quote_emission_files')->where('emission_id', $emission['id'])->first();
+        $this->assertSame($emission['id'].'.pdf', $file->object_key);
+        $this->assertNull($file->content);
+        Storage::disk('official_pdfs')->assertExists($file->object_key);
+        $bytes = $this->get("/api/v1/quotes/{$id}/official-pdf")->assertOk()->getContent();
+        $this->assertStringStartsWith('%PDF-', $bytes);
+        $this->assertSame($emission['pdf_sha256'], hash('sha256', $bytes));
+        $this->assertSame($bytes, Storage::disk('official_pdfs')->get($file->object_key));
+
+        Storage::disk('official_pdfs')->put($file->object_key, '%PDF-alterado');
+        $this->get("/api/v1/quotes/{$id}/official-pdf")->assertStatus(500);
+        $this->assertDatabaseHas('audit_logs', ['action' => 'quote.emission_integrity_failed', 'subject_id' => $id]);
+        Storage::disk('official_pdfs')->delete($file->object_key);
+        $this->get("/api/v1/quotes/{$id}/official-pdf")->assertStatus(500);
+    }
+
+    public function test_pdfs_already_archived_in_the_database_are_still_served_after_switching_to_s3(): void
+    {
+        Storage::fake('official_pdfs');
+        $id = $this->approved();
+        $this->issue($id, $this->author)->assertCreated();
+        $before = $this->get("/api/v1/quotes/{$id}/official-pdf")->assertOk()->getContent();
+        config(['quotes.official_pdf_storage' => 's3']);
+        $this->assertSame($before, $this->get("/api/v1/quotes/{$id}/official-pdf")->getContent());
+    }
+
+    public function test_failed_s3_upload_prevents_the_emission(): void
+    {
+        config(['quotes.official_pdf_storage' => 's3']);
+        Storage::shouldReceive('disk')->with('official_pdfs')->andThrow(new \RuntimeException('S3 no disponible'));
+        $id = $this->approved();
+        $this->issue($id, $this->author)->assertStatus(500);
+        $this->assertDatabaseCount('quote_emissions', 0);
+        $this->assertDatabaseCount('quote_emission_files', 0);
+        $this->assertSame('approved', DB::table('quotes')->where('id', $id)->value('status'));
     }
 
     public function test_emitting_a_revision_supersedes_the_previous_emission(): void

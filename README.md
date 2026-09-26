@@ -97,6 +97,7 @@ Inicio de sesión: `POST /api/v1/auth/login` con correo y contraseña; cuando MF
 | GET | `/auth/mfa` | Estado de MFA y cantidad de códigos disponibles |
 | POST | `/auth/mfa/setup`, `/auth/mfa/confirm`, `/auth/mfa/disable` | Preparar / activar / desactivar MFA |
 | POST | `/auth/logout`, `/auth/password` | Cerrar sesión / cambiar contraseña |
+| POST | `/auth/password/forgot`, `/auth/password/reset` | Recuperar contraseña por correo (sin sesión; ver [docs/decimoquinta-iteracion.md](docs/decimoquinta-iteracion.md)) |
 
 Las rutas de la tabla se agregan a `/api/v1`. Los permisos se verifican en servidor.
 
@@ -157,5 +158,9 @@ La emisión oficial se documenta en [docs/duodecima-iteracion.md](docs/duodecima
 El seguimiento comercial se documenta en [docs/decimotercera-iteracion.md](docs/decimotercera-iteracion.md).
 
 El asistente IA se documenta en [docs/decimocuarta-iteracion.md](docs/decimocuarta-iteracion.md).
+
+La recuperación de contraseña por correo (Amazon SES) se documenta en [docs/decimoquinta-iteracion.md](docs/decimoquinta-iteracion.md).
+
+El almacenamiento de los PDF oficiales en Amazon S3 se documenta en [docs/decimosexta-iteracion.md](docs/decimosexta-iteracion.md).
 
 La guía de despliegue (backend en Laravel Forge, frontend en Cloudflare Workers), con secreto compartido entre el proxy y la API, está en [docs/despliegue.md](docs/despliegue.md); la plantilla de entorno de producción es `backend/.env.production.example`.

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
+const publicPage = computed(() => ['/login', '/olvide-contrasena', '/restablecer'].includes(route.path))
 const expired = useState<boolean>('session-expired', () => false)
 const { user, error, load, logout } = useAuth()
 const sessionError = ref('')
@@ -21,7 +22,7 @@ async function signOut() {
 <template>
   <div class="app-shell">
     <a class="skip-link" href="#main">Ir al contenido</a>
-    <aside v-if="route.path !== '/login'" class="sidebar">
+    <aside v-if="!publicPage" class="sidebar">
       <NuxtLink :to="user?.mfa_enrollment_required ? '/cuenta' : '/'" class="brand" :aria-label="user?.mfa_enrollment_required ? 'Systek, mi cuenta' : 'Systek, nueva cotización'"><span class="brand-mark">s<span>✦</span></span><span>systek<small>COMPANY</small></span></NuxtLink>
       <div class="workspace-label">ESPACIO COMERCIAL</div>
       <nav aria-label="Navegación principal">
@@ -48,10 +49,10 @@ async function signOut() {
       <button class="access-logout" @click="signOut">Cerrar sesión</button>
       <p v-if="sessionError" class="access-session-error" role="alert">{{ sessionError }}</p>
     </aside>
-    <div class="main-shell" :class="{ 'access-public': route.path === '/login' }">
+    <div class="main-shell" :class="{ 'access-public': publicPage }">
       <header class="topbar"><span class="product-name">JARVIS <span>/</span> Cotizador</span><span class="demo-badge"><span />Modo de prueba</span></header>
       <ClientOnly><InstallApp /></ClientOnly>
-      <main id="main"><div v-if="expired && route.path !== '/login'" class="notice error" role="alert">Tu sesión venció. Conserva los datos que estás preparando y vuelve a iniciar sesión. <NuxtLink class="button secondary" to="/login">Iniciar sesión</NuxtLink></div><div v-if="error && route.path !== '/login'" class="notice error" role="alert">{{ error }}<br><button class="button secondary" :disabled="retrying" @click="retry">Reintentar</button></div><NuxtPage v-else /></main>
+      <main id="main"><div v-if="expired && !publicPage" class="notice error" role="alert">Tu sesión venció. Conserva los datos que estás preparando y vuelve a iniciar sesión. <NuxtLink class="button secondary" to="/login">Iniciar sesión</NuxtLink></div><div v-if="error && !publicPage" class="notice error" role="alert">{{ error }}<br><button class="button secondary" :disabled="retrying" @click="retry">Reintentar</button></div><NuxtPage v-else /></main>
       <footer class="page-footer">Systek Company <span>Claridad en cada propuesta.</span></footer>
     </div>
   </div>

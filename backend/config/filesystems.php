@@ -60,6 +60,23 @@ return [
             'report' => false,
         ],
 
+        // PDF oficiales de cotizaciones (QUOTE_PDF_STORAGE=s3). Bucket privado, sin URLs públicas,
+        // cifrado del lado del servidor y errores como excepción (nunca emitir sin haber guardado el archivo).
+        'official_pdfs' => [
+            'driver' => 's3',
+            'key' => env('AWS_ACCESS_KEY_ID'),
+            'secret' => env('AWS_SECRET_ACCESS_KEY'),
+            'region' => env('AWS_DEFAULT_REGION'),
+            'bucket' => env('AWS_BUCKET'),
+            'endpoint' => env('AWS_ENDPOINT'),
+            'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false),
+            'root' => 'official-quotes',
+            'visibility' => 'private',
+            'options' => ['ServerSideEncryption' => 'AES256'],
+            'throw' => true,
+            'report' => false,
+        ],
+
     ],
 
     /*

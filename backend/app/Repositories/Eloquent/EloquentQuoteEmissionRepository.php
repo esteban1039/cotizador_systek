@@ -9,12 +9,23 @@ use App\Models\User;
 use App\Repositories\Contracts\QuoteEmissionRepository;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 final class EloquentQuoteEmissionRepository implements QuoteEmissionRepository
 {
     public function create(array $attributes, string $pdfBytes): void
     {
         QuoteEmission::query()->create($attributes);
+        if (config('quotes.official_pdf_storage') === 's3') {
+            // El disco lanza excepción si falla: la transacción se revierte y no se emite sin archivo.
+            $key = $attributes['id'].'.pdf';
+            Storage::disk('official_pdfs')->put($key, $pdfBytes);
+            QuoteEmissionFile::query()->create(['emission_id' => $attributes['id'], 'object_key' => $key]);
+
+            return;
+        }
         QuoteEmissionFile::query()->create(['emission_id' => $attributes['id'], 'content' => base64_encode($pdfBytes)]);
     }
 
@@ -40,8 +51,15 @@ final class EloquentQuoteEmissionRepository implements QuoteEmissionRepository
     {
         try {
             $file = QuoteEmissionFile::query()->whereKey($emissionId)->first();
+            if ($file?->object_key) {
+                return Storage::disk('official_pdfs')->get($file->object_key);
+            }
             $bytes = $file ? base64_decode((string) $file->content, true) : false;
         } catch (DecryptException) {
+            return null;
+        } catch (Throwable $failure) {
+            Log::warning('PDF oficial: no se pudo leer de S3.', ['emission_id' => $emissionId, 'error' => $failure::class]);
+
             return null;
         }
 

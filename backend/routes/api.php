@@ -8,6 +8,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\MfaController;
+use App\Http\Controllers\PasswordResetController;
 use App\Http\Controllers\QuoteAssistController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\QuoteEmissionController;
@@ -21,6 +22,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     Route::post('auth/login', [AuthController::class, 'login'])->middleware('throttle:20,1');
+    Route::post('auth/password/forgot', [PasswordResetController::class, 'forgot'])->middleware('throttle:10,1,password-forgot');
+    Route::post('auth/password/reset', [PasswordResetController::class, 'reset'])->middleware('throttle:10,1,password-reset');
     Route::middleware(['auth:sanctum', ActiveUser::class, RequireMfaEnrollment::class])->group(function () {
         Route::get('auth/mfa', [MfaController::class, 'status']);
         Route::post('auth/mfa/setup', [MfaController::class, 'setup'])->middleware('throttle:5,1,mfa-setup');

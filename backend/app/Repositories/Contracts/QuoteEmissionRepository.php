@@ -7,7 +7,7 @@ use Illuminate\Support\Collection;
 interface QuoteEmissionRepository
 {
     /**
-     * Inserta la emisión y su archivo (PDF cifrado). Dentro de transacción.
+     * Inserta la emisión y guarda su PDF (cifrado en la base o en S3 según `quotes.official_pdf_storage`). Dentro de transacción.
      *
      * @param  array<string, mixed>  $attributes
      */
@@ -30,7 +30,7 @@ interface QuoteEmissionRepository
     public function markSuperseded(string $emissionId, string $byEmissionId): void;
 
     /**
-     * Bytes del PDF descifrados; null si falta o no se puede descifrar.
+     * Bytes del PDF; null si falta, no se puede descifrar o S3 no responde.
      */
     public function fileContent(string $emissionId): ?string;
 }
