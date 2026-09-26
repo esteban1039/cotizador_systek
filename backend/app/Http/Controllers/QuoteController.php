@@ -6,6 +6,7 @@ use App\Application\Quotes\CreateQuote;
 use App\Domain\CompanyProfile;
 use App\Domain\Quotes\ApprovalValidation;
 use App\Domain\Quotes\EmissionPolicy;
+use App\Domain\Quotes\FollowupPolicy;
 use App\Domain\Quotes\QuotePricer;
 use App\Domain\Quotes\QuoteVisibility;
 use App\Domain\Quotes\SnapshotCompatibility;
@@ -15,6 +16,7 @@ use App\Http\Requests\PreviewQuoteRequest;
 use App\Repositories\Contracts\ClientRepository;
 use App\Repositories\Contracts\CompanyRepository;
 use App\Repositories\Contracts\QuoteEmissionRepository;
+use App\Repositories\Contracts\QuoteFollowupRepository;
 use App\Repositories\Contracts\QuoteRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -24,7 +26,7 @@ use Illuminate\Validation\ValidationException;
 
 final class QuoteController extends Controller
 {
-    public function __construct(private QuoteRepository $quotes, private CompanyRepository $companies, private QuoteEmissionRepository $emissions, private EmissionPolicy $policy) {}
+    public function __construct(private QuoteRepository $quotes, private CompanyRepository $companies, private QuoteEmissionRepository $emissions, private EmissionPolicy $policy, private QuoteFollowupRepository $followups, private FollowupPolicy $followupPolicy) {}
 
     public function store(CalculateQuoteRequest $request, CreateQuote $create): JsonResponse
     {
@@ -150,6 +152,9 @@ final class QuoteController extends Controller
         $snapshot['issue_blockers'] = $issueBlockers;
         $snapshot['emission_allowed'] = $snapshot['can_issue'];
         $snapshot['emission'] = $this->emissions->forQuote($id);
+        $issued = $quote->status === 'issued';
+        $snapshot['commercial_status'] = $issued ? $this->followupPolicy->commercialStatus($this->followups->forQuote($id)->pluck('type')->all()) : null;
+        $snapshot['can_record_followup'] = $issued && $this->followupPolicy->mayRecord($request->user()->role, $request->user()->id, $quote->created_by === null ? null : (int) $quote->created_by);
 
         return response()->json(['data' => QuoteVisibility::redact($snapshot, $request->user())]);
     }

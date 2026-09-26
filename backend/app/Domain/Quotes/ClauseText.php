@@ -36,11 +36,18 @@ final class ClauseText
         if (preg_match_all('/\{([^{}]*)\}/', $body, $matches) && array_diff($matches[1], ['vigencia_dias']) !== []) {
             $errors[] = 'El texto solo admite el marcador {vigencia_dias}.';
         }
-        $digitsOnly = preg_replace('/[\s.\-]/', '', $body) ?? $body;
-        if (preg_match('/\d{8,}/', $digitsOnly)) {
+        if (self::looksLikeBankAccount($body)) {
             $errors[] = 'Los datos bancarios se configuran en Empresa emisora, no en cláusulas.';
         }
 
         return $errors;
+    }
+
+    /** Secuencia de 8 o más dígitos (ignorando espacios, puntos y guiones). */
+    public static function looksLikeBankAccount(string $text): bool
+    {
+        $digitsOnly = preg_replace('/[\s.\-]/', '', $text) ?? $text;
+
+        return (bool) preg_match('/\d{8,}/', $digitsOnly);
     }
 }

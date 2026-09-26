@@ -10,6 +10,7 @@ use App\Repositories\Contracts\DashboardRepository;
 use App\Repositories\Contracts\HistoryRepository;
 use App\Repositories\Contracts\PricingRepository;
 use App\Repositories\Contracts\QuoteEmissionRepository;
+use App\Repositories\Contracts\QuoteFollowupRepository;
 use App\Repositories\Contracts\QuoteNumberRepository;
 use App\Repositories\Contracts\QuoteRepository;
 use App\Repositories\Eloquent\EloquentClauseRepository;
@@ -18,6 +19,7 @@ use App\Repositories\Eloquent\EloquentDashboardRepository;
 use App\Repositories\Eloquent\EloquentHistoryRepository;
 use App\Repositories\Eloquent\EloquentPricingRepository;
 use App\Repositories\Eloquent\EloquentQuoteEmissionRepository;
+use App\Repositories\Eloquent\EloquentQuoteFollowupRepository;
 use App\Repositories\Eloquent\EloquentQuoteNumberRepository;
 use App\Repositories\Eloquent\EloquentQuoteRepository;
 use Illuminate\Support\ServiceProvider;
@@ -38,6 +40,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(ClauseRepository::class, EloquentClauseRepository::class);
         $this->app->bind(QuoteNumberRepository::class, EloquentQuoteNumberRepository::class);
         $this->app->bind(QuoteEmissionRepository::class, EloquentQuoteEmissionRepository::class);
+        $this->app->bind(QuoteFollowupRepository::class, EloquentQuoteFollowupRepository::class);
     }
 
     /**
