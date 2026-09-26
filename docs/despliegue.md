@@ -65,7 +65,7 @@ Con el secreto compartido la API responde 404 a quien no lo tenga, pero sigue p�
 
 1. `php artisan migrate --force` (ya lo hace el despliegue).
 2. `php artisan db:seed --class=InitialConfigurationSeeder --force` (datos legales públicos y cláusulas iniciales; sin datos bancarios). **No** ejecutes `DemoSeeder` (falla a propósito fuera de local/testing).
-3. `php artisan systek:create-admin --email=<correo>` (contraseña fuerte; guárdala en un gestor).
+3. `php artisan systek:create-admin --email=<correo>` (solo funciona si aún no existe ningún administrador; genera una contraseña de 24 caracteres y la guarda en un archivo privado del servidor con permisos 0600). Léela **una sola vez** desde la pestaña Commands de Forge (`cat` del archivo de acceso de producción y luego bórralo con `rm`), guárdala en un gestor, elimina esos dos registros del historial de Commands y cambia la contraseña en tu primer ingreso (Mi cuenta).
 4. Entra por `https://app.<dominio>` y configura por la interfaz: **cuenta bancaria** (`/empresa`), **reglas comerciales** (`/reglas`), **usuarios** y aprobador (`/usuarios`), catálogo y precios.
 5. **MFA:** cada administrador y aprobador configura su autenticador en «Mi cuenta» y guarda sus códigos de recuperación. Después define `MFA_REQUIRED_ROLES=admin,approver` en Forge y recarga la configuración (`php artisan config:cache`, reinicio de PHP-FPM).
 6. Asistente IA (opcional): `ANTHROPIC_API_KEY` y `AI_ASSISTANT_ENABLED=true` en Forge; ver [decimocuarta-iteracion.md](decimocuarta-iteracion.md).
