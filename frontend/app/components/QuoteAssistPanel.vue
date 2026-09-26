@@ -39,7 +39,7 @@ async function submit() {
         <textarea v-model="text" rows="4" maxlength="4000" placeholder="Ej.: instalar 8 cámaras IP en una bodega con grabador y cableado…" />
       </label>
       <small class="muted">{{ text.length }}/4000 · mínimo 10 caracteres</small>
-      <p class="notice" role="note">No incluyas nombres, NIT, teléfonos, correos ni datos bancarios; el texto se envía a Anthropic (Claude).</p>
+      <p class="notice privacy-note" role="note">No incluyas nombres, NIT, teléfonos, correos ni datos bancarios; el texto se envía a Anthropic (Claude).</p>
       <div v-if="errors.length" class="notice error" role="alert"><p v-for="message in errors" :key="message">{{ message }}</p></div>
       <div class="assist-actions"><button type="button" class="button primary" :disabled="loading || !valid" :aria-busy="loading" @click="submit">{{ loading ? 'Generando propuesta…' : 'Proponer borrador' }}</button></div>
       <div v-if="proposal" class="assist-result">
@@ -53,5 +53,6 @@ async function submit() {
   </section>
 </template>
 <style scoped>
+.privacy-note{background:#f3f7f2;border:1px solid #dce6df;color:#4c6660;font-weight:500}
 .assist-panel{margin-bottom:22px;display:grid;gap:14px}.assist-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}.assist-body,.assist-result{display:grid;gap:12px}.assist-actions{display:flex;justify-content:flex-end}.assist-list{margin:6px 0 0;padding-left:18px;font-size:12px;line-height:1.6;overflow-wrap:anywhere}
 </style>
