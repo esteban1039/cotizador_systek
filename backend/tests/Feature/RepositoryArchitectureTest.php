@@ -30,7 +30,7 @@ final class RepositoryArchitectureTest extends TestCase
 
     public function test_controllers_and_quote_domain_do_not_build_database_queries(): void
     {
-        foreach (array_merge(glob(app_path('Http/Controllers/*.php')), glob(app_path('Domain/Quotes/*.php')), glob(app_path('Application/Quotes/*.php')), glob(app_path('Application/Company/*.php'))) as $file) {
+        foreach (array_merge(glob(app_path('Http/Controllers/*.php')), glob(app_path('Domain/Quotes/*.php')), glob(app_path('Application/Quotes/*.php')), glob(app_path('Application/Company/*.php')), glob(app_path('Infrastructure/Anthropic/*.php'))) as $file) {
             $source = file_get_contents($file);
             $this->assertDoesNotMatchRegularExpression('/DB::(?:table|select|insert|update|delete|statement)\s*\(|::(?:query|where|whereKey|find|orderBy)\s*\(/', $source, $file);
         }

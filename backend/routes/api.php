@@ -8,6 +8,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\MfaController;
+use App\Http\Controllers\QuoteAssistController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\QuoteEmissionController;
 use App\Http\Controllers\QuoteFollowupController;
@@ -44,6 +45,7 @@ Route::prefix('v1')->group(function () {
             Route::post('clients', [ClientController::class, 'store']);
             Route::post('clients/{id}/sites', [ClientController::class, 'site'])->whereUuid('id');
             Route::post('clients/{id}/contacts', [ClientController::class, 'contact'])->whereUuid('id');
+            Route::post('quotes/assist', QuoteAssistController::class)->middleware('throttle:quote-assist');
             Route::post('quotes/preview', [QuoteController::class, 'preview']);
             Route::post('quotes', [QuoteController::class, 'store']);
             Route::post('quotes/{id}/revisions', [QuoteController::class, 'revise'])->whereUuid('id');

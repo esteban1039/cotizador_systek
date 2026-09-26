@@ -20,6 +20,26 @@ final class EloquentCatalogRepository implements CatalogRepository
             ->orderBy('sku')->get()->map(fn (CatalogItem $item): array => $item->getAttributes());
     }
 
+    public function assistantCatalog(string $date, ?string $family, int $limit): array
+    {
+        $rows = CatalogItem::query()
+            ->join('price_versions', 'price_versions.catalog_item_id', '=', 'catalog_items.id')
+            ->where('catalog_items.active', true)->where('price_versions.status', 'approved')
+            ->where('valid_from', '<=', $date)->where('valid_until', '>=', $date)
+            ->when($family !== null, fn ($query) => $query->where('catalog_items.family', $family))
+            ->select('catalog_items.sku', 'catalog_items.description', 'catalog_items.family', 'catalog_items.unit', 'price_versions.id as price_version_id')
+            ->orderBy('catalog_items.sku')->limit($limit + 1)->get();
+        $max = (int) config('ai_assistant.max_description_chars');
+
+        return [
+            'items' => $rows->take($limit)->map(fn ($row): array => [
+                'sku' => (string) $row->sku, 'description' => mb_substr((string) $row->description, 0, $max),
+                'family' => (string) $row->family, 'unit' => (string) $row->unit, 'price_version_id' => (string) $row->price_version_id,
+            ])->values()->all(),
+            'truncated' => $rows->count() > $limit,
+        ];
+    }
+
     public function catalogWithHistory(): Collection
     {
         return CatalogItem::query()->with('versions')->orderBy('sku')->get()

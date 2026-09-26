@@ -1,1 +1,2 @@
 - [Decisiones de usuario de la Iteración 11](project_iteracion11_decisiones_usuario.md): ReteIVA 15 %, datos oficiales de la empresa por seeder, banco nunca en código, cláusulas redactadas
+- [Diseño asistente IA v1](project_asistente_ia_diseno.md) — POST /quotes/assist solo propuesta, Haiku, sin esquema; proxy timeout/503

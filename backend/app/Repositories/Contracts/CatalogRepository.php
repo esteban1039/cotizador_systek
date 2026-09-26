@@ -9,6 +9,14 @@ interface CatalogRepository
     /** @return Collection<int, array<string, mixed>> */
     public function currentPrices(string $date): Collection;
 
+    /**
+     * Catálogo vigente reducido para el asistente: sin precios, costos ni vigencias.
+     * Devuelve hasta $limit filas y `truncated` si había más.
+     *
+     * @return array{items: list<array{sku: string, description: string, family: string, unit: string, price_version_id: string}>, truncated: bool}
+     */
+    public function assistantCatalog(string $date, ?string $family, int $limit): array;
+
     /** @return Collection<int, array<string, mixed>> */
     public function catalogWithHistory(): Collection;
 

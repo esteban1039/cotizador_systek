@@ -3,6 +3,8 @@
 namespace App\Providers;
 
 use App\Application\Drive\DriveInventoryClient;
+use App\Application\Quotes\QuoteDraftAssistantClient;
+use App\Infrastructure\Anthropic\AnthropicQuoteDraftClient;
 use App\Infrastructure\Drive\GoogleDriveInventoryClient;
 use App\Repositories\Contracts\ClauseRepository;
 use App\Repositories\Contracts\CompanyRepository;
@@ -22,6 +24,9 @@ use App\Repositories\Eloquent\EloquentQuoteEmissionRepository;
 use App\Repositories\Eloquent\EloquentQuoteFollowupRepository;
 use App\Repositories\Eloquent\EloquentQuoteNumberRepository;
 use App\Repositories\Eloquent\EloquentQuoteRepository;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -32,6 +37,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app->bind(DriveInventoryClient::class, GoogleDriveInventoryClient::class);
+        $this->app->bind(QuoteDraftAssistantClient::class, AnthropicQuoteDraftClient::class);
         $this->app->bind(HistoryRepository::class, EloquentHistoryRepository::class);
         $this->app->bind(DashboardRepository::class, EloquentDashboardRepository::class);
         $this->app->bind(QuoteRepository::class, EloquentQuoteRepository::class);
@@ -48,6 +54,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        RateLimiter::for('quote-assist', fn (Request $request): array => [
+            Limit::perMinute((int) config('ai_assistant.per_minute'))->by('assist-m:'.($request->user()?->id ?? $request->ip())),
+            Limit::perDay((int) config('ai_assistant.per_day'))->by('assist-d:'.($request->user()?->id ?? $request->ip())),
+        ]);
     }
 }
