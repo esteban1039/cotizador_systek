@@ -19,7 +19,7 @@ export interface Dashboard { scope: 'own' | 'all'; as_of: string; counts: { tota
 export interface QuoteReview { decision: string; reason: string; user_name: string; created_at: string }
 export interface QuoteRevision { id: string; revision_number: number; status: string; created_at: string }
 export interface QuoteEmission { id: string; quote_number: string; revision_number: number; version_label: string; issued_at: string; issued_by: string | null; filename: string; pdf_sha256: string; snapshot_sha256: string; company_version: number | null; superseded_at: string | null; superseded_by_revision: number | null }
-export interface ReviewedQuote extends Quote { can_issue: boolean; issue_blockers: string[]; emission: QuoteEmission | null; can_revise: boolean; root_quote_id: string; previous_quote_id: string | null; revision_number: number; revisions: QuoteRevision[]; created_by: number | null; can_submit: boolean; can_review: boolean; approval_errors: string[]; review_flags: string[]; reviews: QuoteReview[] }
+export interface ReviewedQuote extends Quote { commercial_status?: CommercialStatus | null; can_record_followup?: boolean; can_issue: boolean; issue_blockers: string[]; emission: QuoteEmission | null; can_revise: boolean; root_quote_id: string; previous_quote_id: string | null; revision_number: number; revisions: QuoteRevision[]; created_by: number | null; can_submit: boolean; can_review: boolean; approval_errors: string[]; review_flags: string[]; reviews: QuoteReview[] }
 
 // Empresa emisora y cláusulas (iteración 11).
 export interface ClauseOption { clause_id: string; clause_version_id: string; family: string; type: string; title: string; is_default: boolean; version: number; origin: 'initial_draft' | 'admin'; body: string }
@@ -34,3 +34,10 @@ export interface CompanyProfile {
   emission_requires_authorization: boolean; bank_account_configured: boolean; bank_account_summary: BankAccountSummary | null
   updated_at: string | null; updated_by_name: string | null
 }
+
+// Seguimiento comercial de cotizaciones emitidas (iteración 13).
+export type CommercialStatus = 'not_sent' | 'sent' | 'responded' | 'accepted' | 'rejected'
+export type FollowupType = 'sent' | 'response' | 'accepted' | 'rejected' | 'note'
+export type FollowupChannel = 'whatsapp' | 'email' | 'in_person' | 'other'
+export interface QuoteFollowup { id: string; type: FollowupType; channel: FollowupChannel | null; occurred_at: string; note: string | null; created_by: string | null; created_at: string }
+export interface FollowupOverview { commercial_status: CommercialStatus | null; can_record_followup: boolean; followups: QuoteFollowup[] }
