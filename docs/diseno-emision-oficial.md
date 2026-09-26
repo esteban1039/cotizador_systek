@@ -8,7 +8,7 @@ No verificado al redactar: reglas de estado en `QuoteController::revise`, `zend.
 | Tema | Decisión | Motivo |
 | --- | --- | --- |
 | Transición | `approved → issued` (estado final). Sin anulación ni devolución en esta iteración. | Un documento emitido es inmutable; las correcciones se hacen con una nueva revisión. |
-| Quién emite | `role:admin,quoter`; el cotizador solo lo suyo (`findVisible`). El aprobador no emite (D1). Defensa adicional: la última revisión `approve` debe tener `user_id ≠ created_by`. | "Nadie aprueba su propia cotización" ya se cumplió al aprobar; emitir es un acto administrativo del dueño. |
+| Quién emite | Ruta `role:admin,approver,quoter`; la política decide (§1.1): con autorización activada emiten admin y aprobador distintos del autor; desactivada, admin y cotizador dueño. Defensa adicional: la última revisión `approve` debe tener `user_id ≠ created_by`. | "Nadie aprueba su propia cotización" ya se cumplió al aprobar; emitir es un acto administrativo del dueño. |
 | Revalidación | Repite `ApprovalValidation::check(strict)` bajo bloqueo; exige empresa completa (nombre legal, NIT, firmante con cargo, cuenta), `quote_number` no nulo, revisión más reciente y `valid_until ≥ hoy` (hora de Bogotá). | La aprobación puede haber quedado vieja: precios republicados, cláusulas nuevas, ReteIVA o vencimiento. |
 | Precio o vigencia vencidos | Bloquea con 422 y exige nueva revisión (D4). | Nunca se emite un precio histórico; las instantáneas no se reescriben. |
 | Archivo | PDF en BD, cifrado (`encrypted`, base64), tabla `quote_emission_files` separada de los listados. | Alta atómica con la transacción, entra en `backup-local-db.sh`; el disco `local` tiene `serve => true` y quedaría fuera de la copia. |
@@ -69,7 +69,7 @@ quote_emission_files
 
 ## 5. Contrato de API (`/api/v1`)
 
-- **POST `/quotes/{id}/issue`** — `role:admin,quoter`, `throttle:10,1,quote-issue`. Cuerpo `{"reason": "…"}`. 201 → `{data: {status: "issued", emission: {id, quote_number, revision_number, version_label, issued_at, issued_by, filename, pdf_sha256, snapshot_sha256, company_version, superseded_at}}}`. Errores: 404 no visible · 409 no está `approved`, ya emitida o hay revisión posterior · 422 aprobación inválida, empresa incompleta (`missing`), sin número o aprobación del propio autor · 429.
+- **POST `/quotes/{id}/issue`** — `role:admin,approver,quoter` (la política de §1.1 decide; 403 si no puede), `throttle:10,1,quote-issue`. Cuerpo `{"reason": "…"}`. 201 → `{data: {status: "issued", emission: {id, quote_number, revision_number, version_label, issued_at, issued_by, filename, pdf_sha256, snapshot_sha256, company_version, superseded_at}}}`. Errores: 404 no visible · 409 no está `approved`, ya emitida o hay revisión posterior · 422 aprobación inválida, empresa incompleta (`missing`), sin número o aprobación del propio autor · 429.
 - **GET `/quotes/{id}/official-pdf`** — rol autenticado con visibilidad del registro. `application/pdf`, `attachment`, `Cache-Control: private, no-store`, `nosniff`. 404 sin emisión. Audita `quote.official_pdf_downloaded`.
 - **GET `/quotes/{id}`** agrega `emission`, `can_issue`, `issue_blockers[]`; `emission_allowed = can_issue`. Sin banco ni resumen enmascarado para ningún rol.
 - **GET `/quotes/{id}/pdf`** → 409 si `issued`. **GET `/quotes`** admite `status=issued`.
@@ -106,7 +106,7 @@ Detalle de cotización: botón "Emitir oficialmente" si `can_issue`, con confirm
 ## 10. Pruebas mínimas
 
 - Emite: cotizador autor de una aprobada por otro → 201, `issued`, archivo, `pdf_sha256` igual al de la descarga, auditoría sin banco.
-- Roles: aprobador 403 (D1); cotizador ajeno 404; administrador 201; sin autenticar 401; sin MFA bloqueado.
+- Roles: según §1.1 con el ajuste activado y desactivado; cotizador ajeno 404; el rol se comprueba antes que los detalles de validación; sin autenticar 401; sin MFA bloqueado.
 - 409: borrador, en revisión, ya emitida, revisión posterior; doble emisión seguida.
 - 422: vencida; precio republicado; cláusula nueva; cambio de ReteIVA; empresa sin cuenta o sin firmante; aprobación con `user_id = created_by`.
 - Inmutabilidad: publicar precio, empresa o cláusula después no cambia los bytes ni `quotes.snapshot`.

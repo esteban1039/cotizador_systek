@@ -50,6 +50,12 @@ final class IssueQuote
             abort_if((int) $record->revision_number < $this->quotes->latestRevisionNumber($rootId), 409, 'Existe una revisión posterior; solo se emite la más reciente.');
             $this->fail($record->quote_number === null, 'quote', 'La cotización no tiene número asignado.');
 
+            // Rol y autoría primero, con el ajuste leído sin bloqueo: quien no puede emitir no
+            // recibe detalles de validación ni bloquea filas. Se repite abajo con la versión bloqueada.
+            $authorId = $record->created_by === null ? null : (int) $record->created_by;
+            $earlyRequires = (bool) ($this->companies->currentProfile()['emission_requires_authorization'] ?? true);
+            abort_unless($this->policy->mayIssue($actor->role, $actor->id, $authorId, $earlyRequires), 403, $this->policy->denialMessage($earlyRequires));
+
             $rawSnapshot = $record->snapshot;
             $snapshot = json_decode($rawSnapshot, true, flags: JSON_THROW_ON_ERROR);
             $this->fail(($snapshot['valid_until'] ?? '') < now('America/Bogota')->toDateString(), 'quote', 'La vigencia terminó. Crea una nueva revisión.');
@@ -64,7 +70,6 @@ final class IssueQuote
             $this->fail($company === null || $missing !== [], 'company', 'La empresa emisora está incompleta: faltan '.implode(', ', $missing).'.');
 
             $requires = (bool) $company['emission_requires_authorization'];
-            $authorId = $record->created_by === null ? null : (int) $record->created_by;
             abort_unless($this->policy->mayIssue($actor->role, $actor->id, $authorId, $requires), 403, $this->policy->denialMessage($requires));
             $approval = $this->quotes->approvingReview($id);
             $this->fail(! $this->policy->approvalIsIndependent($approval === null ? null : (int) $approval->user_id, $authorId), 'quote', 'La aprobación debe ser de una persona distinta del autor.');

@@ -71,6 +71,8 @@ Inicio de sesión: `POST /api/v1/auth/login` con correo y contraseña; cuando MF
 | GET | `/admin/history`, `/admin/history/{id}` | Bandeja y detalle de antecedentes |
 | POST | `/admin/history/import`, `/admin/history/{id}/review` | Importar lote JSON / decidir revisión humana |
 | GET | `/dashboard` | Resumen de estados y cinco pendientes recientes visibles |
+| POST | `/quotes/{id}/issue` | Emitir una cotización aprobada (archiva PDF oficial) |
+| GET | `/quotes/{id}/official-pdf` | Descargar el PDF oficial archivado |
 | GET / POST | `/admin/company` | Empresa emisora versionada (cuenta bancaria solo escritura) |
 | GET / POST / PATCH | `/admin/clauses`, `/admin/clauses/{id}`, `/admin/clauses/{id}/versions` | Cláusulas por familia versionadas |
 | GET | `/clauses?family=` | Cláusulas vigentes para cotizar |
@@ -126,7 +128,7 @@ Ejecuta build y navegador secuencialmente. Laravel arranca con `--no-reload` par
 
 ## Pendiente
 
-Emisión definitiva y archivo inmutable de PDF, validación legal de cláusulas y datos bancarios, configuración de impuestos con contabilidad, activación operativa de MFA obligatorio en el piloto, asistente IA (la importación de Drive se descartó) y seguimiento/envío con confirmación. No hay operación sin conexión ni integración externa activa.
+Envío al cliente con confirmación, aplicación de la migración de emisión en desarrollo, validación legal de cláusulas y datos bancarios, configuración de impuestos con contabilidad, activación operativa de MFA obligatorio en el piloto, asistente IA (la importación de Drive se descartó) y seguimiento/envío con confirmación. No hay operación sin conexión ni integración externa activa.
 
 Las decisiones históricas están en `docs/primera-iteracion.md` y `docs/segunda-iteracion.md`; este README describe el estado actual.
 
@@ -147,3 +149,5 @@ La importación JSON y sus límites se describen en [docs/novena-iteracion.md](d
 La política de MFA por rol se documenta en [docs/decima-iteracion.md](docs/decima-iteracion.md).
 
 La base de la emisión (empresa, cláusulas, numeración y ReteIVA) se documenta en [docs/undecima-iteracion.md](docs/undecima-iteracion.md).
+
+La emisión oficial se documenta en [docs/duodecima-iteracion.md](docs/duodecima-iteracion.md).

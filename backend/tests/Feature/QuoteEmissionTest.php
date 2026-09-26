@@ -225,6 +225,14 @@ final class QuoteEmissionTest extends TestCase
         $this->assertDatabaseCount('quote_emissions', 0);
     }
 
+    public function test_role_is_checked_before_company_validation_details(): void
+    {
+        $this->publishCompany(requires: true, withBank: false);
+        $id = $this->approved();
+        $this->issue($id, $this->author)->assertForbidden();
+        $this->issue($id, $this->approver)->assertUnprocessable()->assertJsonValidationErrors('company');
+    }
+
     public function test_emitted_document_is_immutable_and_never_leaks_the_account(): void
     {
         $id = $this->approved();
