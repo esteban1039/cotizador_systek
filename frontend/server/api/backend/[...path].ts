@@ -1,8 +1,17 @@
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig(event)
-  if (!['true', true].includes(config.localEditorEnabled)) throw createError({ statusCode: 503, message: 'El editor local no está habilitado.' })
   const url = getRequestURL(event)
-  if (!['localhost', '127.0.0.1', '[::1]'].includes(url.hostname)) throw createError({ statusCode: 403, message: 'El editor solo admite acceso local.' })
+  // Solo hosts explícitos: localhost siempre (desarrollo) y los de NUXT_ALLOWED_HOSTS (p. ej. app.midominio.com).
+  const allowedHosts = ['localhost', '127.0.0.1', '[::1]', ...String(config.allowedHosts ?? '').split(',').map(host => host.trim().toLowerCase()).filter(Boolean)]
+  if (!allowedHosts.includes(url.hostname.toLowerCase())) throw createError({ statusCode: 403, message: 'Host no permitido.' })
+  // Cabeceras hacia la API: secreto compartido (la API solo atiende al BFF) e IP real del cliente para el límite de intentos.
+  const clientIp = getHeader(event, 'cf-connecting-ip') ?? getRequestIP(event)
+  const upstream = (extra: Record<string, string>): Record<string, string> => ({
+    ...extra,
+    ...(config.bffSecret ? { 'X-BFF-Secret': String(config.bffSecret) } : {}),
+    ...(clientIp ? { 'X-Forwarded-For': clientIp } : {}),
+    'X-Forwarded-Proto': url.protocol.replace(':', ''),
+  })
   const path = getRouterParam(event, 'path') ?? ''
   const method = getMethod(event)
   const uuid = '[0-9a-f-]{36}'
@@ -19,7 +28,7 @@ export default defineEventHandler(async (event) => {
   if (path === 'admin/history/import' && method === 'POST') {
     const raw = await readRawBody(event, false)
     if (!raw || raw.byteLength > 1024 * 1024) throw createError({ statusCode: 413, message: 'El archivo debe pesar como máximo 1 MB.' })
-    try { historyImportBody = JSON.parse(raw.toString('utf8')) } catch { throw createError({ statusCode: 400, message: 'El archivo no contiene JSON válido.' }) }
+    try { historyImportBody = JSON.parse(new TextDecoder().decode(raw)) } catch { throw createError({ statusCode: 400, message: 'El archivo no contiene JSON válido.' }) }
   }
   setHeader(event, 'Cache-Control', 'no-store')
   const cookie = 'systek_session'
@@ -29,7 +38,7 @@ export default defineEventHandler(async (event) => {
     if (method === 'GET' && new RegExp(`^quotes/${uuid}/(pdf|official-pdf)$`).test(path)) {
       const official = path.endsWith('/official-pdf')
       const pdf = await $fetch.raw<ArrayBuffer>(`${config.apiBase}/${path}`, {
-        headers: { Authorization: `Bearer ${token}`, Accept: 'application/pdf, application/json' },
+        headers: upstream({ Authorization: `Bearer ${token}`, Accept: 'application/pdf, application/json' }),
         responseType: 'arrayBuffer', timeout: 45000, retry: 0,
       })
       if (!pdf.headers.get('content-type')?.startsWith('application/pdf') || !pdf._data || new TextDecoder().decode(pdf._data.slice(0, 5)) !== '%PDF-') throw createError({ statusCode: 502 })
@@ -46,7 +55,7 @@ export default defineEventHandler(async (event) => {
     }
     const response = await $fetch.raw<Record<string, any>>(`${config.apiBase}/${path}`, {
       method: method as 'GET' | 'POST' | 'PATCH',
-      headers: { ...(token && path !== 'auth/login' ? { Authorization: `Bearer ${token}` } : {}), Accept: 'application/json' },
+      headers: upstream({ ...(token && path !== 'auth/login' ? { Authorization: `Bearer ${token}` } : {}), Accept: 'application/json' }),
       query: method === 'GET' ? getQuery(event) : undefined,
       body: method !== 'GET' ? (historyImportBody ?? await readBody(event)) : undefined,
       timeout: path === 'quotes/assist' && method === 'POST' ? 35000 : 15000, retry: 0,

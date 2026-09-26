@@ -14,6 +14,6 @@ export default defineConfig({
   // Always start a controlled production build against the isolated E2E API.
   webServer: {
     command: 'node .output/server/index.mjs', url: 'http://127.0.0.1:3001', reuseExistingServer: false, timeout: 120000,
-    env: { HOST: '127.0.0.1', PORT: '3001', NUXT_LOCAL_EDITOR_ENABLED: 'true', NUXT_API_BASE: 'http://127.0.0.1:8002/api/v1' },
+    env: { HOST: '127.0.0.1', PORT: '3001', NUXT_API_BASE: 'http://127.0.0.1:8002/api/v1' },
   },
 })

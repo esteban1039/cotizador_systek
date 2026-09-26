@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AuthNoStore;
 use App\Http\Middleware\RequireRole;
+use App\Http\Middleware\VerifyBffSecret;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -16,6 +17,7 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->append(AuthNoStore::class);
+        $middleware->api(prepend: [VerifyBffSecret::class]);
         $middleware->alias(['role' => RequireRole::class]);
         // API authentication errors must not resolve a web login route.
         $middleware->redirectGuestsTo(fn (Request $request) => $request->is('api/*') ? null : '/');

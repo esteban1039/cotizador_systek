@@ -14,3 +14,9 @@
 **/local-admin-access.txt
 **/.claude/.state/
 **/.claude/settings.local.json
+.wrangler/
+
+# Credenciales de servicios (Forge, Cloudflare, etc.): nunca versionar
+tocken servicios*
+token servicios*
+*.token

@@ -1,0 +1,10 @@
+{
+  // Despliegue en Cloudflare Workers. Compilar con: NITRO_PRESET=cloudflare_module npm run build
+  // Luego: npx wrangler deploy   (variables en el panel de Cloudflare; ver docs/despliegue.md)
+  "name": "systek-cotizador",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2026-09-18",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": { "directory": ".output/public", "binding": "ASSETS" },
+  "observability": { "enabled": true }
+}

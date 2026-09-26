@@ -157,3 +157,5 @@ La emisión oficial se documenta en [docs/duodecima-iteracion.md](docs/duodecima
 El seguimiento comercial se documenta en [docs/decimotercera-iteracion.md](docs/decimotercera-iteracion.md).
 
 El asistente IA se documenta en [docs/decimocuarta-iteracion.md](docs/decimocuarta-iteracion.md).
+
+La guía de despliegue (backend en Laravel Forge, frontend en Cloudflare Workers), con secreto compartido entre el proxy y la API, está en [docs/despliegue.md](docs/despliegue.md); la plantilla de entorno de producción es `backend/.env.production.example`.
