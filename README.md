@@ -75,6 +75,10 @@ Inicio de sesión: `POST /api/v1/auth/login` con correo y contraseña; cuando MF
 | GET / POST | `/quotes/{id}/followups` | Seguimiento comercial de una cotización emitida (envío, respuesta, aceptada, rechazada, notas) |
 | GET | `/quotes/{id}/official-pdf` | Descargar el PDF oficial archivado |
 | POST | `/quotes/assist` | Asistente IA: propone un borrador desde texto libre, sin guardar ni montos (desactivado por defecto) |
+| GET | `/ai-knowledge` | Admin: lista paginada (25) de la base de conocimiento; filtros `status`, `source`, `family`, `q`, `page` |
+| GET | `/ai-knowledge/metrics` | Admin: aceptación, cobertura, tokens, tamaño y frescura por familia/fuente, `needs_review` |
+| GET | `/ai-knowledge/{id}` | Admin: detalle con líneas y precio de referencia como cadena decimal |
+| PATCH | `/ai-knowledge/{id}` | Admin: excluir/activar (`status`) y/o editar textos (se vuelven a depurar); `reason` obligatorio; auditado |
 | GET / POST | `/admin/company` | Empresa emisora versionada (cuenta bancaria solo escritura) |
 | GET / POST / PATCH | `/admin/clauses`, `/admin/clauses/{id}`, `/admin/clauses/{id}/versions` | Cláusulas por familia versionadas |
 | GET | `/clauses?family=` | Cláusulas vigentes para cotizar |
@@ -82,6 +86,7 @@ Inicio de sesión: `POST /api/v1/auth/login` con correo y contraseña; cuando MF
 | GET / POST | `/clients` | Consultar / crear clientes |
 | POST | `/clients/{id}/sites`, `/clients/{id}/contacts` | Añadir sedes/contactos |
 | GET | `/catalog` | Catálogo vigente para cotizar |
+| GET | `/catalog/similar?q=&family=` | Hasta 8 ítems activos con precio vigente parecidos a `q` (admin/quoter/approver, 60/min; sin costos) |
 | GET / POST | `/admin/catalog` | Consultar historial / crear ítem |
 | POST | `/admin/catalog/{id}/prices` | Publicar una nueva versión |
 | PATCH | `/admin/catalog/{id}/active` | Activar/desactivar ítem |
@@ -90,7 +95,7 @@ Inicio de sesión: `POST /api/v1/auth/login` con correo y contraseña; cuando MF
 | GET | `/quotes/{id}` | Detalle, permisos e historial |
 | GET | `/quotes/{id}/pdf` | Descargar PDF interno de la versión guardada |
 | POST | `/quotes/{id}/revisions` | Crear nueva revisión con los campos completos del editor |
-| POST | `/quotes/{id}/submit`, `/quotes/{id}/review` | Solicitar / decidir revisión |
+| POST | `/quotes/{id}/submit`, `/quotes/{id}/review` | Solicitar / decidir revisión. Al aprobar con líneas libres exige `confirm_new_items` (lista de `free_line_id`), crea ítem activo + precio v1 (90 días, `catalog.free_line_price_days`) y devuelve `created_items`. UI: tarjeta «Ítems que se crearán» con casilla de confirmación; el editor admite líneas libres (precio escrito por el cotizador) con sugerencias de `GET /catalog/similar` |
 | GET / POST | `/users`, `/rules` | Consultar / administrar |
 | PATCH | `/users/{id}` | Cambiar rol/estado |
 | GET | `/audit`, `/auth/me` | Auditoría / cuenta actual |
@@ -129,6 +134,10 @@ El editor de desarrollo usa 3003 para no competir con otro proyecto Docker que o
 
 Ejecuta build y navegador secuencialmente. Laravel arranca con `--no-reload` para conservar las variables PostgreSQL de Docker. Si cambias `backend/.env`, usa `docker compose restart api`.
 
+## Base de conocimiento del asistente (Fase 1, sin uso aún)
+
+Tablas `quote_knowledge` y `quote_assist_requests`, contrato/repositorio de conocimiento y dos comandos: `php artisan systek:import-knowledge {archivo.psv} --as=<correo admin> [--dry-run]` y `php artisan systek:backfill-knowledge [--dry-run]` (idempotentes). Cada línea guarda un precio de referencia interno (centavos + moneda) que no se envía a Anthropic ni es un precio vigente. Para poblarla (desarrollo y producción) usa el seeder idempotente `php artisan db:seed --class=KnowledgeSeeder --force`: carga `backend/database/seeders/data/knowledge_drive.psv` (117 cotizaciones, 376 líneas) y las cotizaciones aprobadas existentes; no requiere administrador. Con `AI_KNOWLEDGE_ENABLED=true` (apagada por defecto; también `AI_KNOWLEDGE_TOP_K`, `_MIN_SCORE`, `_MAX_PRECEDENT_CHARS`, `_MAX_AI_ASSISTED`) el asistente recupera precedentes (F2) y los envía en `<precedentes>` sin precios, moneda ni datos de cliente; cada propuesta se registra en `quote_assist_requests` (sin texto libre). Evaluación offline: `php artisan systek:eval-knowledge [--k=4]` (hit@k; umbral sugerido hit@4 >= 60 % antes de activar). Diseño: [docs/diseno-base-conocimiento-ia.md](docs/diseno-base-conocimiento-ia.md); nota: [docs/decimosexta-iteracion.md](docs/decimosexta-iteracion.md#base-de-conocimiento-fase-1).
+
 ## Pendiente
 
 Envío al cliente desde el sistema (hoy se comparte por fuera y se registra el seguimiento), validación legal de cláusulas y datos bancarios, configuración de impuestos con contabilidad, activación operativa de MFA obligatorio en el piloto, activación del asistente IA con clave real (la importación de Drive se descartó) y seguimiento/envío con confirmación. No hay operación sin conexión ni integración externa activa.
@@ -164,3 +173,6 @@ La recuperación de contraseña por correo (Amazon SES) se documenta en [docs/de
 El almacenamiento de los PDF oficiales en Amazon S3 se documenta en [docs/decimosexta-iteracion.md](docs/decimosexta-iteracion.md).
 
 La guía de despliegue (backend en Laravel Forge, frontend en Cloudflare Workers), con secreto compartido entre el proxy y la API, está en [docs/despliegue.md](docs/despliegue.md); la plantilla de entorno de producción es `backend/.env.production.example`.
+
+
+Base de conocimiento IA, F3: al aprobar una cotización se captura una entrada (precio de referencia interno por línea, sin costos, descuentos, impuestos, totales ni cliente) tras el commit; `AI_KNOWLEDGE_AUTO_ACTIVATE` controla la activación automática. Detalle en `docs/decimosexta-iteracion.md`.

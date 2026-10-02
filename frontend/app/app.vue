@@ -11,7 +11,7 @@ async function retry() {
     await load()
     if (!user.value) await navigateTo('/login')
     else if (user.value.mfa_enrollment_required) await navigateTo('/cuenta')
-    else if ((['/catalogo', '/usuarios', '/reglas', '/auditoria', '/historicos', '/empresa', '/clausulas'].some(path => route.path.startsWith(path)) && user.value.role !== 'admin') || ((route.path === '/' || route.path.startsWith('/clientes')) && user.value.role === 'approver')) await navigateTo('/borradores')
+    else if ((['/catalogo', '/usuarios', '/reglas', '/auditoria', '/historicos', '/empresa', '/clausulas', '/conocimiento-ia'].some(path => route.path.startsWith(path)) && user.value.role !== 'admin') || ((route.path === '/' || route.path.startsWith('/clientes')) && user.value.role === 'approver')) await navigateTo('/borradores')
   } catch {} finally { retrying.value = false }
 }
 async function signOut() {
@@ -38,6 +38,7 @@ async function signOut() {
           <NuxtLink to="/historicos" :class="{ active: route.path.startsWith('/historicos') }">Históricos</NuxtLink>
           <NuxtLink to="/empresa" :class="{ active: route.path.startsWith('/empresa') }">Empresa</NuxtLink>
           <NuxtLink to="/clausulas" :class="{ active: route.path.startsWith('/clausulas') }">Cláusulas</NuxtLink>
+          <NuxtLink to="/conocimiento-ia" :class="{ active: route.path.startsWith('/conocimiento-ia') }">Conocimiento IA</NuxtLink>
           <NuxtLink to="/auditoria" :class="{ active: route.path.startsWith('/auditoria') }">Auditoría</NuxtLink>
         </template>
         </template>

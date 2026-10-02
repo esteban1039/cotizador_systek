@@ -30,6 +30,7 @@ final class IssueQuote
         private ApprovalValidation $validation,
         private EmissionPolicy $policy,
         private QuotePdfRenderer $renderer,
+        private MarkKnowledgeIssued $knowledge,
     ) {}
 
     /**
@@ -60,7 +61,7 @@ final class IssueQuote
             $snapshot = json_decode($rawSnapshot, true, flags: JSON_THROW_ON_ERROR);
             $this->fail(($snapshot['valid_until'] ?? '') < now('America/Bogota')->toDateString(), 'quote', 'La vigencia terminó. Crea una nueva revisión.');
             $snapshot = SnapshotCompatibility::normalize($snapshot, $record);
-            $this->validation->check($snapshot, $record, true);
+            $this->validation->check($snapshot, $record, true, ApprovalValidation::MODE_EMISSION);
 
             $company = $this->companies->lockedCurrentForEmission();
             $missing = CompanyProfile::missing($company === null ? null : array_merge(
@@ -113,6 +114,17 @@ final class IssueQuote
                 'pdf_sha256' => $emission['pdf_sha256'], 'snapshot_sha256' => $emission['snapshot_sha256'],
                 'company_version' => $emission['company_version'], 'emission_requires_authorization' => $requires, 'reason' => $reason,
             ]);
+            // Tras el commit y tolerante a fallos: la emisión nunca depende de la base de conocimiento.
+            DB::afterCommit(function () use ($rootId, $actor, $id): void {
+                try {
+                    $this->knowledge->execute($rootId);
+                } catch (\Throwable) {
+                    try {
+                        Audit::record($actor->id, 'knowledge.capture_failed', $id, []);
+                    } catch (\Throwable) {
+                    }
+                }
+            });
 
             return $emission;
         });

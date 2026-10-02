@@ -7,11 +7,14 @@ use App\Domain\Quotes\ClauseSelection;
 use App\Domain\Quotes\QuotePricer;
 use App\Domain\Quotes\VatWithholdingPolicy;
 use App\Models\User;
+use App\Repositories\Contracts\CatalogRepository;
 use App\Repositories\Contracts\ClientRepository;
+use App\Repositories\Contracts\KnowledgeRepository;
 use App\Repositories\Contracts\QuoteNumberRepository;
 use App\Repositories\Contracts\QuoteRepository;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
+use Illuminate\Validation\ValidationException;
 
 final class CreateQuote
 {
@@ -21,11 +24,17 @@ final class CreateQuote
         private ClientRepository $clients,
         private QuoteNumberRepository $numbers,
         private ClauseSelection $clauseSelection,
+        private KnowledgeRepository $knowledge,
+        private CatalogRepository $catalog,
     ) {}
 
     public function execute(array $input, User $actor, ?string $sourceId = null): array
     {
-        return DB::transaction(function () use ($input, $actor, $sourceId) {
+        // Solo enlaza la propuesta de la IA; nunca entra en la instantánea.
+        $assistRequestId = $input['assist_request_id'] ?? null;
+        unset($input['assist_request_id']);
+
+        return DB::transaction(function () use ($input, $actor, $sourceId, $assistRequestId) {
             $rootId = null;
             $number = 1;
             $quoteNumber = null;
@@ -40,7 +49,8 @@ final class CreateQuote
 
             $withholds = (bool) $this->clients->lockedTaxProfile($input['client_id']);
             $rate = VatWithholdingPolicy::rateFor($withholds);
-            $calculation = $this->pricer->calculate($input['lines'], $rate);
+            $input['lines'] = $this->prepareFreeLines($input['lines'], $input['family']);
+            $calculation = $this->pricer->calculate($input['lines'], $rate, $input['family']);
 
             $clauses = $this->clauseSelection->resolve(
                 $input['family'],
@@ -76,11 +86,38 @@ final class CreateQuote
                 'snapshot' => json_encode($snapshot, JSON_THROW_ON_ERROR),
                 'created_at' => now(), 'updated_at' => now(),
             ]));
+            if (is_string($assistRequestId) && Str::isUuid($assistRequestId)) {
+                // Ajena, ya enlazada o de más de 24 h: se ignora en silencio.
+                $this->knowledge->linkAssistRequest($assistRequestId, $actor->id, $rootId ?? $id);
+            }
             Audit::record($actor->id, $sourceId ? 'quote.revised' : 'quote.created', $id, array_filter([
                 'source_id' => $sourceId, 'root_quote_id' => $rootId, 'revision_number' => $number, 'quote_number' => $quoteNumber,
             ]));
 
             return $snapshot;
         });
+    }
+
+    /**
+     * Genera `free_line_id` en el servidor (nunca del cliente) y rechaza líneas libres cuya
+     * descripción ya existe como ítem activo de la misma familia.
+     *
+     * @param  array<int, array<string, mixed>>  $lines
+     * @return array<int, array<string, mixed>>
+     */
+    private function prepareFreeLines(array $lines, string $family): array
+    {
+        foreach ($lines as $index => $line) {
+            if (($line['type'] ?? null) !== 'free') {
+                continue;
+            }
+            $match = $this->catalog->activeExactMatch((string) $line['description'], $family);
+            if ($match !== null) {
+                throw ValidationException::withMessages(["lines.{$index}.description" => "Ya existe el ítem SKU {$match['sku']} activo con esa descripción; selecciónalo."]);
+            }
+            $lines[$index]['free_line_id'] = (string) Str::uuid();
+        }
+
+        return $lines;
     }
 }

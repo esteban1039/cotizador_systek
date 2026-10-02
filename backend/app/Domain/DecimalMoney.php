@@ -19,4 +19,10 @@ final class DecimalMoney
 
         return $cents;
     }
+
+    /** Centavos enteros a cadena decimal de dos posiciones, sin punto flotante. */
+    public static function format(int $cents): string
+    {
+        return ($cents < 0 ? '-' : '').intdiv(abs($cents), 100).'.'.str_pad((string) (abs($cents) % 100), 2, '0', STR_PAD_LEFT);
+    }
 }

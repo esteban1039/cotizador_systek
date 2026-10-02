@@ -17,3 +17,8 @@ export function errorMessages(error: unknown): string[] {
   const fields = failure.data?.data?.errors
   return fields ? Object.values(fields).flat() : [failure.data?.message || 'No pudimos completar la solicitud. Intenta de nuevo.']
 }
+// Convierte centavos enteros (cadena/entero del servidor) a cadena decimal para editar; sin aritmética flotante.
+export function centsToDecimal(value: string | number): string {
+  const amount = BigInt(value)
+  return `${amount / 100n}.${String(amount % 100n).padStart(2, '0')}`
+}

@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Application\Quotes\ReviewQuote;
 use App\Domain\Audit;
 use App\Domain\Quotes\ApprovalValidation;
+use App\Http\Requests\ReviewQuoteRequest;
 use App\Repositories\Contracts\QuoteRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\Rule;
 
 final class QuoteReviewController extends Controller
 {
@@ -31,25 +32,11 @@ final class QuoteReviewController extends Controller
         });
     }
 
-    public function review(Request $request, string $id, ApprovalValidation $validation): JsonResponse
+    public function review(ReviewQuoteRequest $request, string $id, ReviewQuote $review): JsonResponse
     {
-        $input = $request->validate([
-            'decision' => ['required', Rule::in(['approve', 'return'])],
-            'reason' => ['required', 'string', 'min:5', 'max:2000'],
-        ]);
+        $input = $request->validated();
 
-        return DB::transaction(function () use ($request, $id, $validation, $input) {
-            $quote = $this->quotes->findForReview($id);
-            abort_unless($quote, 404);
-            abort_unless($quote->status === 'in_review', 409, 'La cotización no está pendiente de revisión.');
-            abort_if((int) $quote->created_by === $request->user()->id, 403, 'Otra persona debe revisar tu cotización.');
-            $snapshot = json_decode($quote->snapshot, true, flags: JSON_THROW_ON_ERROR);
-            $checked = $input['decision'] === 'approve' ? $validation->check($snapshot, $quote) : [];
-            $status = $input['decision'] === 'approve' ? 'approved' : 'draft';
-            $this->transition($request, $id, $status, $input['decision'], $input['reason'], $checked);
-
-            return response()->json(['data' => ['status' => $status, 'validation' => $checked, 'emission_allowed' => false]]);
-        });
+        return response()->json(['data' => $review->execute($id, $request->user(), $input['decision'], $input['reason'], $input['confirm_new_items'] ?? null)]);
     }
 
     private function transition(Request $request, string $id, string $status, string $decision, string $reason, array $validation): void

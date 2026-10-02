@@ -1,9 +1,15 @@
 export interface Site { id: string; name: string; city: string; address?: string }
 export interface Client { id: string; name: string; nit?: string; is_demo: boolean; sites: Site[]; withholds_vat?: boolean }
 export interface CatalogItem { id: string; sku: string; description: string; family: string; unit: string; is_demo: boolean; price_version_id: string; price_cents: number | string; tax_bps: number; valid_until: string }
-export interface LineInput { price_version_id: string; quantity: string; discount_bps: number }
+export interface CatalogLineInput { price_version_id: string; quantity: string; discount_bps: number }
+export type FreeLineUnit = 'unidad' | 'metro' | 'hora' | 'servicio' | 'licencia'
+// Línea libre: precio y costo como cadenas decimales escritas por el cotizador; el cliente nunca envía free_line_id.
+export interface FreeLineInput { type: 'free'; description: string; unit: FreeLineUnit; quantity: string; price: string; cost: string; tax_bps: 0 | 500 | 1900; discount_bps: number; confirmed_new: true }
+export type LineInput = CatalogLineInput | FreeLineInput
+export interface LinkedItem { catalog_item_id: string; sku: string | null; price_version_id: string }
+export interface SimilarItem { id: string; sku: string; description: string; unit: string; family: string; price_version_id: string; price: string; valid_until: string; score: number }
 export interface Amounts { gross: string; discount: string; subtotal: string; tax: string; total: string; cost?: string; vat_withholding?: string; payable?: string }
-export interface PricedLine extends LineInput { catalog_item_id: string; description: string; unit: string; family: string; is_demo: boolean; price_cents: number; cost_cents?: number; tax_bps: number; amounts: Amounts }
+export interface PricedLine { quantity: string; discount_bps: number; line_type?: 'catalog' | 'free'; free_line_id?: string; linked_item?: LinkedItem; price_version_id: string | null; catalog_item_id: string | null; description: string; unit: string; family: string; is_demo: boolean; price_cents: number; cost_cents?: number; tax_bps: number; amounts: Amounts }
 export interface VatWithholding { applied: boolean; rate_bps: number; basis: string }
 export interface Calculation { currency: string; lines: PricedLine[]; totals: Amounts; profit?: string; vat_withholding?: VatWithholding }
 export interface ClauseProvenance { type: string; clause_id: string; clause_version_id: string; version: number; family: string; title: string; body_hash: string; modified: boolean }
@@ -16,6 +22,7 @@ export interface PaginatedQuotes { data: QuoteListItem[]; current_page: number; 
 export interface DashboardQuote { id: string; quote_number: string | null; version_label?: string; revision_number: number; client_name: string; scope: string; status: 'draft' | 'in_review'; created_at: string; valid_until: string | null; is_expired: boolean }
 export interface Dashboard { scope: 'own' | 'all'; as_of: string; counts: { total: number; draft: number; in_review: number; approved: number; expired: number }; pending_quotes: DashboardQuote[] }
 
+export interface CreatedItem { free_line_id: string; catalog_item_id: string; sku: string; price_version_id: string }
 export interface QuoteReview { decision: string; reason: string; user_name: string; created_at: string }
 export interface QuoteRevision { id: string; revision_number: number; status: string; created_at: string }
 export interface QuoteEmission { id: string; quote_number: string; revision_number: number; version_label: string; issued_at: string; issued_by: string | null; filename: string; pdf_sha256: string; snapshot_sha256: string; company_version: number | null; superseded_at: string | null; superseded_by_revision: number | null }
@@ -46,4 +53,4 @@ export interface FollowupOverview { commercial_status: CommercialStatus | null; 
 export type QuoteAssistWarningCode = 'unknown_sku' | 'duplicate_sku' | 'invalid_quantity' | 'invalid_family' | 'family_mismatch' | 'sensitive_text_removed'
 export interface QuoteAssistWarning { code: QuoteAssistWarningCode | string; sku?: string }
 export interface QuoteAssistLine { sku: string; price_version_id: string; description: string; unit: string; family: string; quantity: string; discount_bps: number }
-export interface QuoteAssistProposal { request_id: string; generated_by: 'ai'; model: string; family: string | null; scope: string | null; exclusions: string | null; lines: QuoteAssistLine[]; missing_information: string[]; warnings: QuoteAssistWarning[]; catalog_truncated: boolean }
+export interface QuoteAssistProposal { request_id: string; generated_by: 'ai'; model: string; family: string | null; scope: string | null; exclusions: string | null; lines: QuoteAssistLine[]; missing_information: string[]; warnings: QuoteAssistWarning[]; catalog_truncated: boolean; precedents_used?: { source: string; captured_at: string }[] }

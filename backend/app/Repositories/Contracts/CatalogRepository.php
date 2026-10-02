@@ -13,14 +13,35 @@ interface CatalogRepository
      * Catálogo vigente reducido para el asistente: sin precios, costos ni vigencias.
      * Devuelve hasta $limit filas y `truncated` si había más.
      *
+     * @param  list<string>  $prioritySkus  van primero (vigentes), aunque sean de otra familia (§6.3)
      * @return array{items: list<array{sku: string, description: string, family: string, unit: string, price_version_id: string}>, truncated: bool}
      */
-    public function assistantCatalog(string $date, ?string $family, int $limit): array;
+    public function assistantCatalog(string $date, ?string $family, int $limit, array $prioritySkus = []): array;
+
+    /**
+     * Ítems activos con precio vigente parecidos al texto (sin costos). Hasta $limit, por score descendente.
+     *
+     * @return list<array{id: string, sku: string, description: string, unit: string, family: string, price_version_id: string, price: string, valid_until: string, score: float}>
+     */
+    public function similarItems(string $q, ?string $family, int $limit): array;
 
     /** @return Collection<int, array<string, mixed>> */
     public function catalogWithHistory(): Collection;
 
+    /**
+     * @param  list<string>  $ids
+     * @return array<string, string> SKU por id de ítem.
+     */
+    public function skusByIds(array $ids): array;
+
     public function skuExists(string $sku): bool;
+
+    /**
+     * Ítem activo de la familia cuya descripción normalizada coincide exactamente.
+     *
+     * @return array{id: string, sku: string}|null
+     */
+    public function activeExactMatch(string $description, string $family): ?array;
 
     /** @param array<string, mixed> $attributes
      * @return array<string, mixed>

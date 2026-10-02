@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import type { QuoteAssistProposal, Calculation, CatalogItem, Client, ClauseOption, ClauseVersionSelection, LineInput, Quote, ReviewedQuote } from '../../shared/types'
+import type { QuoteAssistProposal, Calculation, CatalogItem, Client, ClauseOption, ClauseVersionSelection, LineInput, FreeLineUnit, SimilarItem, Quote, ReviewedQuote } from '../../shared/types'
 import { families, clauseTypes } from '#shared/admin'
-import { cents, errorMessages } from '~/utils/format'
+import { cents, centsToDecimal, errorMessages } from '~/utils/format'
 
 definePageMeta({ key: route => route.fullPath })
 const route = useRoute()
@@ -26,6 +26,30 @@ watch(clientId, () => { siteId.value = '' })
 const selectedItem = ref('')
 let nextKey = 1
 const rows = ref<{ key: number; item: CatalogItem; quantity: string; discount: string }[]>([])
+// Líneas libres: ítems que aún no existen en el catálogo; se crean al aprobar. El precio lo escribe siempre el cotizador.
+type FreeRow = { key: number; description: string; unit: FreeLineUnit; quantity: string; discount: string; price: string; cost: string; tax: number }
+const freeUnits: FreeLineUnit[] = ['unidad', 'metro', 'hora', 'servicio', 'licencia']
+const freeRows = ref<FreeRow[]>([])
+const maxFree = 20
+const similar = useCatalogSimilar()
+const activeFree = ref<number | null>(null)
+const lineCount = computed(() => rows.value.length + freeRows.value.length)
+function addFree() {
+  if (freeRows.value.length >= maxFree || lineCount.value >= 100) return
+  freeRows.value.push({ key: nextKey++, description: '', unit: 'unidad', quantity: '1', discount: '0', price: '', cost: '', tax: 1900 })
+}
+function removeFree(index: number) { freeRows.value.splice(index, 1); activeFree.value = null; similar.clear() }
+function onFreeDescription(row: FreeRow) { activeFree.value = row.key; similar.search(row.description, family.value || undefined) }
+const similarNotice = ref('')
+function useSimilar(row: FreeRow, suggestion: SimilarItem) {
+  const item = catalog.value.find(candidate => candidate.price_version_id === suggestion.price_version_id)
+  if (!item) { similarNotice.value = 'Ese ítem no está en el catálogo cargado. Actualiza la página e inténtalo de nuevo.'; return }
+  similarNotice.value = ''
+  rows.value.push({ key: nextKey++, item: { ...item }, quantity: row.quantity, discount: row.discount })
+  freeRows.value.splice(freeRows.value.findIndex(candidate => candidate.key === row.key), 1)
+  activeFree.value = null
+  similar.clear()
+}
 const terms = reactive({ scope: '', exclusions: '', payment_terms: '', warranty: '', validity_terms: '', observations: '', validity_days: 15 })
 const family = ref('')
 
@@ -92,7 +116,7 @@ const previewErrors = ref<string[]>([])
 const saveErrors = ref<string[]>([])
 const saving = ref(false)
 const dirty = ref(false)
-watch([clientId, siteId, rows, terms, family], () => { dirty.value = true; saveErrors.value = [] }, { deep: true })
+watch([clientId, siteId, rows, freeRows, terms, family], () => { dirty.value = true; saveErrors.value = [] }, { deep: true })
 const clientComplete = computed(() => !!clientId.value && !!siteId.value)
 const termsComplete = computed(() => !!family.value && [terms.scope, terms.exclusions, terms.payment_terms, terms.warranty, terms.validity_terms].every(value => value.trim()) && terms.validity_days >= 1 && terms.validity_days <= 90)
 const completion = computed(() => Number(clientComplete.value) + Number(!!preview.value) + Number(termsComplete.value))
@@ -116,10 +140,24 @@ async function prefillSource() {
   await nextTick()
   familyLoading = false
   Object.assign(terms, { scope: original.scope, exclusions: original.exclusions, payment_terms: original.payment_terms, warranty: original.warranty, validity_terms: original.validity_terms ?? '', observations: original.observations ?? '', validity_days: original.validity_days })
-  rows.value = original.lines.map(line => ({
-    key: nextKey++, quantity: String(line.quantity), discount: String(line.discount_bps / 100),
-    item: { id: line.catalog_item_id, price_version_id: line.price_version_id, description: line.description, unit: line.unit, family: line.family, is_demo: line.is_demo, price_cents: line.price_cents, tax_bps: line.tax_bps, sku: catalog.value.find(item => item.id === line.catalog_item_id)?.sku ?? 'Versión original', valid_until: original.valid_until },
-  }))
+  rows.value = []
+  freeRows.value = []
+  for (const line of original.lines) {
+    const quantity = String(line.quantity)
+    const discount = String(line.discount_bps / 100)
+    // Libre sin vincular: se edita como libre. Libre vinculada: pasa a ser línea de catálogo con el precio del ítem creado.
+    if (line.line_type === 'free' && !line.linked_item) {
+      freeRows.value.push({ key: nextKey++, description: line.description, unit: line.unit as FreeLineUnit, quantity, discount, price: centsToDecimal(line.price_cents), cost: line.cost_cents !== undefined ? centsToDecimal(line.cost_cents) : '', tax: line.tax_bps })
+      continue
+    }
+    const linked = line.line_type === 'free' ? line.linked_item : undefined
+    const priceVersionId = linked?.price_version_id ?? line.price_version_id ?? ''
+    const catalogItemId = linked?.catalog_item_id ?? line.catalog_item_id ?? ''
+    rows.value.push({
+      key: nextKey++, quantity, discount,
+      item: { id: catalogItemId, price_version_id: priceVersionId, description: line.description, unit: line.unit, family: line.family, is_demo: line.is_demo, price_cents: line.price_cents, tax_bps: line.tax_bps, sku: linked?.sku ?? catalog.value.find(item => item.id === catalogItemId)?.sku ?? 'Versión original', valid_until: original.valid_until },
+    })
+  }
   if (family.value) {
     await loadClausesForFamily(family.value)
     for (const provenance of original.clauses ?? []) {
@@ -139,38 +177,51 @@ async function retrySource() { await refreshSource(); await prefillSource() }
 onMounted(async () => { await prefillSource(); editorReady.value = true })
 function addItem() {
   const item = catalog.value.find(item => item.price_version_id === selectedItem.value)
-  if (!item || rows.value.length >= 100) return
+  if (!item || lineCount.value >= 100) return
   rows.value.push({ key: nextKey++, item, quantity: '1', discount: '0' })
   selectedItem.value = ''
+}
+function parseQuantityDiscount(row: { quantity: string; discount: string }): { quantity: string; discount_bps: number } | null {
+  const quantity = row.quantity.trim().replace(',', '.')
+  const discount = row.discount.trim().replace(',', '.')
+  if (!/^\d{1,5}(\.\d{1,3})?$/.test(quantity) || !/[1-9]/.test(quantity) || !/^\d{1,3}(\.\d{1,2})?$/.test(discount)) return null
+  const [whole = '0', fraction = ''] = discount.split('.')
+  const bps = Number(whole) * 100 + Number(fraction.padEnd(2, '0'))
+  return bps > 10000 ? null : { quantity, discount_bps: bps }
 }
 function inputLines(): LineInput[] | null {
   const lines: LineInput[] = []
   for (const row of rows.value) {
-    const quantity = row.quantity.trim().replace(',', '.')
-    const discount = row.discount.trim().replace(',', '.')
-    if (!/^\d{1,5}(\.\d{1,3})?$/.test(quantity) || !/[1-9]/.test(quantity) || !/^\d{1,3}(\.\d{1,2})?$/.test(discount)) return null
-    const [whole = '0', fraction = ''] = discount.split('.')
-    const bps = Number(whole) * 100 + Number(fraction.padEnd(2, '0'))
-    if (bps > 10000) return null
-    lines.push({ price_version_id: row.item.price_version_id, quantity, discount_bps: bps })
+    const parsed = parseQuantityDiscount(row)
+    if (!parsed) return null
+    lines.push({ price_version_id: row.item.price_version_id, ...parsed })
+  }
+  for (const row of freeRows.value) {
+    const parsed = parseQuantityDiscount(row)
+    const description = row.description.trim()
+    const price = row.price.trim().replace(',', '.')
+    const cost = row.cost.trim().replace(',', '.')
+    if (!parsed || description.length < 5 || description.length > 255) return null
+    if (!/^\d{1,9}(\.\d{1,2})?$/.test(price) || !/[1-9]/.test(price) || !/^\d{1,9}(\.\d{1,2})?$/.test(cost)) return null
+    lines.push({ type: 'free', description, unit: row.unit, quantity: parsed.quantity, price, cost, tax_bps: row.tax as 0 | 500 | 1900, discount_bps: parsed.discount_bps, confirmed_new: true })
   }
   return lines.length ? lines : null
 }
 let timer: ReturnType<typeof setTimeout> | undefined
 let pending: AbortController | undefined
 let revision = 0
-watch([rows, clientId], () => {
+watch([rows, freeRows, clientId], () => {
   const current = ++revision
   clearTimeout(timer)
   pending?.abort()
   preview.value = null
   previewErrors.value = []
   calculating.value = false
-  if (!rows.value.length) return
+  if (!lineCount.value) return
   timer = setTimeout(async () => {
     if (unavailablePrices.value) { previewErrors.value = ['Hay precios originales que ya no están vigentes. Selecciona explícitamente el precio actual o elimina la partida antes de guardar.']; return }
     const lines = inputLines()
-    if (!lines) { previewErrors.value = ['Usa cantidades mayores que cero (hasta 3 decimales) y descuentos entre 0 y 100 % (hasta 2 decimales).']; return }
+    if (!lines) { previewErrors.value = ['Revisa las partidas: cantidades mayores que cero (hasta 3 decimales), descuentos entre 0 y 100 %, y en las líneas libres descripción de 5 a 255 caracteres, precio mayor que cero y costo (0 o más).']; return }
     pending = new AbortController()
     calculating.value = true
     try {
@@ -210,7 +261,7 @@ async function save() {
   try {
     const response = await $fetch<{ data: Quote }>(revising ? `/api/backend/quotes/${sourceId}/revisions` : '/api/backend/quotes', {
       method: 'POST', retry: 0,
-      body: { client_id: clientId.value, site_id: siteId.value, family: family.value, lines, ...terms, observations: terms.observations || null, clause_versions: clauseVersionsPayload() },
+      body: { client_id: clientId.value, site_id: siteId.value, family: family.value, lines, ...terms, observations: terms.observations || null, clause_versions: clauseVersionsPayload(), ...(assistRequestId.value ? { assist_request_id: assistRequestId.value } : {}) },
     })
     dirty.value = false
     await navigateTo(`/borradores/${response.data.id}`)
@@ -226,7 +277,7 @@ onMounted(() => window.addEventListener('beforeunload', confirmUnload))
 onBeforeUnmount(() => window.removeEventListener('beforeunload', confirmUnload))
 const { user: authUser } = useAuth()
 const assistAllowed = computed(() => !revising && ['admin', 'quoter'].includes(authUser.value?.role ?? ''))
-const assistHasContent = computed(() => rows.value.length > 0 || !!terms.scope.trim() || !!terms.exclusions.trim())
+const assistHasContent = computed(() => lineCount.value > 0 || !!terms.scope.trim() || !!terms.exclusions.trim())
 const assistSkipped = ref(0)
 // Instantánea de lo propuesto por la IA: la etiqueta desaparece cuando el usuario edita el campo.
 const aiProposed = reactive<{ family: string | null; scope: string | null; exclusions: string | null; quantities: Record<number, string> }>({ family: null, scope: null, exclusions: null, quantities: {} })
@@ -234,7 +285,9 @@ const aiFamily = computed(() => aiProposed.family !== null && family.value === a
 const aiScope = computed(() => aiProposed.scope !== null && terms.scope === aiProposed.scope)
 const aiExclusions = computed(() => aiProposed.exclusions !== null && terms.exclusions === aiProposed.exclusions)
 function aiLine(row: { key: number; quantity: string; discount: string }) { return aiProposed.quantities[row.key] === row.quantity && row.discount === '0' }
+const assistRequestId = ref<string | null>(null)
 async function applyAssist(proposal: QuoteAssistProposal) {
+  assistRequestId.value = proposal.request_id
   const nextRows: typeof rows.value = []
   let skipped = 0
   for (const line of proposal.lines) {
@@ -257,6 +310,7 @@ async function applyAssist(proposal: QuoteAssistProposal) {
   if (proposal.scope) { terms.scope = proposal.scope; clauseSelection.scope_base = null; aiProposed.scope = proposal.scope }
   if (proposal.exclusions) { terms.exclusions = proposal.exclusions; clauseSelection.exclusions = null; aiProposed.exclusions = proposal.exclusions }
   rows.value = nextRows
+  freeRows.value = []
   for (const row of nextRows) aiProposed.quantities[row.key] = row.quantity
 }
 const exampleAvailable = computed(() => clients.value.some(client => client.is_demo) && catalog.value.some(item => item.sku === 'DEMO-CAM-IP'))
@@ -286,14 +340,34 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
         <p v-if="selectedClient?.withholds_vat" class="empty-message">Agente retenedor de IVA: se calculará ReteIVA.</p>
       </section>
       <section class="panel" aria-labelledby="lines-title">
-        <div class="section-heading"><span class="step-number" :class="{ complete: !!preview }"><AppIcon v-if="preview" name="check" :size="16" /><template v-else>02</template></span><div><h2 id="lines-title">Partidas de la propuesta</h2><p>Productos y servicios del catálogo vigente.</p></div><span class="counter">{{ rows.length }} {{ rows.length === 1 ? 'partida' : 'partidas' }}</span></div>
-        <div class="add-line"><label class="grow"><span class="sr-only">Producto o servicio</span><select v-model="selectedItem" :disabled="!catalog.length || rows.length >= 100"><option value="">Selecciona un producto o servicio…</option><option v-for="item in catalog" :key="item.price_version_id" :value="item.price_version_id">{{ item.description }} · {{ cents(item.price_cents) }}</option></select></label><button type="button" class="button secondary" :disabled="!selectedItem || rows.length >= 100" @click="addItem"><AppIcon name="plus" />Añadir</button></div>
-        <div v-if="!rows.length" class="empty-lines"><span class="empty-icon"><AppIcon name="document" :size="28" /></span><h3>Una buena propuesta empieza aquí</h3><p>{{ catalog.length ? 'Añade la primera partida desde el catálogo.' : 'No hay precios vigentes. Actualiza el catálogo para continuar.' }}</p></div>
+        <div class="section-heading"><span class="step-number" :class="{ complete: !!preview }"><AppIcon v-if="preview" name="check" :size="16" /><template v-else>02</template></span><div><h2 id="lines-title">Partidas de la propuesta</h2><p>Productos y servicios del catálogo vigente.</p></div><span class="counter">{{ lineCount }} {{ lineCount === 1 ? 'partida' : 'partidas' }}</span></div>
+        <div class="add-line"><label class="grow"><span class="sr-only">Producto o servicio</span><select v-model="selectedItem" :disabled="!catalog.length || lineCount >= 100"><option value="">Selecciona un producto o servicio…</option><option v-for="item in catalog" :key="item.price_version_id" :value="item.price_version_id">{{ item.description }} · {{ cents(item.price_cents) }}</option></select></label><button type="button" class="button secondary" :disabled="!selectedItem || lineCount >= 100" @click="addItem"><AppIcon name="plus" />Añadir</button><button type="button" class="button secondary" :disabled="freeRows.length >= maxFree || lineCount >= 100" @click="addFree"><AppIcon name="plus" />Línea libre</button></div>
+        <div v-if="!lineCount" class="empty-lines"><span class="empty-icon"><AppIcon name="document" :size="28" /></span><h3>Una buena propuesta empieza aquí</h3><p>{{ catalog.length ? 'Añade la primera partida desde el catálogo.' : 'No hay precios vigentes. Actualiza el catálogo para continuar.' }}</p></div>
         <div v-if="otherFamilyLines" class="notice">{{ otherFamilyLines }} {{ otherFamilyLines === 1 ? 'partida es' : 'partidas son' }} de una familia distinta a la seleccionada.</div>
         <div v-for="(row, index) in rows" :key="row.key" class="line-card">
           <div class="line-description"><span class="line-index">{{ String(index + 1).padStart(2, '0') }}</span><div><strong>{{ row.item.description }}</strong><span>{{ row.item.sku }} <b>·</b> {{ row.item.unit }} <b>·</b> Impuesto {{ row.item.tax_bps / 100 }} % <b v-if="family && row.item.family !== family">· Otra familia</b> <b v-if="aiLine(row)" class="draft-badge">Propuesto por IA</b></span></div><button type="button" class="icon-button danger" :aria-label="`Eliminar partida ${index + 1}`" @click="rows.splice(index, 1)"><AppIcon name="trash" :size="18" /></button></div>
           <div v-if="unavailable(row)" class="notice error"><p>El precio original de {{ cents(row.item.price_cents) }} ya no está disponible para una nueva cotización. La versión original se conserva sin cambios.</p><button v-if="replacement(row)" type="button" class="button secondary" :aria-label="`Usar precio actual partida ${index + 1}`" @click="replacePrice(row)">Usar precio actual · {{ cents(replacement(row)!.price_cents) }}</button><p v-else>No hay un precio vigente para este ítem. Puedes eliminar la partida y elegir otro producto del catálogo.</p></div>
           <div class="line-fields"><label :for="`quantity-${row.key}`">Cantidad<input :id="`quantity-${row.key}`" v-model="row.quantity" :aria-label="`Cantidad partida ${index + 1}`" inputmode="decimal" required maxlength="9"></label><label :for="`discount-${row.key}`">Descuento %<input :id="`discount-${row.key}`" v-model="row.discount" :aria-label="`Descuento partida ${index + 1}`" inputmode="decimal" required maxlength="6"></label><div class="unit-price"><span>Precio unitario</span><strong>{{ cents(row.item.price_cents) }}</strong></div></div>
+        </div>
+        <div v-for="(row, index) in freeRows" :key="row.key" class="line-card free-line">
+          <div class="line-description"><span class="line-index">L{{ index + 1 }}</span><div><strong>Línea libre</strong><span>No existe en el catálogo todavía</span></div><button type="button" class="icon-button danger" :aria-label="`Eliminar línea libre ${index + 1}`" @click="removeFree(index)"><AppIcon name="trash" :size="18" /></button></div>
+          <div class="notice" role="status"><p>Se creará un ítem nuevo en el catálogo al aprobar. El precio y el costo los escribes tú; no se rellenan automáticamente.</p></div>
+          <div class="field-stack"><label>Descripción <span class="required">*</span><input v-model="row.description" required minlength="5" maxlength="255" autocomplete="off" :aria-label="`Descripción línea libre ${index + 1}`" @input="onFreeDescription(row)"></label>
+            <div v-if="activeFree === row.key && (similar.results.value.length || similar.loading.value || similar.failed.value)" class="similar-box" aria-live="polite">
+              <p v-if="similar.loading.value" class="empty-message">Buscando ítems parecidos…</p>
+              <p v-else-if="similar.failed.value" class="empty-message">No pudimos buscar ítems parecidos.</p>
+              <template v-else><strong>Ítems parecidos en el catálogo</strong><ul><li v-for="suggestion in similar.results.value" :key="suggestion.id"><span>{{ suggestion.description }} <small>{{ suggestion.sku }} · {{ suggestion.unit }}</small></span><button type="button" class="button secondary" @click="useSimilar(row, suggestion)">Usar este ítem</button></li></ul></template>
+            </div>
+            <p v-if="similarNotice" class="empty-message">{{ similarNotice }}</p>
+          </div>
+          <div class="line-fields free-fields">
+            <label>Unidad<select v-model="row.unit"><option v-for="unit in freeUnits" :key="unit" :value="unit">{{ unit }}</option></select></label>
+            <label>Cantidad<input v-model="row.quantity" :aria-label="`Cantidad línea libre ${index + 1}`" inputmode="decimal" required maxlength="9"></label>
+            <label>Precio unitario (COP)<input v-model="row.price" :aria-label="`Precio línea libre ${index + 1}`" inputmode="decimal" required maxlength="12" placeholder="0.00"></label>
+            <label>Costo unitario (COP)<input v-model="row.cost" :aria-label="`Costo línea libre ${index + 1}`" inputmode="decimal" required maxlength="12" placeholder="0.00"></label>
+            <label>IVA<select v-model.number="row.tax"><option :value="0">0 %</option><option :value="500">5 %</option><option :value="1900">19 %</option></select></label>
+            <label>Descuento %<input v-model="row.discount" :aria-label="`Descuento línea libre ${index + 1}`" inputmode="decimal" required maxlength="6"></label>
+          </div>
         </div>
         <div v-if="previewErrors.length" class="notice error" role="alert"><p v-for="message in previewErrors" :key="message">{{ message }}</p></div>
         <p class="field-note"><AppIcon name="shield" :size="14" />Precios vigentes. Los impuestos se calculan por partida.</p>
@@ -325,3 +399,8 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
     </aside>
   </form>
 </template>
+
+<style scoped>
+.free-line{background:#fbfcfb;padding:19px 14px;border-radius:8px;margin-top:10px}.free-fields{grid-template-columns:repeat(3,1fr);padding-left:0}.similar-box{border:1px solid #ecf0ed;border-radius:7px;padding:10px 12px;background:#fff;font-size:12px}.similar-box ul{list-style:none;display:grid;gap:8px;margin:8px 0 0;padding:0}.similar-box li{display:flex;justify-content:space-between;align-items:center;gap:10px}.similar-box small{color:var(--muted)}
+@media(max-width:640px){.free-fields{grid-template-columns:1fr 1fr}.similar-box li{flex-direction:column;align-items:stretch}}
+</style>

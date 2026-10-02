@@ -3,12 +3,14 @@
 namespace App\Repositories\Eloquent;
 
 use App\Models\Quote;
+use App\Models\QuoteFreeLineItem;
 use App\Models\User;
 use App\Repositories\Contracts\QuoteRepository;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 final class EloquentQuoteRepository implements QuoteRepository
 {
@@ -35,6 +37,21 @@ final class EloquentQuoteRepository implements QuoteRepository
     public function markIssued(string $id): void
     {
         Quote::query()->whereKey($id)->update(['status' => 'issued', 'updated_at' => now()]);
+    }
+
+    public function linkFreeLine(array $attributes): void
+    {
+        QuoteFreeLineItem::query()->create(array_merge(['id' => (string) Str::uuid()], $attributes));
+    }
+
+    public function freeLineLinks(string $quoteId): array
+    {
+        $links = [];
+        foreach (QuoteFreeLineItem::query()->where('quote_id', $quoteId)->get() as $link) {
+            $links[$link->free_line_id] = ['catalog_item_id' => $link->catalog_item_id, 'price_version_id' => $link->price_version_id];
+        }
+
+        return $links;
     }
 
     public function rootNumber(string $rootId): ?string

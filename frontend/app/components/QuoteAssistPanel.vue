@@ -44,6 +44,7 @@ async function submit() {
       <div class="assist-actions"><button type="button" class="button primary" :disabled="loading || !valid" :aria-busy="loading" @click="submit">{{ loading ? 'Generando propuesta…' : 'Proponer borrador' }}</button></div>
       <div v-if="proposal" class="assist-result">
         <div class="notice" role="status"><strong>Propuesta generada por IA: revísala antes de guardar.</strong><p>Cliente, sede, contacto y cláusulas quedan a tu criterio. Los totales se calculan con el catálogo vigente.</p></div>
+        <p v-if="proposal.precedents_used?.length" class="notice">Basada en {{ proposal.precedents_used.length }} {{ proposal.precedents_used.length === 1 ? 'cotización aprobada' : 'cotizaciones aprobadas' }}.</p>
         <div v-if="proposal.catalog_truncated" class="notice">El catálogo era muy grande y se envió recortado: la propuesta puede omitir productos. Añade manualmente lo que falte.</div>
         <div v-if="skipped" class="notice">{{ skipped }} {{ skipped === 1 ? 'partida propuesta ya no está' : 'partidas propuestas ya no están' }} en el catálogo cargado y no se añadió.</div>
         <ul v-if="proposal.warnings.length" class="assist-list"><li v-for="(warning, index) in proposal.warnings" :key="index">{{ warningText(warning) }}</li></ul>

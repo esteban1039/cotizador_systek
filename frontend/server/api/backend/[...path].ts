@@ -16,10 +16,10 @@ export default defineEventHandler(async (event) => {
   const method = getMethod(event)
   const uuid = '[0-9a-f-]{36}'
   const allowed = method === 'GET'
-    ? new RegExp(`^(dashboard|clients|catalog|clauses|quotes|quotes/${uuid}|quotes/${uuid}/(pdf|official-pdf|followups)|admin/catalog|admin/history|admin/history/${uuid}|admin/clauses|admin/clauses/${uuid}|admin/company|users|audit|rules|auth/me|auth/mfa)$`).test(path)
+    ? new RegExp(`^(dashboard|clients|catalog|catalog/similar|clauses|quotes|quotes/${uuid}|quotes/${uuid}/(pdf|official-pdf|followups)|admin/catalog|admin/history|admin/history/${uuid}|ai-knowledge|ai-knowledge/metrics|ai-knowledge/${uuid}|admin/clauses|admin/clauses/${uuid}|admin/company|users|audit|rules|auth/me|auth/mfa)$`).test(path)
     : method === 'POST'
       ? new RegExp(`^(admin/history/import|admin/history/${uuid}/review|clients|clients/${uuid}/(sites|contacts)|admin/catalog|admin/catalog/${uuid}/prices|admin/clauses|admin/clauses/${uuid}/versions|admin/company|rules|users|quotes/preview|quotes/assist|quotes|quotes/${uuid}/(submit|review|revisions|issue|followups)|auth/(login|logout|password|password/(forgot|reset)|mfa/(setup|confirm|disable)))$`).test(path)
-      : method === 'PATCH' && new RegExp(`^(admin/catalog/${uuid}/active|admin/clauses/${uuid}|clients/${uuid}/tax-profile|users/[0-9]+)$`).test(path)
+      : method === 'PATCH' && new RegExp(`^(ai-knowledge/${uuid}|admin/catalog/${uuid}/active|admin/clauses/${uuid}|clients/${uuid}/tax-profile|users/[0-9]+)$`).test(path)
   if (!allowed) throw createError({ statusCode: 404 })
   if (['POST', 'PATCH', 'PUT'].includes(method)) {
     if (getHeader(event, 'origin') !== url.origin || !getHeader(event, 'content-type')?.startsWith('application/json')) throw createError({ statusCode: 403, message: 'Origen de solicitud no permitido.' })

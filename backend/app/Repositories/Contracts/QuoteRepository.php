@@ -23,6 +23,16 @@ interface QuoteRepository
     /** Pasa a `issued`; solo `IssueQuote`, bajo bloqueo. */
     public function markIssued(string $id): void;
 
+    /** Vincula una línea libre con el ítem y precio creados al aprobar. Solo inserción. */
+    public function linkFreeLine(array $attributes): void;
+
+    /**
+     * Vínculos de la cotización indexados por `free_line_id`.
+     *
+     * @return array<string, array{catalog_item_id: string, price_version_id: string}>
+     */
+    public function freeLineLinks(string $quoteId): array;
+
     public function rootNumber(string $rootId): ?string;
 
     public function visibleRevisions(string $rootId, User $user): Collection;
