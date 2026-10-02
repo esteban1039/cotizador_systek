@@ -14,6 +14,7 @@ use App\Http\Controllers\QuoteAssistController;
 use App\Http\Controllers\QuoteController;
 use App\Http\Controllers\QuoteEmissionController;
 use App\Http\Controllers\QuoteFollowupController;
+use App\Http\Controllers\QuoteLineSuggestionController;
 use App\Http\Controllers\QuotePdfController;
 use App\Http\Controllers\QuoteReviewController;
 use App\Http\Controllers\UserController;
@@ -37,6 +38,7 @@ Route::prefix('v1')->group(function () {
         Route::get('clients', [ClientController::class, 'index']);
         Route::get('catalog', [CatalogController::class, 'current']);
         Route::get('catalog/similar', [CatalogController::class, 'similar'])->middleware(['role:admin,quoter,approver', 'throttle:60,1,catalog-similar']);
+        Route::get('quotes/line-suggestions', QuoteLineSuggestionController::class)->middleware(['role:admin,quoter,approver', 'throttle:30,1,line-suggestions']);
         Route::get('quotes', [QuoteController::class, 'index']);
         Route::get('quotes/{id}/pdf', [QuotePdfController::class, 'show'])->whereUuid('id');
         Route::get('quotes/{id}', [QuoteController::class, 'show'])->whereUuid('id');

@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Eloquent;
 
+use App\Domain\DecimalMoney;
 use App\Models\CatalogItem;
 use App\Models\Quote;
 use App\Models\QuoteAssistRequest;
@@ -143,6 +144,110 @@ final class EloquentKnowledgeRepository implements KnowledgeRepository
         }
 
         return $picked;
+    }
+
+    public function suggestLines(array $fragments, ?string $family, int $perFragment, int $max): array
+    {
+        $fragments = array_values(array_filter($fragments, fn (string $f): bool => $this->terms($f) !== []));
+        if ($fragments === [] || $perFragment < 1 || $max < 1) {
+            return [];
+        }
+        // Puntuación en PHP (misma lógica en PostgreSQL y SQLite): cobertura de términos por prefijo + similitud de trigramas.
+        $candidates = [];
+        $rows = QuoteKnowledge::query()->where('status', 'active')->orderByDesc('captured_at')->limit(3000)->get(['source', 'family', 'lines', 'trust']);
+        foreach ($rows as $row) {
+            foreach (is_array($row->lines) ? $row->lines : [] as $line) {
+                $description = is_array($line) && is_string($line['description'] ?? null) ? trim($line['description']) : '';
+                if ($description === '') {
+                    continue;
+                }
+                $candidates[] = [
+                    'description' => $description, 'terms' => $this->terms($description), 'grams' => $this->trigrams($description),
+                    'unit' => is_string($line['unit'] ?? null) ? $line['unit'] : null,
+                    'family' => is_string($line['family'] ?? null) ? $line['family'] : (string) $row->family,
+                    'quantity' => is_numeric($line['quantity'] ?? null) ? (string) $line['quantity'] : null,
+                    'cents' => is_int($line['reference_price_cents'] ?? null) ? $line['reference_price_cents'] : null,
+                    'currency' => ($line['currency'] ?? 'COP') === 'USD' ? 'USD' : 'COP',
+                    'source' => $row->source === 'drive_import' ? 'drive_import' : 'approved_quote',
+                    'trust' => (float) $row->trust, 'row_family' => (string) $row->family,
+                ];
+            }
+        }
+        $out = [];
+        $total = 0;
+        foreach ($fragments as $fragment) {
+            $fTerms = $this->terms($fragment);
+            $fGrams = $this->trigrams($fragment);
+            $scored = [];
+            foreach ($candidates as $c) {
+                $hits = 0;
+                foreach ($fTerms as $t) {
+                    foreach ($c['terms'] as $d) {
+                        if ($t === $d || (min(strlen($t), strlen($d)) >= 4 && substr($t, 0, 4) === substr($d, 0, 4)) || (strlen($t) >= 5 && strlen($d) >= 5 && levenshtein($t, $d) <= 1)) {
+                            $hits++;
+                            break;
+                        }
+                    }
+                }
+                if ($hits === 0) {
+                    continue;
+                }
+                $score = (0.65 * ($hits / count($fTerms)) + 0.35 * $this->dice($fGrams, $c['grams'])) * (0.5 + $c['trust'] / 2) * ($family !== null && $c['row_family'] === $family ? 1.15 : 1.0);
+                if ($score >= 0.2) {
+                    $scored[] = [$score, $c];
+                }
+            }
+            usort($scored, fn (array $a, array $b): int => $b[0] <=> $a[0]);
+            $matches = [];
+            foreach ($scored as [$score, $c]) {
+                if (count($matches) >= $perFragment || $total + count($matches) >= $max) {
+                    break;
+                }
+                foreach ($matches as $m) {
+                    if ($this->dice($c['grams'], $m['_grams']) >= 0.85) {
+                        continue 2;
+                    }
+                }
+                $matches[] = [
+                    'description' => $c['description'], 'unit' => $c['unit'], 'family' => $c['family'], 'quantity' => $c['quantity'],
+                    'reference_price' => $c['cents'] === null ? null : DecimalMoney::format($c['cents']),
+                    'currency' => $c['currency'], 'source' => $c['source'], 'score' => round($score, 4), '_grams' => $c['grams'],
+                ];
+            }
+            $total += count($matches);
+            $out[] = ['fragment' => $fragment, 'matches' => array_map(function (array $m): array {
+                unset($m['_grams']);
+
+                return $m;
+            }, $matches)];
+        }
+
+        return $out;
+    }
+
+    /** @return list<string> */
+    private function trigrams(string $text): array
+    {
+        $plain = ' '.implode(' ', $this->terms($text)).' ';
+        $grams = [];
+        for ($i = 0, $n = strlen($plain) - 2; $i < $n; $i++) {
+            $grams[substr($plain, $i, 3)] = true;
+        }
+
+        return array_keys($grams);
+    }
+
+    /**
+     * @param  list<string>  $a
+     * @param  list<string>  $b
+     */
+    private function dice(array $a, array $b): float
+    {
+        if ($a === [] || $b === []) {
+            return 0.0;
+        }
+
+        return 2 * count(array_intersect($a, $b)) / (count($a) + count($b));
     }
 
     public function skuFrequencyForFamily(?string $family, int $limit): array

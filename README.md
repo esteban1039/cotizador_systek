@@ -74,6 +74,7 @@ Inicio de sesión: `POST /api/v1/auth/login` con correo y contraseña; cuando MF
 | POST | `/quotes/{id}/issue` | Emitir una cotización aprobada (archiva PDF oficial) |
 | GET / POST | `/quotes/{id}/followups` | Seguimiento comercial de una cotización emitida (envío, respuesta, aceptada, rechazada, notas) |
 | GET | `/quotes/{id}/official-pdf` | Descargar el PDF oficial archivado |
+| GET | `/quotes/line-suggestions?q=&family=` | Partidas parecidas desde la base de conocimiento (sin IA ni catálogo): por fragmento, descripción, unidad y precio de referencia COP/USD; sin clientes ni costos (30/min) |
 | POST | `/quotes/assist` | Asistente IA: propone un borrador desde texto libre, sin guardar ni montos (desactivado por defecto) |
 | GET | `/ai-knowledge` | Admin: lista paginada (25) de la base de conocimiento; filtros `status`, `source`, `family`, `q`, `page` |
 | GET | `/ai-knowledge/metrics` | Admin: aceptación, cobertura, tokens, tamaño y frescura por familia/fuente, `needs_review` |
@@ -176,3 +177,5 @@ La guía de despliegue (backend en Laravel Forge, frontend en Cloudflare Workers
 
 
 Base de conocimiento IA, F3: al aprobar una cotización se captura una entrada (precio de referencia interno por línea, sin costos, descuentos, impuestos, totales ni cliente) tras el commit; `AI_KNOWLEDGE_AUTO_ACTIVATE` controla la activación automática. Detalle en `docs/decimosexta-iteracion.md`.
+
+Frontend: composable `useLineSuggestions` (acción explícita, sin debounce; secuencia anti-pisado), tipos en `shared/types.ts`; `QuoteAssistPanel.vue` muestra siempre, con o sin IA/catálogo, las partidas por fragmento (descripción, unidad, precio con `money`, origen «cotización aprobada»/«histórico Drive») con botón «Buscar en la base» (también se lanza junto a «Proponer borrador», errores independientes) y «Agregar» (deshabilitado tras agregar o al llegar a 20 líneas libres) que crea una línea libre (`pages/index.vue`, `addSuggestedFree`) con descripción (máx. 255), unidad válida o `unidad`, cantidad o 1, precio prellenado editable, costo vacío, IVA 19 % y marca «Precio sugerido de referencia: revísalo». Si la moneda es USD o no hay precio, no se prellena y se avisa. Sin cambios en el proxy. Verificado: typecheck y build; sin E2E de navegador.
