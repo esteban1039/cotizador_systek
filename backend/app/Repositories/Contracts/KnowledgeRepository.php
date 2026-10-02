@@ -52,6 +52,15 @@ interface KnowledgeRepository
     public function similar(string $text, ?string $family, int $limit, ?string $excludeRootId = null): array;
 
     /**
+     * Partidas parecidas a cada fragmento, buscadas a nivel de línea en entradas activas (sin IA ni catálogo).
+     * Sin ids, clientes ni costos; `reference_price` es una cadena decimal o null. Máximo `$max` en total.
+     *
+     * @param  list<string>  $fragments
+     * @return list<array{fragment: string, matches: list<array{description: string, unit: ?string, family: ?string, quantity: ?string, reference_price: ?string, currency: string, source: string, score: float}>}>
+     */
+    public function suggestLines(array $fragments, ?string $family, int $perFragment, int $max): array;
+
+    /**
      * SKU más frecuentes en las entradas activas de la familia (todas si es null).
      *
      * @return list<string>

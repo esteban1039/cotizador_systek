@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { QuoteAssistProposal, Calculation, CatalogItem, Client, ClauseOption, ClauseVersionSelection, LineInput, FreeLineUnit, SimilarItem, Quote, ReviewedQuote } from '../../shared/types'
+import type { QuoteAssistProposal, Calculation, CatalogItem, Client, ClauseOption, ClauseVersionSelection, LineInput, FreeLineUnit, FreeLineDraft, SimilarItem, Quote, ReviewedQuote } from '../../shared/types'
 import { families, clauseTypes } from '#shared/admin'
 import { cents, centsToDecimal, errorMessages } from '~/utils/format'
 
@@ -27,7 +27,7 @@ const selectedItem = ref('')
 let nextKey = 1
 const rows = ref<{ key: number; item: CatalogItem; quantity: string; discount: string }[]>([])
 // Líneas libres: ítems que aún no existen en el catálogo; se crean al aprobar. El precio lo escribe siempre el cotizador.
-type FreeRow = { key: number; description: string; unit: FreeLineUnit; quantity: string; discount: string; price: string; cost: string; tax: number }
+type FreeRow = { key: number; description: string; unit: FreeLineUnit; quantity: string; discount: string; price: string; cost: string; tax: number; suggested?: boolean }
 const freeUnits: FreeLineUnit[] = ['unidad', 'metro', 'hora', 'servicio', 'licencia']
 const freeRows = ref<FreeRow[]>([])
 const maxFree = 20
@@ -37,6 +37,11 @@ const lineCount = computed(() => rows.value.length + freeRows.value.length)
 function addFree() {
   if (freeRows.value.length >= maxFree || lineCount.value >= 100) return
   freeRows.value.push({ key: nextKey++, description: '', unit: 'unidad', quantity: '1', discount: '0', price: '', cost: '', tax: 1900 })
+}
+function addSuggestedFree(draft: FreeLineDraft) {
+  if (freeRows.value.length >= maxFree || lineCount.value >= 100) return
+  const unit = (freeUnits as string[]).includes(draft.unit) ? draft.unit as FreeLineUnit : 'unidad'
+  freeRows.value.push({ key: nextKey++, description: draft.description.slice(0, 255), unit, quantity: draft.quantity || '1', discount: '0', price: draft.price, cost: '', tax: 1900, suggested: true })
 }
 function removeFree(index: number) { freeRows.value.splice(index, 1); activeFree.value = null; similar.clear() }
 function onFreeDescription(row: FreeRow) { activeFree.value = row.key; similar.search(row.description, family.value || undefined) }
@@ -325,7 +330,7 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
   <div v-if="revising && !sourceReady" class="notice error" role="alert"><strong>No pudimos abrir la cotización para revisarla.</strong><p>Comprueba el enlace y que tengas permiso para crear una nueva revisión.</p><button v-if="validSource" class="button secondary" @click="retrySource">Reintentar revisión</button></div>
   <div v-if="revising && sourceReady" class="notice"><strong>Revisión de la versión {{ source?.revision_number }}.</strong> Los datos originales se conservarán. Esta copia se guardará como un nuevo borrador y requerirá su propia revisión comercial. <NuxtLink :to="`/borradores/${sourceId}`">Ver original</NuxtLink></div>
   <div class="demo-notice"><span class="notice-symbol">i</span><p><strong>Estás en un espacio de prueba.</strong> Los precios de demostración no tienen validez comercial.</p></div>
-  <QuoteAssistPanel v-if="assistAllowed" :has-content="assistHasContent" :family="family" :skipped="assistSkipped" @apply="applyAssist" />
+  <QuoteAssistPanel v-if="assistAllowed" :has-content="assistHasContent" :family="family" :skipped="assistSkipped" :can-add-free="freeRows.length < maxFree && lineCount < 100" @apply="applyAssist" @add-free="addSuggestedFree" />
   <form class="editor-layout" @submit.prevent="save">
     <fieldset class="editor-fields" :disabled="!editorReady || saving || !sourceReady">
       <section class="panel" aria-labelledby="client-title">
@@ -351,7 +356,8 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
         </div>
         <div v-for="(row, index) in freeRows" :key="row.key" class="line-card free-line">
           <div class="line-description"><span class="line-index">L{{ index + 1 }}</span><div><strong>Línea libre</strong><span>No existe en el catálogo todavía</span></div><button type="button" class="icon-button danger" :aria-label="`Eliminar línea libre ${index + 1}`" @click="removeFree(index)"><AppIcon name="trash" :size="18" /></button></div>
-          <div class="notice" role="status"><p>Se creará un ítem nuevo en el catálogo al aprobar. El precio y el costo los escribes tú; no se rellenan automáticamente.</p></div>
+          <div v-if="row.suggested" class="notice" role="status"><strong>Precio sugerido de referencia: revísalo.</strong><p>Viene de la base de conocimiento; escribe el costo. El aprobador validará el precio antes de crear el ítem.</p></div>
+          <div v-if="!row.suggested" class="notice" role="status"><p>Se creará un ítem nuevo en el catálogo al aprobar. El precio y el costo los escribes tú; no se rellenan automáticamente.</p></div>
           <div class="field-stack"><label>Descripción <span class="required">*</span><input v-model="row.description" required minlength="5" maxlength="255" autocomplete="off" :aria-label="`Descripción línea libre ${index + 1}`" @input="onFreeDescription(row)"></label>
             <div v-if="activeFree === row.key && (similar.results.value.length || similar.loading.value || similar.failed.value)" class="similar-box" aria-live="polite">
               <p v-if="similar.loading.value" class="empty-message">Buscando ítems parecidos…</p>

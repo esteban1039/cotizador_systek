@@ -54,3 +54,6 @@ export type QuoteAssistWarningCode = 'unknown_sku' | 'duplicate_sku' | 'invalid_
 export interface QuoteAssistWarning { code: QuoteAssistWarningCode | string; sku?: string }
 export interface QuoteAssistLine { sku: string; price_version_id: string; description: string; unit: string; family: string; quantity: string; discount_bps: number }
 export interface QuoteAssistProposal { request_id: string; generated_by: 'ai'; model: string; family: string | null; scope: string | null; exclusions: string | null; lines: QuoteAssistLine[]; missing_information: string[]; warnings: QuoteAssistWarning[]; catalog_truncated: boolean; precedents_used?: { source: string; captured_at: string }[] }
+export interface LineSuggestionMatch { description: string; unit: string | null; family: string | null; quantity: string | null; reference_price: string | null; currency: 'COP' | 'USD' | string; source: 'approved_quote' | 'drive_import' | string; score: number }
+export interface LineSuggestionGroup { fragment: string; matches: LineSuggestionMatch[] }
+export interface FreeLineDraft { description: string; unit: string; quantity: string; price: string }
