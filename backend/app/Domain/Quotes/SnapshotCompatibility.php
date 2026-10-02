@@ -22,6 +22,9 @@ final class SnapshotCompatibility
         $snapshot['vat_withholding'] ??= ['applied' => false, 'rate_bps' => 0, 'basis' => 'tax_total'];
         $snapshot['totals']['vat_withholding'] ??= '0.00';
         $snapshot['totals']['payable'] ??= $snapshot['totals']['total'];
+        foreach ($snapshot['lines'] ?? [] as $index => $line) {
+            $snapshot['lines'][$index]['line_type'] ??= 'catalog';
+        }
         $snapshot['quote_number'] = $record->quote_number ?? ($snapshot['quote_number'] ?? null);
 
         return $snapshot;

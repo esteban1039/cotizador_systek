@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AiKnowledgeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CatalogController;
 use App\Http\Controllers\ClauseController;
@@ -35,6 +36,7 @@ Route::prefix('v1')->group(function () {
         Route::get('dashboard', DashboardController::class)->middleware('role:admin,quoter,approver');
         Route::get('clients', [ClientController::class, 'index']);
         Route::get('catalog', [CatalogController::class, 'current']);
+        Route::get('catalog/similar', [CatalogController::class, 'similar'])->middleware(['role:admin,quoter,approver', 'throttle:60,1,catalog-similar']);
         Route::get('quotes', [QuoteController::class, 'index']);
         Route::get('quotes/{id}/pdf', [QuotePdfController::class, 'show'])->whereUuid('id');
         Route::get('quotes/{id}', [QuoteController::class, 'show'])->whereUuid('id');
@@ -60,6 +62,10 @@ Route::prefix('v1')->group(function () {
             Route::get('rules', [CatalogController::class, 'rules']);
         });
         Route::middleware('role:admin')->group(function () {
+            Route::get('ai-knowledge', [AiKnowledgeController::class, 'index']);
+            Route::get('ai-knowledge/metrics', [AiKnowledgeController::class, 'metrics']);
+            Route::get('ai-knowledge/{id}', [AiKnowledgeController::class, 'show'])->whereUuid('id');
+            Route::patch('ai-knowledge/{id}', [AiKnowledgeController::class, 'update'])->whereUuid('id')->middleware('throttle:30,1,ai-knowledge-review');
             Route::get('admin/history', [HistoryController::class, 'index']);
             Route::post('admin/history/import', [HistoryController::class, 'import'])->middleware('throttle:10,1,history-import');
             Route::get('admin/history/{id}', [HistoryController::class, 'show'])->whereUuid('id');

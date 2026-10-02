@@ -1,0 +1,377 @@
+# fuente|seccion|precio_unitario_cop (o USDnnnn)|descripcion — líneas de cotizaciones de la carpeta CLIENTES de Drive (sin datos bancarios)
+POMOS-BLOQUE-C|CCTV|375000|Cámara IP modo Full HD, tipo bala para exteriores, lente 2.8mm, visión nocturna IR (1), adaptador 12V (1), cable UTP 100% cobre y cable eléctrico (28 mts aprox.), caja de paso plástica (2), toma eléctrica y terminales.
+POMOS-BLOQUE-C|CCTV|320000|Instalación y configuración de cámara IP nueva y reubicación de cámara análoga existente (bloque C).
+PAPAS-LILI-CCTV|CCTV|470000|XVR modo Full HD de 4CH + 1CH IP (soporta hasta 5 cámaras), puertos VGA/HDMI/USB y LAN para visual remota + Disco duro de 500GB especial para CCTV.
+PAPAS-LILI-CCTV|CCTV|146000|Cámara modo Full HD para interiores o exteriores, lente 2.8mm y visión nocturna IR, terminales videobalum, adaptador 12V y Jack voltaje.
+PAPAS-LILI-CCTV|CCTV|456000|Gabinete metálico Rack pequeño, cable UTP 100% cobre y cable eléctrico (25 mts), tubería metálica EMT (16 mts aprox.), cajas de paso metálicas (5), toma y multitoma eléctrica.
+PAPAS-LILI-CCTV|CCTV|360000|Instalación y configuración de CCTV con visual remota.
+PAPAS-LILI-NAVI|SOFTWARE|1880000|Software NAVI nube, instalación, configuración, capacitación de manejo, soporte y licenciamiento anual (primer año), inventario, clientes, proveedores, facturación electrónica y compras (Exento de IVA).
+SANTA-MARTA-ILUM|ILUMINACION|2696000|Lampara LED especular de 2.4mts, 4 tubos X18W (17), Lampara LED especular de 1.2mts, 2 tubos X18W (4) con soportes, terminales y accesorios.
+SANTA-MARTA-ILUM|ILUMINACION|1230000|Cable eléctrico (300 mts aprox.), breaker 15Amp (4), interruptor eléctrico (5), terminales empalme.
+SANTA-MARTA-ILUM|ILUMINACION|1900000|Instalación de circuitos eléctricos iluminación y lámparas LED.
+POMOS-CABLEADO|CCTV|124000|Cámara modo Full HD tipo bala para exteriores, lente 2.8mm y visión nocturna IR.
+POMOS-CABLEADO|CCTV|135000|Cable UTP 100% cobre (30 mts aprox.), caja de paso plástica (2), videobalum y Jack voltaje.
+POMOS-CABLEADO|CCTV|150000|Instalación y configuración de 1 cámara de seguridad.
+KAIOWA|INFRAESTRUCTURA DATOS - POTENCIA|2984000|Canalización metálica con división de 80X40 mm y 60X40 mm (64 mts aprox.), troquel datos y potencia (88), terminales y accesorios canalización, tubería PVC 3/4 (30 mts aprox.), terminales y accesorios.
+KAIOWA|INFRAESTRUCTURA DATOS - POTENCIA|2139000|Gabinete metálico Rack de piso 23RU 120X60X60 cm con multitoma eléctrica interruptor (1), bandeja metálica 30 cm (2) y accesorios + UPS de 1200VA para dispositivos telecomunicaciones.
+KAIOWA|INFRAESTRUCTURA DATOS - POTENCIA|3977000|Switch de red 24 puertos no administrable Gigabite (2), patchpanel cat6 (3), organizador 1RU (3), patchcord cat6 para centro de datos (64) y patchcord cat6 de 1.8mts para puestos de trabajo (45).
+KAIOWA|INFRAESTRUCTURA DATOS - POTENCIA|3489000|Cable UTP cat6 100% cobre certificado (700 mts aprox.), Jack datos cat6 con faceplate (45), terminales y accesorios.
+KAIOWA|INFRAESTRUCTURA DATOS - POTENCIA|2095000|Tablero eléctrico bifásico de 8 circuitos (1), breaker de 20Amp (5), toma eléctrica incrustar 110V con faceplate (43), cable eléctrico #8 acometida (50 mts aprox.), cable eléctrico #12 puestos de trabajo (300 mts aprox.)
+KAIOWA|INFRAESTRUCTURA DATOS - POTENCIA|5500000|Servicio de ingeniería, instalación de red datos y red eléctrica.
+SALVADOR-CCTV|CCTV|1070000|XVR hibrido 4K / 8MPX de 4CH + 4CH IP (soporta hasta 8 cámaras), puertos VGA/HDMI y LAN para visual remota + disco duro de 1TB especial para CCTV.
+SALVADOR-CCTV|CCTV|236000|Cámara tipo bala para exteriores 3K / 5MPX, lente 2.8mm, visión nocturna Full Color, micrófono incorporado
+SALVADOR-CCTV|CCTV|45000|Terminales videobalum, adaptador 12V, Jack voltaje y caja de paso plástica.
+SALVADOR-CCTV|CCTV|290000|Gabinete metálico Rack pequeño (1), toma y multitoma eléctrica (1), cable UTP 100% cobre y cable eléctrico (60 mts aprox.), terminales y accesorios.
+SALVADOR-CCTV|CCTV|440000|Instalación y configuración de CCTV con visualización remota.
+SALVADOR-CCTV|CCTV|788000|XVR hibrido 2K / 3MPX de 4CH + 2CH IP (soporta hasta 6 cámaras), puertos VGA/HDMI y LAN para visual remota + disco duro de 1TB especial para CCTV.
+SALVADOR-CCTV|CCTV|199000|Cámara tipo bala para exteriores 2K / 4MPX, lente 2.8mm, visión nocturna Full Color, micrófono incorporado.
+SALVADOR-CCTV|CCTV|45000|Terminales videobalum, adaptador 12V, Jack voltaje y caja de paso plástica.
+SALVADOR-CCTV|CCTV|290000|Gabinete metálico Rack pequeño (1), toma y multitoma eléctrica (1), cable UTP 100% cobre y cable eléctrico (60 mts aprox.), terminales y accesorios.
+SALVADOR-CCTV|CCTV|440000|Instalación y configuración de CCTV con visualización remota.
+SALVADOR-ALARMA|ALARMA|1530000|Panel central de Alarma Hibrida + expansor zonal cableado e inalámbrico, con batería 12V (1), sirena cableada (1), pánico inalámbrico (2), cable UTP 100% cobre (50 mts aprox.), terminales y accesorios.
+SALVADOR-ALARMA|ALARMA|590000|Instalación y configuración de alarma con monitoreo remoto.
+IE-LFGB-AGO|HARDWARE|1344000|PC Corporativo remanufacturado Intel Core i5 – 6 Gen, Ram de 8 GB, SSD de 256 GB, monitor de 20”, teclado y mouse USB, instalación y configuración de sistema operativo con programación básica.
+DESCUENTO-UPS|HARDWARE|980000|Baterías nuevas (6), instalación y configuración de UPS online de 3KVA.
+DESCUENTO-MANT|HARDWARE - MANTENIMIENTO|680000|Mantenimiento físico de gabinete Rack y equipos, DVR, Switch de red, modem internet, acomodación cableado Rack, revisión y diagnóstico de UPS online de 3KVA para regulación y respaldo eléctrico.
+DESCUENTO-MANT|HARDWARE - MANTENIMIENTO|560000|Mantenimiento físico de 7 PC estaciones de trabajo y 1 PC servidor.
+DESCUENTO-MANT|HARDWARE – REPOTENCIACION|860000|Aumento de memoria RAM a 8GB y cambio de disco mecánico por SSD de 128GB para 3 PC estaciones (Vitrinas).
+DESCUENTO-MANT|HARDWARE – REPOTENCIACION|450000|Actualización, instalación y configuración de sistema operativo con programación básica para 5 PC estaciones de trabajo (Win 11).
+NAVI-ASOMOCAGP|SOFTWARE|2600000|Software NAVI nube, instalación, configuración, capacitación de manejo, soporte y licenciamiento anual (primer año), inventario, clientes, proveedores, facturación electrónica y compras (Exento de IVA).
+OKY|HARDWARE – CAMARAS – ENLACE RED|2400000|PC con microtorre corporativa remanufacturada Core i5-10Gen, RAM de 16 GB, SSD de 256Gb, monitor modo Full HD HDMI/VGA de 22”, teclado y mouse, instalación y configuración de sistema operativo con programación básica.
+OKY|HARDWARE – CAMARAS – ENLACE RED|675000|Cámara IP modo Full HD para interiores tipo domo (1), cámara análoga Full HD para exteriores tipo domo (1), cable UTP cat6 100% cobre (7 mts aprox.), caja de paso metálica (1), toma aérea (1), adaptador eléctrico 12V (2), instalación y configuración.
+OKY|HARDWARE – CAMARAS – ENLACE RED|1280000|Cable UTP cat6 100% cobre (28 mts aprox.), tubería EMT ¾ (17 mts aprox.), caja de paso metálica (5), terminales y accesorios EMT, Jack de datos con faceplate (1), instalación y configuración de enlace de red para oficina nueva con 1 punto de datos e instalación y configuración de Aplicación para monitoreo remoto de CCTV (Oky y Chupeta).
+BOMBAY|HARDWARE Y RED DATOS|280000|UPS nueva para regulación y respaldo eléctrico de PC e instalación.
+BOMBAY|HARDWARE Y RED DATOS|1480000|PC Servidor: Microtorre corporativa remanufacturada Core i5, RAM de 8GB, instalación y configuración de SSD existente.
+BOMBAY|HARDWARE Y RED DATOS|1340000|PC Estación: Microtorre corporativa remanufacturada Core i5, RAM de 8GB, SSD de 256 GB, instalación y configuración.
+BOMBAY|HARDWARE Y RED DATOS|505000|Uniones, terminales y accesorios Emt, cable Utp cat6 100% cobre (12 mts) y Jack de datos cat6 con faceplate (2), Instalación de gabinete existente para Switch de red y módem de Internet existentes, instalación y configuración de 2 puntos de datos y acomodación cableado de puestos de trabajo.
+NONNA-PLANTA-2026|CCTV|155000|Cámara modo Full HD, lente 2.8mm y visión nocturna IR, terminales videobalum, adaptador 12V y Jack voltaje.
+NONNA-PLANTA-2026|CCTV|255000|Cámara IP modo Full HD, lente 2.8mm y visión nocturna IR, adaptador 12V y Jack voltaje.
+NONNA-PLANTA-2026|CCTV|552000|Cable UTP 100% cobre y cable eléctrico (180 mts aprox.), cajas de paso plásticas (10), toma aérea (7), terminales y accesorios.
+NONNA-PLANTA-2026|CCTV|950000|Instalación y configuración.
+NEBRASKA-OP1|INFRAESTRUCTURA ELECTRICA|3727000|Cable eléctrico #14 (450 mts aprox.), cable eléctrico #10 (120 mts aprox.), toma eléctrica doble 110V (34), toma eléctrica 220V (5), breaket 15Amp (8), breaket 2X30Amp (5), interruptor eléctrico (5), tablero eléctrico Bifásico de 24 circuitos 220Amp (1), barra cooperweld terminales y accesorios.
+NEBRASKA-OP1|INFRAESTRUCTURA ELECTRICA|1863000|Tubería EMT ½ y ¾ (120 mst aprox.), coraza flexible con terminales, cajas de paso metálicas (50 aprox.), uniones, curvas, terminales y accesorios EMT.
+NEBRASKA-OP1|INFRAESTRUCTURA ELECTRICA|2700000|Instalación de infraestructura eléctrica.
+NEBRASKA-OP2|INFRAESTRUCTURA ELECTRICA|3727000|Cable eléctrico #14 (450 mts aprox.), cable eléctrico #10 (120 mts aprox.), toma eléctrica doble 110V (34), toma eléctrica 220V (5), breaket 15Amp (8), breaket 2X30Amp (5), interruptor eléctrico (5), tablero eléctrico Bifásico de 24 circuitos 220Amp (1), barra cooperweld terminales y accesorios.
+NEBRASKA-OP2|INFRAESTRUCTURA ELECTRICA|590000|Tubería PVC de ½ y ¾ (120 mst aprox.), cajas de paso plásticas de empotrar (50 aprox.), uniones, curvas, terminales y accesorios.
+NEBRASKA-OP2|INFRAESTRUCTURA ELECTRICA|2300000|Instalación de infraestructura eléctrica.
+SAN-JOAQUIN|CCTV|355000|Gabinete metálico Rack (50x50x30), toma y multitoma eléctrico 110V.
+SAN-JOAQUIN|CCTV|209000|Cámara modo 3K de 4MPX tipo domo, lente 2.8mm, visión nocturna Full Color y micrófono integrado.
+SAN-JOAQUIN|CCTV|43000|Terminales videobalum, adaptador 12V, toma eléctrica aérea y caja de paso plástica.
+SAN-JOAQUIN|CCTV|774000|Cable UTP 100% cobre (170 mts aprox.), cable eléctrico (80 mts aprox.), canalización plástica (30 mts aprox.), terminales y accesorios.
+SAN-JOAQUIN|CCTV|1200000|Instalación y configuración de cámaras de seguridad nuevas e instalación de gabinete Rack nuevo con reubicación de cableado, DVR, terminales y enlace de red.
+POMOS-BLOQUE-B|CCTV|320000|Cable UTP (20 mts aprox.), cable eléctrico (15 mts aprox.), caja de paso plástica (2), terminales videobalum (1), toma aérea (1), instalación y configuración de cámara de seguridad.
+POMOS-BLOQUE-B|CCTV|495000|Cable UTP (80 mts aprox.), cable eléctrico (15 mts aprox.), caja de paso plástica (2), terminales videobalum (1), toma aérea (1), instalación y configuración de cámara de seguridad.
+AVANTI-PC-2026|HARDWARE|2615000|PC de escritorio nuevo corporativo Dell/Lenovo, Microtorre con procesador Intel Core i5-11Gen, memoria RAM de 16GB, SSD M2 de 256GB, monitor modo Full HD Samsung/Dahua/LG de 22”, puertos USB/HDMI/LAN, combo de teclado y mouse, instalación y configuración de sistema operativo con programación básica (exento de IVA).
+AVANTI-PC-2026|HARDWARE|2440000|PC de escritorio nuevo corporativo Dell/Lenovo, Microtorre con procesador Intel Core i5-10Gen, memoria RAM de 16GB, SSD M2 de 256GB, monitor modo Full HD Samsung/Dahua/LG de 22”, puertos USB/HDMI/LAN, combo de teclado y mouse, instalación y configuración de sistema operativo con programación básica (exento de IVA).
+AVANTI-PC-2026|HARDWARE|1890000|PC de escritorio remanufacturado corporativo Dell/Lenovo/HP, Microtorre con procesador Intel Core i5-8Gen, memoria RAM de 16GB, SSD de 256GB, monitor modo Full HD de 22”, puertos USB/HDMI/LAN, combo de teclado y mouse, instalación y configuración de sistema operativo con programación básica (exento de IVA).
+POMOS-CANCHA-MAY|CCTV – RED DATOS|695000|Cámara IP modo Full HD, tipo bala para exteriores, lente 2.8mm, visión nocturna IR (1), Switch de red POE de 5 puertos (1), cable UTP cat6 100% cobre (40 mts aprox.), caja de paso plástica (2) y terminales (cancha).
+POMOS-CANCHA-MAY|CCTV – RED DATOS|370000|Instalación y configuración de cámaras de seguridad IP con Switch de red POE (cancha).
+POMOS-CANCHA-MAY|CCTV – RED DATOS|595000|Cable UTP cat6 100% cobre (100 mts aprox.), soportes tensores (6), caja de paso plástica e instalación de enlace de red para Router (Sala 8).
+NONNA-MALL-SONIDO-2026|SONIDO|1027000|Parlante activo de 100W RMS, impedancia 4Ω, amplificador clase AB, alimentación de 110V, medidas 35X12X12 cm con anclajes
+NONNA-MALL-SONIDO-2026|SONIDO|598000|Cable encauchedato sonido (50 mts aprox.), cable encauchetado eléctrico (30 mts aprox.), cajas de paso (8), toma eléctrica aérea 110V (4), terminales y accesorios.
+NONNA-MALL-SONIDO-2026|SONIDO|1130000|Instalación de parlantes, puntos eléctricos 110V, ajuste y configuración de planta sonido mixer y puesta en marcha.
+NONNA-MALL-SONIDO-2026|SONIDO|676000|Parlante activo de 50W RMS, impedancia 4Ω, alimentación de 110V, medidas 50X20X15 cm con anclajes
+NONNA-MALL-SONIDO-2026|SONIDO|598000|Cable encauchedato sonido (50 mts aprox.), cable encauchetado eléctrico (30 mts aprox.), cajas de paso (8), toma eléctrica aérea 110V (4), terminales y accesorios.
+NONNA-MALL-SONIDO-2026|SONIDO|1130000|Instalación de parlantes, puntos eléctricos 110V, ajuste y configuración de planta sonido mixer y puesta en marcha.
+PARAPLASTICOS-IMPRESORA|HARDWARE|1490000|Impresora Láser HP 137 nueva multifuncional (impresión, escáner y fotocopias) con puertos USB y LAN instalación y configuración.
+PARAPLASTICOS-IMPRESORA|HARDWARE|880000|Impresora Láser HP M127 remanufacturada multifuncional (impresión, escáner y fotocopias) con puertos USB y LAN instalación y configuración.
+MEDECARNES-TIEMPOS|SOFTWARE|4200000|Software para control de tiempos Turnos Empleados Liquidación de horas Capacitación y Puesta en Operación.
+MEDINA-BODEGA-ALARMA|ALARMA|2865000|Panel central zonal expandible SH 433MHZ (1), extensor de señal inalámbrica (1), detector de movimiento inalámbrico (5), control llavero inalámbrico (2), sirena de pánico luz LED (1), terminales y accesorios.
+MEDINA-BODEGA-ALARMA|ALARMA|660000|Cable UTP Y cable eléctrico (60 mts aprox.), fuente de poder 12V/5Amp (2) y UPS para regulación y respaldo eléctrico (1).
+MEDINA-BODEGA-ALARMA|ALARMA|730000|Instalación y configuración de sistema
+VERVANTIS-1015|DATOS - POTENCIA|1580000|Canalización metálica blanca 8x4cm con división (20 mts), troqueles datos (20) y potencia (40), caja de paso metálica 25X25 (3), caja de paso metálica 15X15 (4), terminales y accesorios.
+VERVANTIS-1015|DATOS - POTENCIA|1635000|Cable UTP cat6 100% cobre (90 mts aprox.), cable eléctrico #14 (30 mts aprox.), Jack de datos Cat6 con faceplate (40), toma eléctrica 110V (40), espiral plástica blanca, terminales y accesorios.
+VERVANTIS-1015|DATOS - POTENCIA|1600000|Instalación y configuración de puntos de datos y puntos eléctricos para puestos de trabajo.
+SUPER-REMATES-NAVI|SOFTWARE|6700000|Software NAVI nube, instalación, configuración, capacitación de manejo, soporte y licenciamiento anual (primer año), inventario, clientes, proveedores, facturación electrónica y compras (Exento de IVA).
+SUPER-REMATES-NAVI|SOFTWARE|4600000|Licenciamiento anual Software NAVI nube (renovación, incremento anual IPC + 2 puntos).
+CEDROS-MAR-2026|CCTV|219000|Cámara IP nueva modo Full HD, tipo bala para exteriores, lente 2.8mm, visión nocturna IR y terminales.
+CEDROS-MAR-2026|CCTV|776000|Switch de red POE de 5 puertos (1), cable UTP cat6 100% cobre (150 mts aprox.), (cable eléctrico neopreno 50 mts aprox.), caja de paso plástica (6), terminales y accesorios.
+CEDROS-MAR-2026|CCTV|890000|Instalación y configuración de cámaras de seguridad IP.
+COOTRANSCOL-CCTV|CCTV|1080000|Gabinete metálico Rack mediano (1), cable UTP 100% cobre (160 mts aprox.), cable eléctrico neopreno (160 mts aprox.), terminales videobalum (6), adaptador 12V (6), cajas de paso plásticas (6) y accesorios.
+COOTRANSCOL-CCTV|CCTV|218000|Cámara modo Full HD tipo bala para exteriores, lente 2.8mm y visión nocturna Full Color, terminales videobalum y adaptador 12V.
+COOTRANSCOL-CCTV|CCTV|980000|Instalación y configuración de cámaras de seguridad, cambio e instalación de gabinete rack y equipos y revisión de cámaras existentes.
+HOSPITAL-SV-POLIZA|SERVICIOS|4500000|Póliza mensual de mantenimiento y soporte de CCTV (mantenimiento semestral preventivo y correctivo, 4 horas mensuales de soporte técnico, visitas semanales y soporte remoto).
+HOSPITAL-SV-POLIZA|SERVICIOS|160000|Hora adicional de soporte técnico.
+HOSPITAL-SV-VMS|SOFTWARE|108000000|Licencia perpetua Hikcentral VMS multimarca para 314 cámaras, incluye ingeniería, instalación, configuración y puesta en marcha.
+ALGI-NAVI|SOFTWARE|3800000|Software NAVI nube, instalación, configuración, capacitación de manejo, soporte y licenciamiento anual (primer año), inventario, clientes, proveedores, facturación electrónica y compras (Exento de IVA).
+ALGI-NAVI|SOFTWARE|2700000|Licenciamiento anual Software NAVI nube (renovación, incremento anual IPC + 2 puntos).
+NAVI-ASOMOCAGP|SOFTWARE|1900000|Licenciamiento anual Software NAVI nube (renovación, incremento anual IPC + 2 puntos).
+MEDECARNES-TIEMPOS|SOFTWARE|3200000|Renovación anual software de control de tiempos.
+JAULA-TESORO-SONIDO|SONIDO - CCTV|1592000|Amplificador Zonal de 4Ch auxiliares, TRF de acoples, 350WTS, Bluetooh, USB, FM.
+JAULA-TESORO-SONIDO|SONIDO - CCTV|2190000|Cable encauchetado x 2 líneas (340 mts aprox.), terminales empalme y cajas de paso plásticas (6).
+JAULA-TESORO-SONIDO|SONIDO - CCTV|165000|Cámara modo Full HD tipo domo, lente 2.8mm y visión nocturna, terminales video balum, adaptador 12V y Jack voltaje.
+JAULA-TESORO-SONIDO|SONIDO - CCTV|1480000|Instalación y configuración de planta de sonido, instalación de cableado sonido para 8 parlantes e instalación y configuración de 1 cámara de seguridad.
+FINCA-ALARMA|ALARMA|3366000|Panel central zonal expandible SH 433MHZ (1), extensor de señal (1), detector de movimiento inalámbrico (9), control llavero inalámbrico (2), sirena de pánico luz LED (1), terminales y accesorios.
+FINCA-ALARMA|ALARMA|950000|Cable UTP (40 mts aprox.), fuente de poder 12V/5Amp (2) y UPS para regulación y respaldo eléctrico (1).
+FINCA-ALARMA|ALARMA|1470000|Servicio de ingeniería, instalación y configuración de sistema de Alarma (aprox.).
+FINCA-CCTV-OP1|CCTV|1175000|XVR de 8CH hibrido modo Full HD 2MPX, puertos HDMI/VGA y LAN para visualización remota, con disco duro de 1TB especial para CCTV.
+FINCA-CCTV-OP1|CCTV|278000|Cámara IP modo Full HD 2MPX para exteriores, lente 2.8mm, visión nocturna Smartligth Full color (30 mts) y micrófono incorporado.
+FINCA-CCTV-OP1|CCTV|850000|Switch de red de 8 puertos POE, organizador de 1 RU, UPS de 1200VA para regulación y respaldo eléctrico, cable UTP cat6 100% cobre (200 mts aprox.) Jack datos cat6 con faceplate
+FINCA-CCTV-OP1|CCTV|2100000|Servicio de ingeniería, instalación y configuración de CCTV.
+FINCA-CCTV-OP2|CCTV|1320000|XVR de 8CH hibrido modo Full HD 4MPX, puertos HDMI/VGA y LAN para visualización remota, con disco duro de 1TB especial para CCTV.
+FINCA-CCTV-OP2|CCTV|413000|Cámara IP modo Full HD 4MPX para exteriores, lente 2.8mm, visión nocturna Smartligth Full color (30 mts) y micrófono incorporado.
+FINCA-CCTV-OP2|CCTV|850000|Switch de red de 8 puertos POE, organizador de 1 RU, UPS de 1200VA para regulación y respaldo eléctrico, cable UTP cat6 100% cobre (200 mts aprox.) Jack datos cat6 con faceplate
+FINCA-CCTV-OP2|CCTV|2100000|Servicio de ingeniería, instalación y configuración de CCTV (aprox.).
+POMOS-CANCHA-FEB|CCTV|695000|Cámara IP modo Full HD, tipo bala para exteriores, lente 2.8mm, visión nocturna IR (1), Switch de red POE de 5 puertos (1), cable UTP cat6 100% cobre (40 mts aprox.), caja de paso plástica (2) y terminales.
+POMOS-CANCHA-FEB|CCTV|370000|Instalación y configuración de cámaras de seguridad IP con Switch de red POE.
+CARVACARO-SERVIDOR|HARDWARE|USD7290|HPE ProLiant DL320 Gen11 - Factor de Forma: Rack (1U) - Procesador: 1 x Intel Xeon-S 4510U CPU for HPE 12 Core (2,4 GHZ) - Memoria RAM: 64GB (2 x 32GB) PC5-5600 RDIMM - Red: 2 x 1GbE Embedded - Disco Duro: 2 x HPE 960GB SSD SATA 6G Read Intensive SFF (2.5in) - 1 x HPE MR408i-o Gen11 SPDM Storage Controller - RAID: 0/1/1+0/5/5+0/6/6+0 SATA y SAS - Fuente De Alimentación: 2 x HPE 800W Flex Slot Platinum Hot Plug - Garantía: 3 Year Next Business Day Warranty
+CARVACARO-SERVIDOR|HARDWARE|USD1190|HPE 960GB SATA MU SFF SSD
+CARVACARO-SERVIDOR|HARDWARE|USD1070|HPE 3YTCBas ML350 G11 Smart Choice SVC
+CARVACARO-SERVIDOR|HARDWARE|USD1540|Windows Server 16 Cores
+CARVACARO-SERVIDOR|SERVICIO DE INGENIERIA|4850000|Implementación de dos máquinas virtuales, una para controlador de dominio principal y otra para controlador de dominio secundario en servidor actual.
+INVENTEX|CCTV – RED DATOS|1260000|XVR de 16CH 5Mpx hibrido modo Full HD, puertos HDMI/VGA y LAN para visualización remota, con disco duro de 2TB especial para CCTV.
+INVENTEX|CCTV – RED DATOS|189000|Cámara modo Full HD para interiores o exteriores, lente 2.8mm, visión nocturna Full color.
+INVENTEX|CCTV – RED DATOS|40000|Terminales videobalum, adaptador eléctrico 12V y toma aérea.
+INVENTEX|CCTV – RED DATOS|570000|AP Acces Point doble banda 2.4-5.0 GHZ + alimentación POE+.
+INVENTEX|CCTV – RED DATOS|900000|Switch de red de 5 puertos Gigabite, bandeja para Rack, multitoma eléctrica rackeable, organizador de 1 RU y UPS de 1000VA para regulación y respaldo eléctrico.
+INVENTEX|CCTV – RED DATOS|880000|Cable UTP cat5 100% cobre CCTV (80 mts aprox.) cable UTP cat6 100% cobre para datos (80 mts aprox.), cable dúplex (60 mts aprox.), terminales y accesorios.
+INVENTEX|CCTV – RED DATOS|1730000|Servicio de ingeniería, instalación y configuración de CCTV, enlace de red y AP (Acces Point).
+SANTA-MARTA-INFRA-ENE|INFRAESTRUCTURA DATOS Y POTENCIA|5920000|Canaleta metálica con división portacable metálica 10x4 cm (90 mts aprox.), soporte ménsula metálica, espárragos, terminales y accesorios canaleta, tubería EMT para derivaciones (30 mst), cajas de paso metálicas (12), uniones, curvas y accesorios EMT.
+SANTA-MARTA-INFRA-ENE|INFRAESTRUCTURA DATOS Y POTENCIA|2284000|Cable eléctrico iluminación (400 mts aprox.), cable eléctrico para puntos de pago (120 mts aprox.), breaket 15Amp (6), tomas eléctricas 110V (15), faceplate potencia, interruptor eléctrico doble (4), terminales empalme y accesorios.
+SANTA-MARTA-INFRA-ENE|INFRAESTRUCTURA DATOS Y POTENCIA|1290000|Cable UTP cat6 100% cobre (250 mts aprox.), Jack de datos cat6 (10), faceplate datos, terminales y accesorios.
+SANTA-MARTA-INFRA-ENE|INFRAESTRUCTURA DATOS Y POTENCIA|4600000|Servicio de ingeniería, instalación de red eléctrica para circuitos de iluminación, circuito eléctrico para puntos de pago, con canaleta metálica portacable para cableado estructurado.
+SANTA-MARTA-INFRA-ENE|INFRAESTRUCTURA DATOS Y POTENCIA|1590000|Gabinete metálico Rack de 12RU (60cmx60cmx60cm) con multitoma eléctrica rackeable, bandeja metálica y accesorios.
+SANTA-MARTA-INFRA-ENE|INFRAESTRUCTURA DATOS Y POTENCIA|1460000|Switch de red de 24 puertos Gigabite de alta velocidad (1), patchpanel cat6 de 24 puertos, organizador de 1 RU y patchcord para centro de datos, terminales y accesorios.
+SANTA-MARTA-INFRA-ENE|INFRAESTRUCTURA DATOS Y POTENCIA|1100000|Servicio de ingeniería, instalación y configuración de Rack y equipos para centro de datos y marcación de red datos.
+IE-LFGB-ENE|HARDWARE|1314000|PC Corporativo remanufacturado Intel Core i5 – 6 Gen, Ram de 8 GB, SSD de 256 GB, monitor de 20”, teclado y mouse USB, instalación y configuración de sistema operativo con programación básica.
+PARROQUIA-PC|HARDWARE|1840000|Microtorre corporativa remanufacturada, procesador Intel Core 5 – 9 Gen, RAM de 8 GB, SSD M2 de 256 GB, instalación y configuración de sistema operativo con programación básica. (Equipo Exento de IVA).
+PARROQUIA-PC|HARDWARE|2080000|Microtorre corporativa remanufacturada, procesador Intel Core 5 – 10 Gen, RAM de 8 GB, SSD M2 de 256 GB, instalación y configuración de sistema operativo con programación básica. (Equipo Exento de IVA).
+PARROQUIA-PC|HARDWARE|2590000|PC Corporativo nuevo con procesador Intel Core 5 – 12 Gen, RAM de 8 GB, SSD M2 de 256 GB, monitor nuevo modo Full HD de 22”, teclado y mouse nuevos, instalación y configuración de sistema operativo con programación básica. (Equipo Exento de IVA).
+DELIGTH-PC|HARDWARE - SOFTWARE|2190000|PC Corporativo con microtorre remanufacturada, procesador Intel Core 5 – 9 Gen, RAM de 8 GB, SSD M2 de 256 GB, monitor nuevo modo Full HD de 22”, cámara Web HD con micrófono incorporado nueva, teclado y mouse nuevos, instalación y configuración de sistema operativo con programación básica. (Equipo Exento de IVA).
+DELIGTH-PC|HARDWARE - SOFTWARE|2580000|PC Corporativo nuevo con procesador Intel Core 5 – 12 Gen, RAM de 8 GB, SSD M2 de 256 GB, monitor nuevo modo Full HD de 22”, cámara Web HD con micrófono incorporado nueva, teclado y mouse nuevos, instalación y configuración de sistema operativo con programación básica. (Equipo Exento de IVA).
+DELIGTH-PC|HARDWARE - SOFTWARE|180000|Instalación y configuración de estación para escritorio remoto local (servidor).
+MEDECARNES-TIEMPOS-ENE|SOFTWARE|4200000|Software para control de tiempos Turnos Empleados Liquidación de horas Capacitación y Puesta en Operación.
+CARVACARO-CLOUD|INFRAESTRUCTURA CLOUD|3260000|Servidor Cloud, Win Server 2022, 10VCPU, memoria RAM de 22 GB, SSD de 640 GB, HDD de 250 GB (Busint) + Servidor Cloud, Win Server 2022, 6VCPU, memoria RAM de 8 GB, HDD de 75 GB (Controlador Dominio) y sistema de Backup. (Mensual, Exento de IVA).
+CARVACARO-CLOUD|INFRAESTRUCTURA CLOUD|260000|VPN Paquete 20 Usuarios. (Mensual, Exento de IVA).
+CARVACARO-CLOUD|HARDWARE|460000|FortiGate 40F Laas (Mensual).
+CARVACARO-POLIZA|SERVICIOS|1120000|Póliza mensual de servicio técnico con visita semanal (soporte técnico nivel uno en hardware, software y redes, visita semanal en sitio y atención remota).
+SURTIEXPRESS-CCTV|CCTV|117000|Cámara modo Full HD para interiores o exteriores, lente 2.8mm y visión nocturna IR.
+SURTIEXPRESS-CCTV|CCTV|215000|Cámara modo Full HD para interiores o exteriores, lente 2.8mm y visión nocturna Full Color.
+SURTIEXPRESS-CCTV|CCTV|39000|Terminales videobalum, adaptador eléctrico 12V y toma aérea.
+SURTIEXPRESS-CCTV|CCTV|1290000|Cable UTP (250 mts aprox.), cable eléctrico encauchetado (100 mts aprox.), cajas de paso plásticas (22), terminales y accesorios.
+SURTIEXPRESS-CCTV|CCTV|1100000|Instalación y configuración de cámaras nuevas y reubicación de cámaras existentes.
+NONNA-LLANO-GRANDE-CAM|CCTV - SONIDO|140000|Cámara de modo Full HD tipo domo, lente 2.8mm y visión nocturna IR, terminales videobalum, adaptador 12V y Jack voltaje.
+NONNA-LLANO-GRANDE-CAM|CCTV - SONIDO|238000|Cámara Wifi modo Full HD tipo domo, lente 2.8mm y visión nocturna IR y tarjeta microSD de 64GB.
+NONNA-LLANO-GRANDE-CAM|CCTV - SONIDO|295000|Parlante lateral 15W (1), caja de paso (3), cable dúplex (15 mts aprox.), cable UTP (15 mts aprox.) y terminales empalme.
+NONNA-LLANO-GRANDE-CAM|CCTV - SONIDO|430000|Instalación y configuración de 3 cámaras de seguridad nuevas y 1 parlante.
+MEDINA-PC|HARDWARE|1670000|PC Corporativo remanufacturado con microtorre, procesador Intel Core i5 – 6 Gen, Ram de 8 GB, SSD de 256 GB, monitor de 20”, teclado y mouse USB, instalación y configuración de sistema operativo con programación básica.
+MEDINA-PC|HARDWARE|2080000|PC Corporativo remanufacturado con microtorre, procesador Intel Core i5 – 8 Gen, Ram de 8 GB, SSD de 256 GB, monitor de 20”, teclado y mouse USB, instalación y configuración de sistema operativo con programación básica.
+BIOPRODUCTOS-CCTV|CCTV|798000|Cámara IP modo Pro de 2mp Full HD, lente 4mm, micrófono incorporado, Low Lux, WDR Pro IR, tipo bala H.265
+BIOPRODUCTOS-CCTV|CCTV|3978000|Switch de red POE de 16 puertos base 10/100/1000 con puertos SFP administrable de 250W (2) y Switch de red POE de 8 puertos base 10/100/1000 no administrable de 120W (1).
+BIOPRODUCTOS-CCTV|CCTV|889000|Patchpanel Cat6 de 16 puertos con Jack de datos y patchcord centro de datos Cat6, organizador de 1 RU y accesorios para montaje en gabinete Rack existente.
+BIOPRODUCTOS-CCTV|CCTV|4885000|Cable UTP cat6 100% cobre (900 mts aprox.), Jack de datos Cat6 con faceplate (18), tubería EMT ½ y ¾ (170 mts aprox.), cajas de paso metálicas (38), uniones, curvas, terminales y accesorios EMT.
+BIOPRODUCTOS-CCTV|CCTV|4700000|Servicio de Ingeniería, instalación y configuración de cámaras IP nuevas y Switch de red con patchpanel, segmentación y parametrización de red y reubicación de cámaras IP existentes.
+BIOPRODUCTOS-CCTV|CCTV|970000|Mantenimiento físico y de software de equipos y gabinetes Rack CCTV, revisión y ajuste de cámaras existentes.
+VILLA-ROSA|HARDWARE|1850000|PC corporativo Dell/Lenovo remanufacturado con procesador Intel Core i5 – 7 Gen, memoria RAM de 16 GB, almacenamiento SSD de 256 GB, monitor de 19”, instalación y configuración de sistema operativo con programación básica
+VILLA-ROSA|HARDWARE|215000|Cajón Monedero
+VILLA-ROSA|HARDWARE|389000|Impresora Tirilla
+VILLA-ROSA|HARDWARE|485000|Lector de código de barras
+VILLA-ROSA|HARDWARE|280000|UPS
+VILLA-ROSA|SOFTWARE|6350000|SOFTWARE RESTAURANTE Recetas, facturación, Informes Se presenta opción local y web
+VILLA-ROSA|SOFTWARE|4200000|Renovación anual del software restaurante.
+NONNA-LG-SONIDO-RED|SONIDO - RED|1490000|Parlante lateral de rango completo ambiental 30W (4), cajas de paso y terminales empalme
+NONNA-LG-SONIDO-RED|SONIDO - RED|380000|Instalación de 4 parlantes y 1 amplificador con cableado existente.
+NONNA-LG-SONIDO-RED|SONIDO - RED|460000|Router 4 antenas Gigabite doble banda 2.4 – 5.0 GHZ con patchcord de datos, instalación y configuración.
+NONNA-LG-SONIDO|SONIDO|1762000|Cabina de 130 db 10 pulgadas de 400wts rms en 2 vías importado apta para escenarios y oradores + soportes metálicos reforzados de pared.
+NONNA-LG-SONIDO|SONIDO|2959000|Mixer profesional Yamaha importado de 10 canales 6 en baja y 4 estéreo con efectos.
+NONNA-LG-SONIDO|SONIDO|545000|Cable blindado para sonido con forraje para interior y exterior (100 mts aprox.) y terminales empalme.
+NONNA-LG-SONIDO|SONIDO|630000|Instalación de sistema de sonido.
+NONNA-LG-SONIDO|SONIDO|1330000|Cabina de 128 db 4pulgadas de 250wts rms en 2 vías importado apta para escenarios y oradores + soportes metálicos reforzados de pared.
+NONNA-LG-SONIDO|SONIDO|1970000|Mixer aurora importado de 10 canales 6 en baja y 4 estéreo con efectos ecualizador
+NONNA-LG-SONIDO|SONIDO|545000|Cable blindado para sonido con forraje para interior y exterior (100 mts aprox.) y terminales empalme.
+NONNA-LG-SONIDO|SONIDO|630000|Instalación de sistema de sonido.
+MADEARTE-OP1|CCTV|590000|XVR modo Full HD de 16CH + 2CH IP (soporta hasta 18 cámaras), puertos VGA/HDMI/USB y LAN para visualización remota.
+MADEARTE-OP1|CCTV|420000|Disco duro de 2TB especial para CCTV.
+MADEARTE-OP1|CCTV|108000|Cámara modo Full HD para interiores o exteriores, lente 2.8mm y visión nocturna IR.
+MADEARTE-OP1|CCTV|35000|Terminales videobalum, adaptador eléctrico 12V y toma aérea.
+MADEARTE-OP1|CCTV|1590000|Tubería EMT (80 mts aprox.), cajas de paso metálicas (20), uniones, curvas, terminales y accesorios EMT, cable UTP y cable eléctrico (180 mts aprox.), gabinete metálico Rack con toma y multitoma eléctrica.
+MADEARTE-OP1|CCTV|1100000|Instalación y configuración de CCTV con tubería EMT.
+MADEARTE-OP2|CCTV|1268000|XVR modo 3K de 16CH + 6CH IP (soporta hasta 22 cámaras), puertos VGA/HDMI/USB y LAN para visualización remota.
+MADEARTE-OP2|CCTV|420000|Disco duro de 2TB especial para CCTV.
+MADEARTE-OP2|CCTV|162000|Cámara modo 3K para interiores o exteriores, lente 2.8mm y visión nocturna IR.
+MADEARTE-OP2|CCTV|35000|Terminales videobalum, adaptador eléctrico 12V y toma aérea.
+MADEARTE-OP2|CCTV|1590000|Tubería EMT (80 mts aprox.), cajas de paso metálicas (20), uniones, curvas, terminales y accesorios EMT, cable UTP y cable eléctrico (180 mts aprox.), gabinete metálico Rack con toma y multitoma eléctrica.
+MADEARTE-OP2|CCTV|1100000|Instalación y configuración de CCTV con tubería EMT.
+PPT-BACKUP|BACKUP NUBE|790000|Disco duro nuevo sata de 2 TB para PC servidor e instalación y configuración de aplicativo de backup automático.
+PPT-BACKUP|BACKUP NUBE|369000|Instalación y configuración agente de Backup automático, administración y gestión Nube con 1 TB de almacenamiento (valor mensual exento de IVA).
+PPT-BACKUP|BACKUP NUBE|589000|Instalación y configuración agente de Backup automático, administración y gestión Nube con 2 TB de almacenamiento (valor mensual exento de IVA).
+MEDINA-RED-BACKUP|GESTION DE RED|1180000|Router Board Gigabite 10/100/1000, 5 puertos LAN/WAN, administración remota y gestión redes, Firewall, VPN onsite.
+MEDINA-RED-BACKUP|GESTION DE RED|1900000|Servicio de ingeniería, instalación y configuración de Router, acceso remoto servidor (A2) para 12 usuarios.
+MEDINA-RED-BACKUP|GESTION DE RED|3960000|Router Board Fortigate, 10/100/1000, balanceador de cargas, 5 puertos LAN/WAN, administración remota y gestión redes avanzada con licenciamiento anual, Firewall, VPN onsite.
+MEDINA-RED-BACKUP|GESTION DE RED|2600000|Servicio de ingeniería, instalación y configuración de Router, acceso remoto servidor (A2) para 12 usuarios.
+MEDINA-RED-BACKUP|BACKUP NUBE|845000|Disco duro nuevo sata de 2 TB para PC servidor e instalación y configuración de aplicativo de backup automático.
+MEDINA-RED-BACKUP|BACKUP NUBE|369000|Instalación y configuración agente de Backup automático, administración y gestión Nube con 1 TB de almacenamiento (valor mensual exento de IVA).
+MEDINA-RED-BACKUP|BACKUP NUBE|589000|Instalación y configuración agente de Backup automático, administración y gestión Nube con 2 TB de almacenamiento (valor mensual exento de IVA).
+MEDINA-RED-BACKUP|HARDWARE|89000|Mantenimiento físico y de software con configuración de rendimiento para PC estaciones.
+MEDINA-RED-BACKUP|HARDWARE|170000|Mantenimiento físico y de software con configuración de rendimiento para PC Servidor.
+MEDINA-RED-BACKUP|HARDWARE|55000|Mantenimiento físico de impresora.
+NONNA-LG-CAM|CCTV|294000|Terminales videobalum (7), Jack voltaje (7), adaptador eléctrico 12V-5Amp (2) y cajas de paso plásticas.
+NONNA-LG-CAM|CCTV|325000|UPS para regulación y respaldo eléctrico de CCTV.
+NONNA-LG-CAM|CCTV|540000|Instalación y configuración de CCTV y mantenimiento de DVR.
+FERRELECTRICOS|CENTRO DE DATOS|720000|Gabinete metálico Rack (alto 55cm, fondo 52cm, ancho 52cm) con organizador, bandeja, regleta eléctrica multitoma rackeable y extractor de calor.
+FERRELECTRICOS|CENTRO DE DATOS|895000|Switch de red de 24 puertos Gigabite Rackeable con Patchpanel con Jack de datos y patchcord centro de datos Cat6.
+FERRELECTRICOS|CENTRO DE DATOS|670000|Desmonte de rack, cableado y equipos existentes e instalación de Rack nuevo con equipos nuevos (Pathpanel, organizador, Switch de red y DVR de 32CH).
+BIOPRODUCTOS-UPS|UPS|175000|Revisión y mantenimiento físico preventivo de UPS.
+BIOPRODUCTOS-UPS|UPS|768000|Baterías nuevas 12V/9AH (6), instalación baterías, mantenimiento físico y puesta en marcha de UPS de 3KVA.
+SUPERMARK-TIEMPOS|SOFTWARE|3900000|Software para control de tiempos Turnos Empleados Liquidación de horas, instalación, configuración, capacitación de manejo, soporte técnico y Puesta en Operación.
+SUPERMARK-TIEMPOS|SOFTWARE|2400000|Renovación anual del software de control de tiempos.
+SUPERCARNES-TIEMPOS|SOFTWARE|6200000|Software para control de tiempos Turnos Empleados Liquidación de horas Aplicación para Control de tiempos Camiones capacitación y Puesta en Operación.
+SUPERCARNES-TIEMPOS|SOFTWARE|3200000|Renovación anual del software de control de tiempos.
+304-METALES-FINAL|CCTV|145000|Cámara de modo Full HD tipo bala para interiores o exteriores, lente 2.8mm y visión nocturna IR, terminales videobalum, adaptador eléctrico 12V y toma aérea.
+304-METALES-FINAL|CCTV|788000|Tubería EMT y coraza flexible (25 mts aprox.), cable UTP y cable eléctrico (100 mts aprox.), cajas de paso metálicas (12), uniones, terminales y accesorios EMT.
+304-METALES-FINAL|CCTV|850000|Instalación y configuración de CCTV.
+NONNA-MALL-INFRA|INFRAESTRUCTURA - HARDWARE|496000|Tubería EMT y coraza flexible (10 mts), cajas de paso metálicas (4), uniones, terminales y accesorios EMT, cable UTP (26 mts), Jack de datos Cat6 con faceplate (2), instalación y configuración de tubería y cableado para punto de voz y punto de datos.
+NONNA-MALL-INFRA|INFRAESTRUCTURA - HARDWARE|449000|Impresora POS térmica nueva, 3Nstar puertos LAN/USB, 80mm, instalación y configuración.
+PARAPLASTICOS-UPS-SEP|HARDWARE|2171000|Baterías nuevas 12V/9AH (16), instalación baterías, mantenimiento físico y puesta en marcha de UPS de 10KVA.
+PARAPLASTICOS-UPS-SEP|HARDWARE|215000|Revisión y mantenimiento físico de UPS de 2KVA.
+CREACASA-CCTV|CCTV|312000|Cámara de modo Full HD tipo bala para exteriores, micrófono incorporado, lente 2.8mm y visión nocturna IR, adaptador eléctrico 12V y microSD de 64 GB para almacenamiento de grabaciones.
+CREACASA-CCTV|CCTV|95000|Cable dúplex (15 mts), cajas de paso plásticas (2), tomas aéreas (2) y terminales.
+CREACASA-CCTV|CCTV|370000|Instalación y configuración de 2 cámaras de seguridad inalámbricas
+304-METALES-INICIAL|CCTV|145000|Cámara de modo Full HD tipo bala para interiores o exteriores, lente 2.8mm y visión nocturna IR, terminales videobalum, adaptador eléctrico 12V y toma aérea.
+304-METALES-INICIAL|CCTV|2677000|Bandeja portacable de 10cm con terminales, uniones, chazos y accesorios (60 mts aprox.), soporte metálico ménsula (20), tubería EMT y coraza flexible (25 mts aprox.), cable UTP y cable eléctrico (100 mts aprox.), cajas de paso metálicas (12), uniones, terminales y accesorios.
+304-METALES-INICIAL|CCTV|1550000|Instalación y configuración de CCTV (8 cámaras) con bandeja portacable y tubería EMT.
+DELIGTH-ELECTRICA|INFRAESTRUCTURA ELECTRICA|6920000|Tablero de Distribución Industrial Tipo ML 6 Circuitos, incluye 6 totalizadores (max 350 Amp.), interruptor Automático 3 x 315 Amp 50kA, Interruptor Automático 3 x 40 Amp 42kA, Interruptor Automático 3 x 50 Amp 42kA, Interruptor Automático 3 x 75 Amp 42kA. (Se dejan 2 espacios libres para requerimiento futuro), servicio de ingeniería e instalación.
+DELIGTH-ELECTRICA|INFRAESTRUCTURA ELECTRICA|3460000|Tablero de 12 circuitos trifásico con acometida eléctrica, cableado #8, tubería EMT (30 mts), cajas de paso metálicas, terminales y accesorios EMT, instalación de acometida eléctrica con circuitos existentes para oficina, marcación y señalización de riesgo eléctrico.
+KREDICEL-NAVI|SOFTWARE|3880000|Software NAVI, instalación, configuración, capacitación de manejo, soporte y licenciamiento anual (primer año), inventario, clientes, proveedores, facturación electrónica y compras.
+KREDICEL-NAVI|SOFTWARE|2700000|Licenciamiento anual Software NAVI nube (renovación, incremento anual IPC + 2 puntos).
+MEDINA-RIONEGRO-MANT|HARDWARE|130000|Mantenimiento físico y de software de PC.
+YULIYES-ROUTER|HARDWARE|375000|Monitor corporativo remanufacturado de 19”, convertidor DP a VGA, instalación y configuración de visualización de cámaras (PC administrativo piso 2).
+YULIYES-ROUTER|HARDWARE|295000|SSD de 240GB, instalación, configuración y actualización de sistema operativo (Win 11) con programación básica para PC.
+YULIYES-ROUTER|HARDWARE|130000|Formateo, instalación, configuración y actualización de sistema operativo (Win 11) con programación básica para PC.
+ALCO-CCTV|CCTV|720000|XVR modo Full HD de 8CH hibrido (TVI, CVI, IP), puertos VGA/HDMI/USB y LAN para visualización remota + disco duro de 1TB especial para CCTV.
+ALCO-CCTV|CCTV|155000|Cámara modo Full HD tipo bala para exteriores, lente 2.8mm y visión nocturna IR + terminales videobalum, adaptador eléctrico 12V y toma aérea.
+ALCO-CCTV|CCTV|735000|Tubería EMT (32 mts), cajas de paso metálicas (6), uniones y accesorios EMT, cable UTP cat5 100% cobre y cable electrico (75 mts) y gabinete Rack pequeño.
+ALCO-CCTV|CCTV|690000|Instalación y configuración de CCTV con tubería EMT.
+PODER-NATURAL|CCTV E INFRAESTRUCTURA|765000|DVR hibrido modo Full HD de 8CH (TVI-CVI-IP), puertos USB/HDMI y LAN para visualización remota con disco duro de 1TB + Switch de red Gigabite de 5 puertos.
+PODER-NATURAL|CCTV E INFRAESTRUCTURA|170000|Cámara modo Full HD tipo domo, lente 2.8mm y visión nocturna IR con terminales videobalum, adaptador electrico 12V, caja de paso plástica.
+PODER-NATURAL|CCTV E INFRAESTRUCTURA|240000|Cable UTP para cámaras (25 mts), cable eléctrico encauchetado (18 mts), toma eléctrica 110V (2) y terminales.
+PODER-NATURAL|CCTV E INFRAESTRUCTURA|570000|Instalación y configuración de 1 DVR y 2 cámaras nuevas con visualización remota e instalación de 2 puntos eléctricos 110V nuevos sobre canaleta metálica existente.
+PODER-NATURAL|CCTV E INFRAESTRUCTURA|80000|Servicio técnico de configuración de visual remota cámaras y chequeo red de datos.
+PODER-NATURAL|HARDWARE|2790000|PC completo con microtorre corporativa remanufacturada Intel Core i5, memoria RAM de 8GB, SSD M2 de 240GB, monitor táctil de 15”, teclado y mouse, instalación y configuración de sistema operativo con programación básica.
+PODER-NATURAL|HARDWARE|280000|Aumento de memoria RAM para PC POS a 8 GB, instalación y configuración de sistema operativo con programación básica.
+JAULA-VIVA-OP1|CCTV|579000|Switch de red POE de 5 puertos 10/100, caja de paso 15x15 (1), cable UTP cat6 para exteriores (70 mts), Jack de datos Cat6 y terminales.
+JAULA-VIVA-OP1|CCTV|630000|Instalación de cableado por tubería existente, Switch de red y configuración de cámara de seguridad IP.
+JAULA-VIVA-OP2|CCTV|1270000|Tubería EMT ½ (90 mts), cajas de paso metálicas (12), curvas, uniones y accesorios EMT, cable UTP cat6 para exteriores (120 mts), Jack de datos Cat6 y terminales.
+JAULA-VIVA-OP2|CCTV|1290000|Instalación de tubería y cableado y configuración de cámara de seguridad IP.
+POMOS-AGO-2025|CCTV|255000|Cámara IP modo Full HD tipo bala para exteriores, lente 2.8mm y visión nocturna IR con adaptador eléctrico 12V.
+POMOS-AGO-2025|CCTV|145000|Cámara modo Full HD tipo bala para exteriores, lente 2.8mm y visión nocturna IR con adaptador eléctrico 12V y terminales videobalum.
+POMOS-AGO-2025|CCTV|396000|Cable UTP 100% cat5 (85 mts), cable eléctrico (35 mts), cajas de paso plásticas (5), tubería EMT ½ con accesorios (5 mts).
+POMOS-AGO-2025|CCTV|570000|Instalación y configuración de 2 cámaras de seguridad nuevas y reubicación de 1 existente.
+ASESORIAS-CONTABLES-POLIZA|SERVICIOS|850000|Póliza mensual de servicio técnico con visita semanal (soporte técnico de nivel uno en hardware, software, redes y CCTV, visita semanal en sitio y atención remota).
+ASESORIAS-CONTABLES-POLIZA|SERVICIOS|30000|Mantenimiento por equipo (precio preferencial para más de 10 equipos).
+NONNA-VIVA-LUCES|INFRAESTRUCTURA|115000|Lampara LED de emergencia doble luz giratoria (1), tubo LED para lampara hermética (4).
+NONNA-VIVA-LUCES|INFRAESTRUCTURA|260000|Instalación de tubos LED para lámparas herméticas y lampara de emergencia nueva, ajuste de 2 lámparas existentes, ajuste de empalme eléctrico lampara (área cocina) y revisión de reflectores (área Bar).
+NONNA-LAURELES|CCTV Y RED|660000|Switch de Red de 16 puertos Gigabite, gabinete metálico Rack (1) pequeño (1), pacthcord Cat6 de 2 mts (3), espiral plástica y terminales.
+NONNA-LAURELES|CCTV Y RED|280000|Instalación de Switch de red y gabinete pequeño, reubicación terminales y cableado de red, instalación y configuración básica de PC nuevo.
+CEDROS-AGO-2025|CCTV|297000|Cámara IP modo full HD tipo bala para exteriores, lente 2.8mm y visión nocturna IR.
+CEDROS-AGO-2025|CCTV|988000|Cable UTP 100% cobre y cable eléctrico (210 mts aprox.), cajas de paso plásticas (8), Switch de red POE de 5 puertos (1), terminales y accesorios.
+CEDROS-AGO-2025|CCTV|1280000|Instalación y configuración de 3 cámaras IP nuevas y reubicación de 2 existentes.
+SANTA-MARTA-POS|SOFTWARE|2200000|Implementación de Sistema POS Paccioli, instalación, configuración, capacitación de manejo, soporte (3 meses), inventarios, clientes, proveedores, ventas y compras para 1 PC servidor y 3 estaciones.
+SANTA-MARTA-POS|SOFTWARE|4300000|Licenciamiento anual del software con emisión de Facturación Electrónica.
+PARAPLASTICOS-SOPORTE|SOPORTE TECNICO|80000|Hora o fracción de servicio técnico presencial nivel 1.
+PARAPLASTICOS-SOPORTE|SOPORTE TECNICO|45000|Hora o fracción de servicio técnico remoto nivel 1.
+PARAPLASTICOS-REUBICACION|INFRAESTRUCTURA DATOS Y POTENCIA|2600000|Mano de obra necesaria para reubicación de cableado de telecomunicaciones y potencia cuarto técnico rack.
+MEDINA-ITAGUI-ALARMA|ALARMA|2669000|Controlador de Sistema de intrusión Security HUB de 433MHZ con extensión de rango (2), control remoto pánico 433MHZ (2), detector de movimiento inalámbrico (5), detector de contacto magnético de apertura de puerta inalámbrico (3), sirena luz LED y sonido (2).
+MEDINA-ITAGUI-ALARMA|ALARMA|270000|Cable UTP y cable dúplex (50 mts), Switch de red 5 puertos (1), adaptador eléctrico 12V (2) y terminales.
+MEDINA-ITAGUI-ALARMA|ALARMA|830000|Instalación y configuración de sistema de intrusión controlado desde aplicación móvil.
+PORTEÑOS-ELECTRICO-UPS|RED DATOS|269000|Tubería EMT ½ (3 mts), caja de paso metálica (2), y accesorios EMT, cable eléctrico (9 mts), toma eléctrica (1), interruptor eléctrico (1) e instalación de punto eléctrico con interruptor desde tablero eléctrico principal.
+PORTEÑOS-ELECTRICO-UPS|RED DATOS|309000|UPS de 1000VA para regulación y respaldo eléctrico de equipos.
+SURTIEXPRESS-RED|RED DATOS|1269000|Switch de red de 24 puertos Gigabite (1), Jack de datos Cat6 con faceplate (11), terminale Rj45, Patch panel 24 puertos con terminales (1) y patchcord de 2mts.
+SURTIEXPRESS-RED|RED DATOS|1141000|Cable UTP cat6 100% cobre (230 mts aprox.), cable eléctrico para circuito Rack (45 mts aprox.), breaket 15Amp (1), toma eléctrica 110V (1), canalización plástica 40x25 (30 mts), tubería PVC ½ (9 mts aprox.), cajas de paso (2) y terminales.
+SURTIEXPRESS-RED|RED DATOS|1670000|Instalación y configuración de red datos (11 puntos), reubicación Rack, UPS, servidor y router con instalación de circuito eléctrico independiente.
+SANTA-MARTA-ELECTRICA-JUL|INFRAESTRUCTURA ELECTRICA|3280000|Bandeja portacable metálica cablofil de 100mm X 3mt (50 mts aprox.), soporte ménsula metálica de 10 y 15 cm (33), espárragos, terminales y accesorios cablofil, tubería EMT de ½ y ¾ (36 mts aprox.), cajas de paso metálicas (12), uniones, curvas y accesorios EMT.
+SANTA-MARTA-ELECTRICA-JUL|INFRAESTRUCTURA ELECTRICA|1470000|Cable eléctrico iluminación (300 mts aprox.), cable eléctrico puntos de pago (100 mts aprox.), breaket 15Amp (3), tomas eléctricas 110V (12), interruptor eléctrico doble (2) y terminales empalme.
+SANTA-MARTA-ELECTRICA-JUL|INFRAESTRUCTURA ELECTRICA|2900000|Instalación de red eléctrica para 2 circuitos de iluminación y 1 circuito eléctrico para 3 puntos de pago, con bandeja portacable para cableado estructurado.
+AMARILLO-FINAL|CCTV|890000|XVR de 16 Ch + 2 Ch IP (soporta hasta 18 cámaras) modo Full HD, con disco duro de 2 TB, puertos VGA/HDMI y LAN para visualización remota.
+AMARILLO-FINAL|CCTV|92000|Cámara modo full HD para interiores o exteriores (bala o domo), lente 2.8mm y visión nocturna IR.
+AMARILLO-FINAL|CCTV|41000|Terminales video balum, adaptador eléctrico 12V, toma aérea y caja de paso plástica.
+AMARILLO-FINAL|CCTV|1090000|Gabinete metálico Rack para almacenamiento de DVR y Switch de red, cable UTP, cable eléctrico (190 mts), y breaket 15Amp (1) para cámaras y circuito eléctrico independiente Rack, canalización metálica 40x25 (4 mts), HDMI de 10 mts con mouse inalámbrico para visual cámaras, terminales, toma y multitoma eléctrica.
+AMARILLO-FINAL|CCTV|880000|Instalación y configuración de CCTV con visualización remota (16 camaras).
+AMARILLO-FINAL|RED ELECTRICA Y DATOS PARA PC – ILUMINACION Y NEVERAS|1845000|Cable UTP (100 mts), Jack de datos con faceplate (4), Switch de red de 8 puertos base mil, rj45, canalización plástica (8 mts), tubería EMT (15 mts), canalización metálica 100*40 (2) con troqueles y accesorios, cajas de paso metálicas (5), terminales y accesorios EMT, cable eléctrico (38 mts), breaket 15Amp (1), instalación y configuración de 4 puntos de datos e instalación de circuito eléctrico independiente para 4 estaciones de trabajo.
+AMARILLO-FINAL|RED ELECTRICA Y DATOS PARA PC – ILUMINACION Y NEVERAS|27500|Lámpara LED nueva de 1.20mts de 50W para interiores.
+AMARILLO-FINAL|RED ELECTRICA Y DATOS PARA PC – ILUMINACION Y NEVERAS|650000|Cable eléctrico dúplex (100 mts aprox), terminales empalme e instalación de lámparas.
+AMARILLO-FINAL|RED ELECTRICA Y DATOS PARA PC – ILUMINACION Y NEVERAS|1290000|Tablero eléctrico bifásico auxiliar de 8 circuitos (1), Breaket doble 220V (3), cable eléctrico (90 mts), tubería EMT (15 mts), cajas de paso metálicas (4), terminales y accesorios EMT, tomas eléctricas 220V (3), instalación de tablero eléctrico auxiliar e instalación de puntos eléctricos 220V para neveras con circuitos independientes.
+AMARILLO-FINAL|EQUIPOS DE COMPUTO|3100000|Computador de Escritorio corporativo remanufacturado PROCESADOR I5, RAM 8GB, DISCO SOLIDO 240GB S.O. Windows 11, Monitor 19”, 1 Año de Garantía. Impresora Térmica 80mm puertos LAN/USB, Lector Código Barras omnidireccional, cajón Monedero, UPS de 650VA para regulación y respaldo eléctrico de PC (puntos de pago).
+AMARILLO-FINAL|EQUIPOS DE COMPUTO|1800000|Computador de Escritorio corporativo remanufacturado PROCESADOR I5, RAM 8GB, DISCO SOLIDO 240GB S.O. Windows 11, Monitor 19”, 1 Año de Garantía (administrativo).
+FONDO-EMPLEADOS-2|HARDWARE|2948000|PC Corporativo nuevo portátil Dell Inspiron con procesador Intel Core i5 1334U, memoria Ram de 16 GB, SSD M2 de 512 GB de alta velocidad, teclado numérico, pantalla LED de 15.6” modo Full HD, puertos USB 3.2 y tipo C, HDMI, Windows 11 Pro con programación básica.
+FONDO-EMPLEADOS-2|HARDWARE|529000|Monitor LED de 23.8” modo Full HD, puertos VGA/HDMI.
+FONDO-EMPLEADOS-1|HARDWARE - SOFTWARE|3590000|PC Corporativo nuevo de escritorio Lenovo (microtorre) con procesador Intel Core i5 13420, memoria Ram de 16 GB, SSD M2 de 500 GB de alta velocidad, teclado y mouse USB, monitor LED de 23.8” modo Full HD con puertos HDMI/DP, puertos USB 3.2, LAN Gigabit, HDMI/DP y Windows 11 Pro con programación básica.
+FONDO-EMPLEADOS-1|HARDWARE - SOFTWARE|4970000|PC Corporativo nuevo portátil Lenovo con procesador Intel Core i7 1355, memoria Ram de 16 GB, SSD M2 de 500 GB de alta velocidad, teclado y mouse USB, pantalla LED de 14” modo Full HD, puertos USB 3.2, LAN Gigabite, HDMI/DP, Windows 11 Pro con programación básica.
+FONDO-EMPLEADOS-1|HARDWARE - SOFTWARE|878000|Impresora nueva multifuncional HP Laser monocromática M141, interfaz USB y conexión Wifi 24.GHZ (ciclo de trabajo mensual hasta 8.000 pag.)
+FONDO-EMPLEADOS-1|HARDWARE - SOFTWARE|798000|Paquete Office 2024 para 1 Dispositivo (perpetua).
+INDUSTRIAS-BO|CCTV|105000|Cable UTP y cable eléctrico dúplex (10 mts), cajas de paso plásticas (2), terminales videobalum (1) y terminales empalme.
+INDUSTRIAS-BO|CCTV|149000|Cámara modo Full HD tipo bala para interiores o exteriores, lente 2.8mm y visión nocturna IR, terminales videobalum, adaptador eléctrico 12V y toma aérea.
+INDUSTRIAS-BO|CCTV|180000|Instalación y configuración de 1 cámara nueva con tramo de cableado existente y reparación de 2 cámaras.
+INDUSTRIAS-BO|CCTV|650000|DVR nuevo modo Full HD de 16CH + 2CH IP (hasta 18 cámaras).
+JAULA-TESORO-TIMBRES|INFRAESTRUCTURA|375000|Timbre 110V con interfaz para cronometro digital (3) y servicio técnico.
+JAULA-TESORO-TIMBRES|INFRAESTRUCTURA|660000|Cable UTP cat5 100% cobre (150 mts), instalación y configuración para servicio de cronometro digital cancha 5.
+MEDINA-RIONEGRO-ALARMA|ALARMA|1960000|Controlador de Sistema de intrusión Security HUB de 433MHZ con extensión de rango (1), control remoto pánico 433MHZ (1), detector de movimiento inalámbrico (3), detector de contacto magnético de apertura de puerta inalámbrico (2), sirena luz LED y sonido (1).
+MEDINA-RIONEGRO-ALARMA|ALARMA|240000|Cable UTP y cable dúplex (60 mts), adaptador eléctrico 12V (2) y terminales.
+MEDINA-RIONEGRO-ALARMA|ALARMA|770000|Instalación y configuración de sistema de intrusión controlado desde aplicación móvil.
+NONNA-PLANTA-2025|CCTV (CABLEADO EXPUESTO)|660000|XVR de 16Ch + 2CH IP modo Full HD (soporta hasta 18 cámaras), puertos VGA/HDMI y LAN para visualización remota.
+NONNA-PLANTA-2025|CCTV (CABLEADO EXPUESTO)|380000|Disco duro especial para CCTV de 2 TB.
+NONNA-PLANTA-2025|CCTV (CABLEADO EXPUESTO)|149000|Cámara de modo Full HD tipo domo o bala para interiores o exteriores, lente 2.8mm y visión nocturna IR, terminales videobalum, adaptador eléctrico 12V y toma aérea.
+NONNA-PLANTA-2025|CCTV (CABLEADO EXPUESTO)|720000|Cable UTP y cable eléctrico (190 mts aprox.), cajas de paso plásticas (15), amarras plásticas, toma y multitoma eléctrica, HDMI de 10 mts y mouse inalámbrico (para TV de monitoreo).
+NONNA-PLANTA-2025|CCTV (CABLEADO EXPUESTO)|780000|Instalación y configuración de CCTV (10 cámaras con cableado expuesto) y visualización remota.
+NONNA-PLANTA-2025|ADICIONAL CON EMT|1331000|Tubería EMT 1/2 (120 mts), coraza flexible (6 mts), cajas de paso metálicas (20), uniones, curvas, terminales y accesorios EMT.
+NONNA-PLANTA-2025|ADICIONAL CON EMT|870000|Mano de obra adicional para instalación de cableado con tubería EMT.
+NONNA-PLANTA-2025|CCTV (CABLEADO EXPUESTO)|1690000|XVR de 32Ch con 2 bahías para disco duro.
+NONNA-TESORO-ELECTRICO|INFRAESTRUCTURA|844000|Tubos LED de 16W (12), tomas eléctricas 110V con protección GFCI (8), tomas eléctricas 110V (4), interruptor eléctrico (2), cable eléctrico rígido y encauchetado (8 mts), lampara LED 30cm (1),
+NONNA-TESORO-ELECTRICO|INFRAESTRUCTURA|420000|Cambio de tomas eléctricas 110V y ajuste, instalación lampara nueva con interruptor independiente, cambio de tubos y ajuste de lámparas herméticas, revisión y ajuste de puntos eléctricos a nivel de piso.
+BIOPRODUCTOS-FORTIGATE|SOFTWARE|3340000|Renovación licenciamiento anual y actualización de firmware, revisión y ajuste de perfiles de seguridad para Fortigate.
+MERCA-ACOSTA|INFRAESTRUCTURA|889000|Tubería EMT ¾ (35 mts), curvas, terminales, cajas de paso metálicas (5) y accesorios EMT, cable eléctrico dúplex (15 mts), cable UTP 100% cobre (80 mts) y Jack de datos con faceplate (3).
+MERCA-ACOSTA|INFRAESTRUCTURA|698000|Extender HDMI y USB para DVR (1), cable de sonido 2x1 de 20 mts (1), cámara modo Full HD tipo domo con terminales video balum y adaptador electrico 12V (2), lampara LED 1.20 nueva de 50W (1).
+MERCA-ACOSTA|INFRAESTRUCTURA|780000|Instalación y configuración de 1 punto de datos, 2 puntos de voz, extender HDMI y mouse para visualización cámaras, instalación enlace sonido para amplificador, reubicación de PC y TV, instalación y configuración de 2 cámaras de seguridad nuevas, e instalación de lampara LED.
+MERCA-ACOSTA|INFRAESTRUCTURA|815000|Monitores nuevos de 22” puertos HDMI/VGA (2), convertidor para torre de PC de DVI/HDMI, instalación y configuración de doble pantalla multitarea para PC.
+MERCA-ACOSTA|INFRAESTRUCTURA|239000|UPS nueva de 750VA para regulación y respaldo eléctrico de PC.
+VERVANTIS-MAY|INFRAESTRUCTURA DATOS Y POTENCIA|2535000|Cable UTP Cat6 (170 mts), Jack de datos Cat6 con faceplate y acoples (40), canalización metálica con división 60x40 y 100x40 (12 tramos), tornillería y accesorios.
+VERVANTIS-MAY|INFRAESTRUCTURA DATOS Y POTENCIA|499000|Cable eléctrico #12 (60 mts), breaket 15Amp (1), tomas eléctricas dobles 110V (28) y terminales empalme.
+VERVANTIS-MAY|INFRAESTRUCTURA DATOS Y POTENCIA|1400000|Instalación de infraestructura de datos y eléctrica para 14 puestos de trabajo con identificación y marcación e instalación de enlaces de red desde Switch de red y Patchpanel existente.
+VERVANTIS-FEB|RED DATOS - POTENCIA|3275000|Cable UTP cat6 (500 mts), Jack de datos Cat6 con faceplate y acoples (28), canalización metálica 100x40 con división potencia – datos y troqueles (7 tramos), organizador de 2 RU para gabinete Rack, pacthcord Cat6 para centro de datos (15), tornillería y accesorios.
+VERVANTIS-FEB|RED DATOS - POTENCIA|1170000|Cable eléctrico #12 (200 mts), Breaket 20Amp (4), tomas eléctricas dobles 110V con faceplate (28), conectores empalme, tornillería y accesorios.
+VERVANTIS-FEB|RED DATOS - POTENCIA|2300000|Instalación de infraestructura de datos y eléctrica para puestos de trabajo con identificación y marcación e instalación de enlaces de red.
+CEDROS-MAY-2025|CCTV|258000|Cable UTP 100% cobre para exteriores (35 mts), cable eléctrico (35 mts), cajas de paso plásticas (3), terminales videobalum (1), adaptador eléctrico 12V (1) y toma aérea.
+CEDROS-MAY-2025|CCTV|125000|Cámara modo full HD tipo bala para exteriores, lente 2.8mm y visión nocturna IR.
+CEDROS-MAY-2025|CCTV|290000|Instalación y configuración de cámara de seguridad para zona baño.
+PARAPLASTICOS-PC-ALMACEN|HARDWARE|2390000|Microtorre corporativa con procesador Intel Core i5 - 10Gen, Ram de 8 GB, SSD M2 de 256 GB, monitor LG/Samsung de 22” HDMI/VGA, teclado y mouse USB, instalación y configuración con programación básica (excluido de IVA).
+PARAPLASTICOS-PC-ALMACEN|HARDWARE|270000|Licencia de Win 11 Pro.
+MEDINA-ITAGUI-CABLEADO|INFRAESTRUCTURA|678000|Cable UTP cat6 100% cobre, 10 tramos de 12 mts cada uno (120 mts), cable eléctrico dúplex (12 mts), cajas de paso metálicas (2), tubería EMT ¾ (15 mts), curvas, terminales y accesorios.
+MEDINA-ITAGUI-CABLEADO|INFRAESTRUCTURA|430000|Instalación de tubería EMT con cajas de paso, conexiones en gabinete Rack y reparación con empalmes de cableado datos, CCTV y cableado eléctrico.
+INDUALPES-IMAC|HARDWARE|590000|Módulo de memoria RAM de 8 GB, SSD de 480 GB, desmontaje y ensamblaje, instalación y configuración de sistema operativo con programación básica.
+AVANTI-AYACUCHO|INFRAESTRUCTURA|1070000|Gabinete metálico Rack (40x40x54) con organizador para almacenamiento e cableado, equipos y terminales (1), DVR modo Full HD de 16 CH (1), instalación y configuración.
+AVANTI-AYACUCHO|INFRAESTRUCTURA|890000|Tubería EMT y coraza flexible de ½ y ¾ (12 mts aprox.), cajas de paso metálicas (7), terminales y accesorios EMT, cable UTP y cable eléctrico (80 mts aprox.), terminales videobalum (10), adaptador eléctrico 12V (6) y cámara tipo bala para zona exterior (1).
+AVANTI-AYACUCHO|INFRAESTRUCTURA|1000000|Instalación y configuración de DVR, Switch de red, gabinete Rack, 6 cámaras de seguridad (salón) y 3 cámaras de seguridad exteriores con tubería EMT.
+COSECHA-POS|SOFTWARE|800000|Implementación de Sistema POS Paccioli Básico, instalación, configuración, capacitación de manejo, soporte (2 meses), inventarios, clientes, proveedores, ventas y compras para 1 PC servidor y 3 estaciones.
+COSECHA-POS|SOFTWARE|2000000|Licenciamiento anual del software con emisión de Facturación Electrónica (1.000 documentos mensuales).
+PARAPLASTICOS-UPS-ABR|HARDWARE|215000|Revisión y mantenimiento físico de UPS.
+PARAPLASTICOS-PC-RECEPCION|HARDWARE|2390000|Microtorre corporativa con procesador Intel Core i5 - 10Gen, Ram de 8 GB, SSD de 256 GB, monitor LG/Samsung de 22” HDMI/VGA, teclado y mouse USB, Win 11, instalación y configuración con programación básica (excluido de IVA).
+PARAPLASTICOS-PC-RECEPCION|HARDWARE|2730000|Microtorre corporativa con procesador Intel Core i5 - 13Gen, Ram de 8 GB, SSD de 256 GB, monitor de 22” HDMI/VGA, teclado y mouse USB, Win 11 Pro, instalación y configuración con programación básica (precio antes de IVA).
+CEDROS-MAR-2025-B|CCTV|359000|Cable UTP 100% cobre cat5 (130 mts aprox), cable eléctrico (30 mts aprox.), cajas de paso plásticas (3), terminales RJ45 y conectores.
+CEDROS-MAR-2025-B|CCTV|290000|Cámara IP modo full HD tipo bala para exteriores, lente 2.8mm y visión nocturna IR.
+CEDROS-MAR-2025-B|CCTV|365000|Instalación de cableado datos y eléctrico, instalación y configuración de cámara IP con switch de red POE.
+JAULA-TESORO-UPS|INFRAESTRUCTURA|810000|UPS de 2000 VA para respaldo eléctrico y regulación de equipos Rack.
+JAULA-TESORO-UPS|INFRAESTRUCTURA|275000|UPS de 750 VA para respaldo eléctrico y regulación de PC.
+JAULA-TESORO-UPS|INFRAESTRUCTURA|340000|Cable eléctrico (10 mts), terminales y accesorios EMT, cambio de tramo cableado eléctrico de cámara de seguridad e instalación de 2 UPS.
+POMOS-REPARACION|CCTV|130000|Terminales videobalum (4), adaptador eléctrico 12V (3).
+POMOS-REPARACION|CCTV|260000|Cambio de tramo de cableado (cámara parqueadero ppal), servicio tecnico y configuracion camaras IP.
+YULIYES-VARIOS|INFRAESTRUCTURA Y HARDWARE|940000|Cable UTP cat6 (50 mts aprox.), cable eléctrico (90 mts aprox.), Jack de datos cat6 con faceplate (2), toma eléctrica doble (2), tubería EMT (9 mts), cajas de paso metálicas (4), terminales y accesorios e instalación de 2 punto eléctricos y 2 puntos de datos.
+YULIYES-VARIOS|INFRAESTRUCTURA Y HARDWARE|389000|Lector de códigos de barra omnidireccional Honeywell remanufacturado para PC pedidos vitrina.
+YULIYES-VARIOS|INFRAESTRUCTURA Y HARDWARE|165000|Mantenimiento físico y de software de PC (server saint), respaldo datos, formateo, instalación y configuración de sistema operativo con programación básica para puesto.
+YULIYES-VARIOS|INFRAESTRUCTURA Y HARDWARE|260000|Mantenimiento físico de gabinete rack y equipos.
+YULIYES-VARIOS|INFRAESTRUCTURA Y HARDWARE|360000|SSD de 120 GB, aumento de RAM a 8 GB, instalación y configuración de sistema operativo con programación básica para PC pedidos vitrina.
+YULIYES-VARIOS|INFRAESTRUCTURA Y HARDWARE|78000|Soporte metálico para microtorres Tiny, instalada y ajustada a monitor.
+NONNA-MILLA-ORO|POTENCIA Y DATOS|670000|Tubería EMT (20 mts), cajas de paso metálicas (5), uniones, terminales y accesorios EMT, cable eléctrico (26 mts), cable UTP (30 mts), lampara LED hermética 36W (1), toma eléctrica 110V (4), Jack de datos con faceplate (4) y terminales.
+NONNA-MILLA-ORO|POTENCIA Y DATOS|560000|Instalación de 2 puntos de datos para impresora y PC, instalación de punto eléctrico para lampara nueva, revisión, reubicación y ajuste de puntos y cableado eléctrico y de red zona cocina, zona bar y zona descomidadero.
+JAULA-FABRICATO-DVR|CCTV|570000|DVR modo Full HD de 16 CH + 2 CH IP (soporta hasta 18 cámaras), puertos VGA/HDMI y LAN para visualización remota.
+JAULA-FABRICATO-DVR|CCTV|245000|Revisión y servicio técnico cámaras, instalación y configuración de DVR.
+MEPER-ELECTRICA|RED POTENCIA|2545000|Canalización metálica 100x40 con división y troqueles (12 tramos), tornillería y accesorios, cable eléctrico #12 (250 mts), breaket 15Amp (3), tomas eléctricas 110V con troqueles (23), conectores empalme, tornillería, terminales y accesorios.
+MEPER-ELECTRICA|RED POTENCIA|1150000|Instalación de infraestructura física de potencia para puestos de trabajo con identificación y marcación.
+MEPER-DATOS|RED POTENCIA Y DATOS|2356000|Cable UTP cat6 100% cobre (350 mts), Jack de datos Cat6 con faceplate y acoples (23), canalización metálica 100x40 con division y troqueles (9 tramos), tornillería y accesorios.
+MEPER-DATOS|RED POTENCIA Y DATOS|1290000|Gabinete metálico Rack con multitoma eléctrica y organizador de 2 RU, Switch de red Gigabite de 16 puertos (2) y Router doble banda 2.4/5.0 GHZ Gigabite (1).
+MEPER-DATOS|RED POTENCIA Y DATOS|1365000|Cable eléctrico #12 (250 mts), breaket 15Amp (3), tomas eléctricas 110V con troqueles (23), conectores empalme, tornillería, terminales y accesorios.
+MEPER-DATOS|RED POTENCIA Y DATOS|1600000|Instalación de infraestructura física de datos y potencia para puestos de trabajo con identificación y marcación.
+MEPER-DATOS|RED POTENCIA Y DATOS|539000|Access Point AP alta velocidad de doble banda con inyector POE.
+CEDROS-FEB-2025|CCTV|660000|Cable UTP 100% cobre cat5 (170 mts aprox), cable eléctrico (60 mts aprox.), switch de red POE de 5 puertos (1), cajas de paso plásticas (6), terminales RJ45 y conectores eléctricos.
+CEDROS-FEB-2025|CCTV|290000|Cámara IP modo full HD tipo bala para exteriores, lente 2.8mm y visión nocturna IR.
+CEDROS-FEB-2025|CCTV|440000|Instalación de cableado datos y eléctrico para configuración de cámara IP con switch de red POE.
+IE-SITIO-NUEVO|HARDWARE|1145000|PC Corporativo Intel Core i5 – 6 Gen, Ram de 8 GB, SSD de 256 GB, monitor de 20”, teclado y mouse USB, instalación y configuración de sistema operativo con programación básica.

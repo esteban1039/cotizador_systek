@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Domain\Audit;
 use App\Domain\DecimalMoney;
 use App\Domain\QuoteFamily;
+use App\Http\Requests\SimilarCatalogRequest;
 use App\Repositories\Contracts\CatalogRepository;
 use Closure;
 use Illuminate\Http\JsonResponse;
@@ -20,6 +21,11 @@ final class CatalogController extends Controller
     public function current(): JsonResponse
     {
         return response()->json(['data' => $this->catalog->currentPrices(now()->toDateString())]);
+    }
+
+    public function similar(SimilarCatalogRequest $request): JsonResponse
+    {
+        return response()->json(['data' => $this->catalog->similarItems($request->validated('q'), $request->validated('family'), 8)]);
     }
 
     public function index(): JsonResponse

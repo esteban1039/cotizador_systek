@@ -21,9 +21,10 @@ final class AssistantProposal
     /**
      * @param  array<string, mixed>  $output
      * @param  array<string, array{price_version_id: string, description: string, unit: string, family: string}>  $catalog  clave: SKU
-     * @return array{family: ?string, scope: ?string, exclusions: ?string, lines: list<array<string, mixed>>, missing_information: list<string>, warnings: list<array<string, string>>, lines_discarded: int}
+     * @param  array<string, array{source: string, captured_at: string}>  $sentPrecedents  clave: id enviado (P1..)
+     * @return array{precedents_used: list<array{source: string, captured_at: string}>, family: ?string, scope: ?string, exclusions: ?string, lines: list<array<string, mixed>>, missing_information: list<string>, warnings: list<array<string, string>>, lines_discarded: int}
      */
-    public function validate(array $output, array $catalog): array
+    public function validate(array $output, array $catalog, array $sentPrecedents = []): array
     {
         $warnings = [];
         $family = $output['family'] ?? null;
@@ -78,7 +79,15 @@ final class AssistantProposal
             }
         }
 
+        $used = [];
+        foreach (is_array($output['precedent_ids'] ?? null) ? array_slice($output['precedent_ids'], 0, 5) : [] as $id) {
+            if (is_string($id) && isset($sentPrecedents[$id])) {
+                $used[$id] = ['source' => $sentPrecedents[$id]['source'], 'captured_at' => $sentPrecedents[$id]['captured_at']];
+            }
+        }
+
         return [
+            'precedents_used' => array_values($used),
             'family' => $family,
             'scope' => $this->text($output['scope'] ?? null, self::MAX_TEXT, $warnings),
             'exclusions' => $this->text($output['exclusions'] ?? null, self::MAX_TEXT, $warnings),

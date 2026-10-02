@@ -13,6 +13,7 @@ use App\Domain\Quotes\SnapshotCompatibility;
 use App\Domain\Quotes\VatWithholdingPolicy;
 use App\Http\Requests\CalculateQuoteRequest;
 use App\Http\Requests\PreviewQuoteRequest;
+use App\Repositories\Contracts\CatalogRepository;
 use App\Repositories\Contracts\ClientRepository;
 use App\Repositories\Contracts\CompanyRepository;
 use App\Repositories\Contracts\QuoteEmissionRepository;
@@ -26,7 +27,7 @@ use Illuminate\Validation\ValidationException;
 
 final class QuoteController extends Controller
 {
-    public function __construct(private QuoteRepository $quotes, private CompanyRepository $companies, private QuoteEmissionRepository $emissions, private EmissionPolicy $policy, private QuoteFollowupRepository $followups, private FollowupPolicy $followupPolicy) {}
+    public function __construct(private QuoteRepository $quotes, private CatalogRepository $catalog, private CompanyRepository $companies, private QuoteEmissionRepository $emissions, private EmissionPolicy $policy, private QuoteFollowupRepository $followups, private FollowupPolicy $followupPolicy) {}
 
     public function store(CalculateQuoteRequest $request, CreateQuote $create): JsonResponse
     {
@@ -89,6 +90,17 @@ final class QuoteController extends Controller
 
         $snapshot = json_decode($quote->snapshot, true, flags: JSON_THROW_ON_ERROR);
         $snapshot = SnapshotCompatibility::normalize($snapshot, $quote);
+        $links = $this->quotes->freeLineLinks($id);
+        if ($links !== []) {
+            $skus = $this->catalog->skusByIds(array_column($links, 'catalog_item_id'));
+            foreach ($snapshot['lines'] as &$line) {
+                $link = ($line['line_type'] ?? 'catalog') === 'free' ? ($links[$line['free_line_id'] ?? ''] ?? null) : null;
+                if ($link !== null) {
+                    $line['linked_item'] = ['catalog_item_id' => $link['catalog_item_id'], 'sku' => $skus[$link['catalog_item_id']] ?? null, 'price_version_id' => $link['price_version_id']];
+                }
+            }
+            unset($line);
+        }
         $snapshot['root_quote_id'] = $quote->root_quote_id;
         $snapshot['previous_quote_id'] = $quote->previous_quote_id;
         $snapshot['revision_number'] = (int) $quote->revision_number;
@@ -156,6 +168,6 @@ final class QuoteController extends Controller
         $snapshot['commercial_status'] = $issued ? $this->followupPolicy->commercialStatus($this->followups->forQuote($id)->pluck('type')->all()) : null;
         $snapshot['can_record_followup'] = $issued && $this->followupPolicy->mayRecord($request->user()->role, $request->user()->id, $quote->created_by === null ? null : (int) $quote->created_by);
 
-        return response()->json(['data' => QuoteVisibility::redact($snapshot, $request->user())]);
+        return response()->json(['data' => QuoteVisibility::redact($snapshot, $request->user(), true)]);
     }
 }
