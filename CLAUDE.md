@@ -27,7 +27,7 @@ El hook de Stop ya corre Pint, typecheck y las pruebas PHP modificadas; no repet
 
 - **Dinero:** centavos enteros, nunca float; respuestas como cadenas decimales; el frontend solo formatea.
 - **Precios:** publicar crea versión nueva; históricos nunca pasan a vigentes; no se reescriben cotizaciones guardadas ni instantáneas.
-- **Emisión:** sin emisión, envío ni PDF oficial sin aprobación humana; nadie aprueba su propia cotización.
+- **Emisión:** sin emisión, envío ni PDF oficial sin aprobación humana; nadie aprueba su propia cotización (excepción decidida por el dueño del producto, 2026-10-03: la cotización que monta un `admin` queda auto-aprobada, con auditoría `quote.auto_approved`; emitir sigue siendo un paso aparte).
 - **Capas:** sin consultas en controladores ni dominio; contratos específicos; transacciones en el caso de uso; bloqueos ítem→precio, usuario→tokens, cotización→estado.
 - **Autorización en servidor.** Endpoint nuevo = ruta en `backend/routes/api.php` **y** entrada en la allowlist del proxy.
 - **BD:** migraciones nuevas y reversibles; nunca editar aplicadas; prohibido `migrate:fresh|reset`, `db:wipe`, `DROP`, `TRUNCATE` o borrar volúmenes; respaldo antes de migrar desarrollo.

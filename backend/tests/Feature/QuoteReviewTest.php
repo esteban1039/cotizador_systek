@@ -90,10 +90,19 @@ final class QuoteReviewTest extends TestCase
         $this->assertDatabaseHas('quotes', ['id' => $id, 'status' => 'in_review']);
     }
 
-    public function test_admin_cannot_approve_own_quote_and_duplicate_submission_is_rejected(): void
+    public function test_admin_quote_is_auto_approved_so_it_cannot_be_submitted_or_reviewed_again(): void
     {
+        $this->rules();
         $this->author->role = 'admin';
         $this->author->save();
+        $id = $this->draft(['clause_versions' => $this->coherentClauseVersions()]);
+        $this->assertDatabaseHas('quotes', ['id' => $id, 'status' => 'approved']);
+        $this->postJson("/api/v1/quotes/{$id}/submit", ['reason' => 'Revisar propuesta.'])->assertConflict();
+        $this->postJson("/api/v1/quotes/{$id}/review", ['decision' => 'approve', 'reason' => 'Aprobación propia.'])->assertConflict();
+    }
+
+    public function test_quoter_duplicate_submission_is_rejected_and_own_approval_forbidden(): void
+    {
         $id = $this->draft();
         $this->postJson("/api/v1/quotes/{$id}/submit", ['reason' => 'Revisar propuesta.'])->assertOk();
         $this->postJson("/api/v1/quotes/{$id}/submit", ['reason' => 'Revisar propuesta.'])->assertConflict();

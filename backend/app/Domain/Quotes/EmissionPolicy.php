@@ -30,16 +30,23 @@ final class EmissionPolicy
             : 'Solo un administrador o el cotizador dueño de la cotización puede emitir.';
     }
 
-    /** El aprobador de la revisión debe existir y ser distinto del autor. */
-    public function approvalIsIndependent(?int $approverId, ?int $authorId): bool
+    /**
+     * El aprobador de la revisión debe existir y ser distinto del autor. Excepción decidida por el dueño del
+     * producto: la auto-aprobación de un administrador (`auto_approved`, fijada solo en servidor) es válida.
+     */
+    public function approvalIsIndependent(?int $approverId, ?int $authorId, bool $autoApproved = false): bool
     {
+        if ($autoApproved && $approverId !== null && $approverId === $authorId) {
+            return true;
+        }
+
         return $approverId !== null && $authorId !== null && $approverId !== $authorId;
     }
 
     /**
      * Bloqueos legibles para `GET /quotes/{id}`.
      *
-     * @param  array{status: string, role: string, actor_id: int, author_id: ?int, requires_authorization: bool, is_latest: bool, company_missing: list<string>, valid_until: string, today: string, approver_id: ?int, quote_number: ?string}  $facts
+     * @param  array{status: string, role: string, actor_id: int, author_id: ?int, requires_authorization: bool, is_latest: bool, company_missing: list<string>, valid_until: string, today: string, approver_id: ?int, quote_number: ?string, approval_auto?: bool}  $facts
      * @return list<string>
      */
     public function blockers(array $facts): array
@@ -57,7 +64,7 @@ final class EmissionPolicy
         if (! $this->mayIssue($facts['role'], $facts['actor_id'], $facts['author_id'], $facts['requires_authorization'])) {
             $blockers[] = $this->denialMessage($facts['requires_authorization']);
         }
-        if ($facts['status'] === 'approved' && ! $this->approvalIsIndependent($facts['approver_id'], $facts['author_id'])) {
+        if ($facts['status'] === 'approved' && ! $this->approvalIsIndependent($facts['approver_id'], $facts['author_id'], (bool) ($facts['approval_auto'] ?? false))) {
             $blockers[] = 'La aprobación debe ser de una persona distinta del autor.';
         }
         if ($facts['company_missing'] !== []) {

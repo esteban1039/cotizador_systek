@@ -11,7 +11,7 @@ Fuente: código actual, `README.md`, `docs/arquitectura.md`, `backend/CLAUDE.md`
 - Publicar precio crea una `PriceVersion` nueva y marca las anteriores como históricas. Nunca se modifican cotizaciones guardadas.
 - Cada guardado crea una instantánea nueva; las revisiones crean una versión nueva en borrador con su propia aprobación.
 - Estados: borrador → en revisión → aprobado internamente (o devuelto). Aprobar recalcula y bloquea precios vencidos/históricos, totales inconsistentes, cotización vencida y reglas faltantes.
-- Nadie aprueba su propia cotización. La aprobación interna no habilita emitir ni compartir.
+- Nadie aprueba su propia cotización (`quoter`, `approver`, y `admin` sobre cotizaciones ajenas en revisión). **Excepción decidida por el dueño del producto:** la cotización guardada (store/revise) por un usuario con rol `admin` queda `approved` al guardarse (`AutoApproveQuote`, dentro de la transacción de `CreateQuote`; `quote_reviews.auto_approved=true`; el rol lo decide solo el servidor, ningún campo del payload lo activa). Si la validación de aprobación bloquea, 422 y no se guarda nada. Emitir sigue siendo un paso aparte con revalidación estricta; `EmissionPolicy::approvalIsIndependent` acepta la auto-aprobación solo con ese flag. La aprobación interna no habilita emitir ni compartir.
 - Los costos internos y márgenes se ocultan por rol (`QuoteVisibility`). El PDF de borrador nunca muestra costos ni márgenes.
 - Históricos importados nunca se convierten en precios vigentes.
 

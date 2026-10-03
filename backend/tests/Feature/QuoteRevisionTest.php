@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Domain\Quotes\ClauseText;
+use App\Models\Clause;
+use App\Models\ClauseVersion;
 use App\Models\User;
 use Database\Seeders\DemoSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -81,9 +84,19 @@ final class QuoteRevisionTest extends TestCase
     public function test_admin_revision_is_not_leaked_in_original_authors_history(): void
     {
         $id = $this->original();
+        DB::table('commercial_rules')->insert(['family' => 'cctv', 'minimum_margin_bps' => 3000, 'max_discount_bps' => 500, 'review_above_cents' => 100000000, 'created_at' => now(), 'updated_at' => now()]);
         $admin = User::factory()->create(['role' => 'admin']);
         Sanctum::actingAs($admin);
-        $new = $this->postJson('/api/v1/quotes/'.$id.'/revisions', $this->input())->assertCreated()->assertJsonPath('data.created_by', $admin->id)->json('data.id');
+        $make = function (string $type, string $title, string $body): string {
+            $clause = Clause::factory()->create(['family' => 'cctv', 'type' => $type, 'title' => $title, 'is_default' => true]);
+
+            return ClauseVersion::factory()->create(['clause_id' => $clause->id, 'body' => $body, 'body_hash' => ClauseText::hash($body)])->id;
+        };
+        $input = $this->input() + ['clause_versions' => [
+            'payment' => $make('payment', 'Contado', 'Contado.'), 'warranty' => $make('warranty', 'Garantía estándar', 'Por confirmar.'),
+            'validity' => $make('validity', 'Vigencia estándar', 'Vigencia de 15 días calendario.'),
+        ]];
+        $new = $this->postJson('/api/v1/quotes/'.$id.'/revisions', $input)->assertCreated()->assertJsonPath('data.created_by', $admin->id)->json('data.id');
         Sanctum::actingAs($this->author);
         $this->getJson('/api/v1/quotes/'.$id)->assertOk()->assertJsonCount(1, 'data.revisions');
         $this->getJson('/api/v1/quotes/'.$new)->assertNotFound();

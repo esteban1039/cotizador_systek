@@ -158,7 +158,7 @@ final class QuoteController extends Controller
             'is_latest' => (int) $quote->revision_number >= $this->quotes->latestRevisionNumber($rootId),
             'company_missing' => $missingCompany, 'valid_until' => $snapshot['valid_until'],
             'today' => now('America/Bogota')->toDateString(),
-            'approver_id' => $approval === null ? null : (int) $approval->user_id, 'quote_number' => $quote->quote_number,
+            'approver_id' => $approval === null ? null : (int) $approval->user_id, 'approval_auto' => (bool) ($approval->auto_approved ?? false), 'quote_number' => $quote->quote_number,
         ]);
         $snapshot['can_issue'] = $issueBlockers === [];
         $snapshot['issue_blockers'] = $issueBlockers;

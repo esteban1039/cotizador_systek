@@ -26,6 +26,7 @@ final class CreateQuote
         private ClauseSelection $clauseSelection,
         private KnowledgeRepository $knowledge,
         private CatalogRepository $catalog,
+        private AutoApproveQuote $autoApprove,
     ) {}
 
     public function execute(array $input, User $actor, ?string $sourceId = null): array
@@ -49,6 +50,8 @@ final class CreateQuote
 
             $withholds = (bool) $this->clients->lockedTaxProfile($input['client_id']);
             $rate = VatWithholdingPolicy::rateFor($withholds);
+            // Orden de bloqueos: cotización (raíz) -> familia (advisory) -> ítem -> precio. Review toma el mismo orden.
+            $this->catalog->lockFreeLineFamilies($this->freeLineFamilies($input['lines'], $input['family']));
             $input['lines'] = $this->prepareFreeLines($input['lines'], $input['family']);
             $calculation = $this->pricer->calculate($input['lines'], $rate, $input['family']);
 
@@ -94,8 +97,30 @@ final class CreateQuote
                 'source_id' => $sourceId, 'root_quote_id' => $rootId, 'revision_number' => $number, 'quote_number' => $quoteNumber,
             ]));
 
+            if (AutoApproveQuote::applies($actor)) {
+                $snapshot['created_items'] = $this->autoApprove->execute($id, $actor, $snapshot);
+                $snapshot['status'] = 'approved';
+                $snapshot['auto_approved'] = true;
+            }
+
             return $snapshot;
         });
+    }
+
+    /**
+     * @param  array<int, array<string, mixed>>  $lines
+     * @return list<string>
+     */
+    private function freeLineFamilies(array $lines, string $family): array
+    {
+        $families = [];
+        foreach ($lines as $line) {
+            if (($line['type'] ?? null) === 'free') {
+                $families[] = (string) ($line['family'] ?? $family);
+            }
+        }
+
+        return $families;
     }
 
     /**

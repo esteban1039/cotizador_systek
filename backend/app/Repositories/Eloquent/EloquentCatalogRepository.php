@@ -112,6 +112,18 @@ final class EloquentCatalogRepository implements CatalogRepository
         return CatalogItem::query()->where('sku', $sku)->exists();
     }
 
+    public function lockFreeLineFamilies(array $families): void
+    {
+        if (DB::getDriverName() !== 'pgsql') {
+            return;
+        }
+        $families = array_values(array_unique($families));
+        sort($families);
+        foreach ($families as $family) {
+            DB::select('select pg_advisory_xact_lock(hashtext(?))', ['free_line_items:'.$family]);
+        }
+    }
+
     public function activeExactMatch(string $description, string $family): ?array
     {
         $wanted = FreeLineSku::normalize($description);

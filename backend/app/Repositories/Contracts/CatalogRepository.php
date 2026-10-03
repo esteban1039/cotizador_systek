@@ -43,6 +43,14 @@ interface CatalogRepository
      */
     public function activeExactMatch(string $description, string $family): ?array;
 
+    /**
+     * Advisory lock transaccional por familia (solo pgsql; no-op en otros motores) para serializar la creación
+     * de ítems de líneas libres. Toma los bloqueos en orden alfabético.
+     *
+     * @param  list<string>  $families
+     */
+    public function lockFreeLineFamilies(array $families): void;
+
     /** @param array<string, mixed> $attributes
      * @return array<string, mixed>
      */

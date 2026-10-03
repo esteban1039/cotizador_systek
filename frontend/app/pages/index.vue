@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { QuoteAssistProposal, Calculation, CatalogItem, Client, ClauseOption, ClauseVersionSelection, LineInput, FreeLineUnit, FreeLineDraft, SimilarItem, Quote, ReviewedQuote } from '../../shared/types'
+import type { QuoteAssistProposal, Calculation, CatalogItem, Client, ClauseOption, ClauseVersionSelection, LineInput, FreeLineUnit, FreeLineDraft, SimilarItem, Quote, ReviewedQuote, CreatedItem } from '../../shared/types'
 import { families, clauseTypes } from '#shared/admin'
 import { cents, centsToDecimal, errorMessages } from '~/utils/format'
 
@@ -254,6 +254,8 @@ async function loadExample() {
   family.value = 'cctv'
   await loadClausesForFamily('cctv')
 }
+const autoApprovedNotice = useState<{ id: string; items: CreatedItem[] } | null>('auto-approved-notice', () => null)
+const isAdmin = computed(() => authUser.value?.role === 'admin')
 async function save() {
   if (!editorReady.value || saving.value || !sourceReady.value || unavailablePrices.value) return
   saveErrors.value = []
@@ -264,11 +266,12 @@ async function save() {
   }
   saving.value = true
   try {
-    const response = await $fetch<{ data: Quote }>(revising ? `/api/backend/quotes/${sourceId}/revisions` : '/api/backend/quotes', {
+    const response = await $fetch<{ data: Quote & { auto_approved?: boolean; created_items?: CreatedItem[] } }>(revising ? `/api/backend/quotes/${sourceId}/revisions` : '/api/backend/quotes', {
       method: 'POST', retry: 0,
       body: { client_id: clientId.value, site_id: siteId.value, family: family.value, lines, ...terms, observations: terms.observations || null, clause_versions: clauseVersionsPayload(), ...(assistRequestId.value ? { assist_request_id: assistRequestId.value } : {}) },
     })
     dirty.value = false
+    if (response.data.auto_approved || response.data.status === 'approved') autoApprovedNotice.value = { id: response.data.id, items: response.data.created_items ?? [] }
     await navigateTo(`/borradores/${response.data.id}`)
   } catch (error) {
     saveErrors.value = errorMessages(error)
@@ -400,7 +403,7 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
       </section>
     </fieldset>
     <aside class="summary-column">
-      <div class="summary-panel"><div class="summary-heading"><span class="eyebrow">TU PROPUESTA</span><span class="draft-badge">Borrador</span></div><h2>Resumen de cotización</h2><p class="summary-client">{{ selectedClient?.name || 'Selecciona un cliente para comenzar' }}</p><div class="progress-bar" :aria-label="`${completion} de 3 secciones completas`"><span :style="{ width: `${completion / 3 * 100}%` }" /></div><p class="progress-caption">{{ completion }} de 3 secciones completas</p><QuoteTotals :calculation="preview" :busy="calculating" /><div class="review-note"><AppIcon name="shield" :size="18" /><p>Antes de compartir, la propuesta debe pasar por revisión y aprobación.</p></div><div v-if="saveErrors.length" class="notice error" role="alert"><p v-for="message in saveErrors" :key="message">{{ message }}</p></div><button type="submit" class="button primary full-width" :disabled="!editorReady || saving || !sourceReady || unavailablePrices || !preview || calculating || !!clientsError || !!catalogError">{{ saving ? 'Guardando borrador…' : revising ? 'Guardar nueva revisión' : 'Guardar borrador' }}<AppIcon name="arrow" :size="18" /></button><p class="save-caption">Guardar no envía la propuesta al cliente.</p></div>
+      <div class="summary-panel"><div class="summary-heading"><span class="eyebrow">TU PROPUESTA</span><span class="draft-badge">Borrador</span></div><h2>Resumen de cotización</h2><p class="summary-client">{{ selectedClient?.name || 'Selecciona un cliente para comenzar' }}</p><div class="progress-bar" :aria-label="`${completion} de 3 secciones completas`"><span :style="{ width: `${completion / 3 * 100}%` }" /></div><p class="progress-caption">{{ completion }} de 3 secciones completas</p><QuoteTotals :calculation="preview" :busy="calculating" /><div class="review-note"><AppIcon name="shield" :size="18" /><p>Antes de compartir, la propuesta debe pasar por revisión y aprobación.</p></div><div v-if="saveErrors.length" class="notice error" role="alert"><p v-for="message in saveErrors" :key="message">{{ message }}</p></div><button type="submit" class="button primary full-width" :disabled="!editorReady || saving || !sourceReady || unavailablePrices || !preview || calculating || !!clientsError || !!catalogError">{{ saving ? (isAdmin ? 'Guardando y aprobando…' : 'Guardando borrador…') : revising ? (isAdmin ? 'Guardar revisión y aprobar' : 'Guardar nueva revisión') : isAdmin ? 'Guardar y aprobar' : 'Guardar borrador' }}<AppIcon name="arrow" :size="18" /></button><p class="save-caption">{{ isAdmin ? 'Como administrador, la cotización se aprueba automáticamente; no se envía al cliente hasta emitirla.' : 'Guardar no envía la propuesta al cliente.' }}</p></div>
       <div class="help-card"><AppIcon name="clock" :size="20" /><div><strong>Todo empieza con un borrador</strong><p>Podrás consultar tus propuestas guardadas desde Borradores.</p></div></div>
     </aside>
   </form>

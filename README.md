@@ -33,7 +33,7 @@ El token compartido de las primeras iteraciones fue eliminado. Cada sesión util
 | Cotizador | Clientes, sedes, contactos y creación/consulta de sus propias cotizaciones; sin costos internos |
 | Aprobador | Consulta de cotizaciones y revisión de propuestas creadas por otra persona |
 
-Nadie puede aprobar su propia cotización. Los cambios de acceso se serializan para evitar que dos administradores se desactiven mutuamente. No existe registro público de usuarios ni recuperación de contraseña por correo en esta etapa.
+Nadie puede aprobar su propia cotización, salvo la excepción del administrador: lo que monta un `admin` queda auto-aprobado al guardarse (ver `docs/decimosexta-iteracion.md`); en el editor el botón del administrador es «Guardar y aprobar». Los cambios de acceso se serializan para evitar que dos administradores se desactiven mutuamente. No existe registro público de usuarios ni recuperación de contraseña por correo en esta etapa.
 
 ## Módulos disponibles
 
@@ -138,6 +138,8 @@ Ejecuta build y navegador secuencialmente. Laravel arranca con `--no-reload` par
 ## Base de conocimiento del asistente (Fase 1, sin uso aún)
 
 Tablas `quote_knowledge` y `quote_assist_requests`, contrato/repositorio de conocimiento y dos comandos: `php artisan systek:import-knowledge {archivo.psv} --as=<correo admin> [--dry-run]` y `php artisan systek:backfill-knowledge [--dry-run]` (idempotentes). Cada línea guarda un precio de referencia interno (centavos + moneda) que no se envía a Anthropic ni es un precio vigente. Para poblarla (desarrollo y producción) usa el seeder idempotente `php artisan db:seed --class=KnowledgeSeeder --force`: carga `backend/database/seeders/data/knowledge_drive.psv` (117 cotizaciones, 376 líneas) y las cotizaciones aprobadas existentes; no requiere administrador. Con `AI_KNOWLEDGE_ENABLED=true` (apagada por defecto; también `AI_KNOWLEDGE_TOP_K`, `_MIN_SCORE`, `_MAX_PRECEDENT_CHARS`, `_MAX_AI_ASSISTED`) el asistente recupera precedentes (F2) y los envía en `<precedentes>` sin precios, moneda ni datos de cliente; cada propuesta se registra en `quote_assist_requests` (sin texto libre). Evaluación offline: `php artisan systek:eval-knowledge [--k=4]` (hit@k; umbral sugerido hit@4 >= 60 % antes de activar). Diseño: [docs/diseno-base-conocimiento-ia.md](docs/diseno-base-conocimiento-ia.md); nota: [docs/decimosexta-iteracion.md](docs/decimosexta-iteracion.md#base-de-conocimiento-fase-1).
+
+Clientes iniciales: `php artisan db:seed --class=ClientSeeder --force` carga los 56 clientes de `backend/database/seeders/data/clients.csv` (nombre y NIT). Es idempotente: omite el cliente si ya existe el mismo NIT o nombre y nunca sobrescribe; no crea sedes ni contactos.
 
 ## Pendiente
 

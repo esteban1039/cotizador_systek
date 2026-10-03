@@ -31,7 +31,7 @@ final class EloquentQuoteRepository implements QuoteRepository
 
     public function approvingReview(string $id): ?object
     {
-        return DB::table('quote_reviews')->where('quote_id', $id)->where('decision', 'approve')->orderByDesc('id')->first(['id', 'user_id']);
+        return DB::table('quote_reviews')->where('quote_id', $id)->where('decision', 'approve')->orderByDesc('id')->first(['id', 'user_id', 'auto_approved']);
     }
 
     public function markIssued(string $id): void
@@ -107,7 +107,7 @@ final class EloquentQuoteRepository implements QuoteRepository
 
     public function reviews(string $id): Collection
     {
-        return DB::table('quote_reviews')->join('users', 'users.id', '=', 'quote_reviews.user_id')->where('quote_id', $id)->select('quote_reviews.decision', 'quote_reviews.reason', 'quote_reviews.created_at', 'users.name as user_name')->orderBy('quote_reviews.id')->get();
+        return DB::table('quote_reviews')->join('users', 'users.id', '=', 'quote_reviews.user_id')->where('quote_id', $id)->select('quote_reviews.decision', 'quote_reviews.reason', 'quote_reviews.created_at', 'quote_reviews.auto_approved', 'users.name as user_name')->orderBy('quote_reviews.id')->get();
     }
 
     public function transition(string $id, string $status, array $review): void

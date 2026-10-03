@@ -160,10 +160,7 @@ final class QuoteEmissionTest extends TestCase
 
         // Admin autor de la cotización: con autorización activada debe emitir otra persona.
         Sanctum::actingAs($this->admin);
-        $own = $this->postJson('/api/v1/quotes', $this->payload($this->clauses()))->assertCreated()->json('data.id');
-        $this->postJson("/api/v1/quotes/{$own}/submit", ['reason' => 'Lista para revisión.'])->assertOk();
-        Sanctum::actingAs($this->approver);
-        $this->postJson("/api/v1/quotes/{$own}/review", ['decision' => 'approve', 'reason' => 'Aprobada para pruebas.'])->assertOk();
+        $own = $this->postJson('/api/v1/quotes', $this->payload($this->clauses()))->assertCreated()->assertJsonPath('data.status', 'approved')->json('data.id');
         $this->issue($own, $this->admin)->assertForbidden();
     }
 

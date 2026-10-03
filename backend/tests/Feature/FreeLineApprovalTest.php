@@ -145,11 +145,10 @@ final class FreeLineApprovalTest extends TestCase
 
         $admin = User::factory()->create(['role' => 'admin']);
         Sanctum::actingAs($admin);
-        $own = $this->postJson('/api/v1/quotes', $this->payload())->assertCreated();
-        $ownId = $own->json('data.id');
-        $this->postJson("/api/v1/quotes/{$ownId}/submit", ['reason' => 'Lista para revisión.'])->assertOk();
-        $this->postJson("/api/v1/quotes/{$ownId}/review", ['decision' => 'approve', 'reason' => 'Aprobada.', 'confirm_new_items' => [$own->json('data.lines.0.free_line_id')]])->assertForbidden();
-        $this->assertSame(0, DB::table('quote_free_line_items')->count());
+        // Excepción de admin: su propia cotización queda auto-aprobada al guardarse (docs/decimosexta-iteracion.md).
+        $own = $this->postJson('/api/v1/quotes', $this->payload())->assertCreated()->assertJsonPath('data.status', 'approved');
+        $this->assertCount(1, $own->json('data.created_items'));
+        $this->assertSame(1, DB::table('quote_free_line_items')->count());
 
         Sanctum::actingAs($this->approver);
         $this->postJson("/api/v1/quotes/{$id}/review", $body)->assertOk();
@@ -163,6 +162,7 @@ final class FreeLineApprovalTest extends TestCase
             $mock->shouldReceive('skuExists')->andReturnUsing(fn ($sku) => $real->skuExists($sku));
             $mock->shouldReceive('createItem')->andReturnUsing(fn ($a) => $real->createItem($a));
             $mock->shouldReceive('activeExactMatch')->andReturnUsing(fn ($d, $f) => $real->activeExactMatch($d, $f));
+            $mock->shouldReceive('lockFreeLineFamilies')->andReturnUsing(fn ($f) => $real->lockFreeLineFamilies($f));
             $mock->shouldReceive('publishPrice')->andThrow(new \RuntimeException('boom'));
         });
         Sanctum::actingAs($this->approver);

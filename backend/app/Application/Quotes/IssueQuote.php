@@ -73,7 +73,7 @@ final class IssueQuote
             $requires = (bool) $company['emission_requires_authorization'];
             abort_unless($this->policy->mayIssue($actor->role, $actor->id, $authorId, $requires), 403, $this->policy->denialMessage($requires));
             $approval = $this->quotes->approvingReview($id);
-            $this->fail(! $this->policy->approvalIsIndependent($approval === null ? null : (int) $approval->user_id, $authorId), 'quote', 'La aprobación debe ser de una persona distinta del autor.');
+            $this->fail(! $this->policy->approvalIsIndependent($approval === null ? null : (int) $approval->user_id, $authorId, (bool) ($approval->auto_approved ?? false)), 'quote', 'La aprobación debe ser de una persona distinta del autor.');
 
             $emissionId = (string) Str::uuid();
             $issuedAt = now();
