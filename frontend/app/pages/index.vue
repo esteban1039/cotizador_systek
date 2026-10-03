@@ -122,7 +122,7 @@ const saveErrors = ref<string[]>([])
 const saving = ref(false)
 const dirty = ref(false)
 watch([clientId, siteId, rows, freeRows, terms, family], () => { dirty.value = true; saveErrors.value = [] }, { deep: true })
-const clientComplete = computed(() => !!clientId.value && !!siteId.value)
+const clientComplete = computed(() => !!clientId.value)
 const termsComplete = computed(() => !!family.value && [terms.scope, terms.exclusions, terms.payment_terms, terms.warranty, terms.validity_terms].every(value => value.trim()) && terms.validity_days >= 1 && terms.validity_days <= 90)
 const completion = computed(() => Number(clientComplete.value) + Number(!!preview.value) + Number(termsComplete.value))
 const otherFamilyLines = computed(() => rows.value.filter(row => family.value && row.item.family !== family.value).length)
@@ -139,7 +139,7 @@ async function prefillSource() {
   const original = source.value
   clientId.value = original.client_id
   await nextTick()
-  siteId.value = original.site_id
+  siteId.value = original.site_id ?? ''
   familyLoading = true
   family.value = original.family ?? ''
   await nextTick()
@@ -254,6 +254,14 @@ async function loadExample() {
   family.value = 'cctv'
   await loadClausesForFamily('cctv')
 }
+const clientNotice = ref('')
+async function onClientCreated(payload: { clientId: string; siteId: string; name: string; warning?: string }) {
+  await refreshClients()
+  clientId.value = payload.clientId
+  await nextTick()
+  siteId.value = payload.siteId
+  clientNotice.value = `Cliente «${payload.name}» creado y seleccionado.${payload.warning ? ' ' + payload.warning : ''}`
+}
 const autoApprovedNotice = useState<{ id: string; items: CreatedItem[] } | null>('auto-approved-notice', () => null)
 const isAdmin = computed(() => authUser.value?.role === 'admin')
 async function save() {
@@ -261,14 +269,14 @@ async function save() {
   saveErrors.value = []
   const lines = inputLines()
   if (!lines || !clientComplete.value || !termsComplete.value) {
-    saveErrors.value = ['Completa el cliente, la sede, la familia, las partidas y las condiciones antes de guardar.']
+    saveErrors.value = ['Completa el cliente, la familia, las partidas y las condiciones antes de guardar.']
     return
   }
   saving.value = true
   try {
     const response = await $fetch<{ data: Quote & { auto_approved?: boolean; created_items?: CreatedItem[] } }>(revising ? `/api/backend/quotes/${sourceId}/revisions` : '/api/backend/quotes', {
       method: 'POST', retry: 0,
-      body: { client_id: clientId.value, site_id: siteId.value, family: family.value, lines, ...terms, observations: terms.observations || null, clause_versions: clauseVersionsPayload(), ...(assistRequestId.value ? { assist_request_id: assistRequestId.value } : {}) },
+      body: { client_id: clientId.value, ...(siteId.value ? { site_id: siteId.value } : {}), family: family.value, lines, ...terms, observations: terms.observations || null, clause_versions: clauseVersionsPayload(), ...(assistRequestId.value ? { assist_request_id: assistRequestId.value } : {}) },
     })
     dirty.value = false
     if (response.data.auto_approved || response.data.status === 'approved') autoApprovedNotice.value = { id: response.data.id, items: response.data.created_items ?? [] }
@@ -340,11 +348,13 @@ const exampleAvailable = computed(() => clients.value.some(client => client.is_d
         <div class="section-heading"><span class="step-number" :class="{ complete: clientComplete }"><AppIcon v-if="clientComplete" name="check" :size="16" /><template v-else>01</template></span><div><h2 id="client-title">Cliente, sede y familia</h2><p>¿Para quién y sobre qué familia vamos a cotizar?</p></div><AppIcon class="section-icon" name="user" /></div>
         <div class="field-grid">
           <label>Cliente <span class="required">*</span><select v-model="clientId" required><option value="" disabled>Selecciona un cliente</option><option v-for="client in clients" :key="client.id" :value="client.id">{{ client.name }}</option></select></label>
-          <label>Sede <span class="required">*</span><select v-model="siteId" required :disabled="!clientId"><option value="" disabled>Selecciona una sede</option><option v-for="site in sites" :key="site.id" :value="site.id">{{ site.name }} · {{ site.city }}</option></select></label>
+          <label>Sede (opcional)<select v-model="siteId" :disabled="!clientId"><option value="">Sin sede</option><option v-for="site in sites" :key="site.id" :value="site.id">{{ site.name }} · {{ site.city }}</option></select></label>
           <label>Familia <span class="required">*</span><span v-if="aiFamily" class="draft-badge">Propuesto por IA</span><select v-model="family" required><option value="" disabled>Selecciona una familia</option><option v-for="(label, key) in families" :key="key" :value="key">{{ label }}</option></select></label>
         </div>
+        <div><ClientQuickCreate @created="onClientCreated" /></div>
         <p v-if="!clients.length && !clientsError" class="empty-message">Aún no hay clientes registrados. Carga los datos de demostración para comenzar.</p>
-        <p v-else-if="clientId && !sites.length" class="empty-message">Este cliente todavía no tiene sedes registradas.</p>
+        <p v-else-if="clientId && !sites.length" class="empty-message">Este cliente no tiene sedes registradas; la sede es opcional.</p>
+        <p v-if="clientNotice" class="notice" role="status">{{ clientNotice }}</p>
         <p v-if="selectedClient?.withholds_vat" class="empty-message">Agente retenedor de IVA: se calculará ReteIVA.</p>
       </section>
       <section class="panel" aria-labelledby="lines-title">

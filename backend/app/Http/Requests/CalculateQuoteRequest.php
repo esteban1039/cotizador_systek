@@ -16,7 +16,7 @@ final class CalculateQuoteRequest extends PreviewQuoteRequest
     {
         return array_merge(parent::rules(), [
             'client_id' => ['required', 'uuid', 'exists:clients,id'],
-            'site_id' => ['required', 'uuid', Rule::exists('sites', 'id')->where('client_id', $this->input('client_id'))],
+            'site_id' => ['nullable', 'uuid', Rule::exists('sites', 'id')->where('client_id', $this->input('client_id'))],
             'assist_request_id' => ['nullable', 'string', 'max:64'],
             'family' => ['required', Rule::in(QuoteFamily::values())],
             'scope' => ['required', 'string', 'max:5000'],

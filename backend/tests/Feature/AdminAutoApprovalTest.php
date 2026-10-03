@@ -99,6 +99,14 @@ final class AdminAutoApprovalTest extends TestCase
         $this->postJson("/api/v1/quotes/{$id}/issue", ['reason' => 'Emisión de prueba.'])->assertCreated()->assertJsonPath('data.status', 'issued');
     }
 
+    public function test_admin_quote_without_site_is_auto_approved_and_issued(): void
+    {
+        Sanctum::actingAs($this->admin);
+        $id = $this->postJson('/api/v1/quotes', array_merge($this->payload(), ['site_id' => null]))->assertCreated()
+            ->assertJsonPath('data.status', 'approved')->assertJsonPath('data.site_name', null)->json('data.id');
+        $this->postJson("/api/v1/quotes/{$id}/issue", ['reason' => 'Emisión de prueba.'])->assertCreated();
+    }
+
     public function test_admin_free_line_creates_item_price_link_and_audit_without_confirm_new_items(): void
     {
         Sanctum::actingAs($this->admin);

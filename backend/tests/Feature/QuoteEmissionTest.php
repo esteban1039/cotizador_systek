@@ -85,10 +85,12 @@ final class QuoteEmissionTest extends TestCase
         ];
     }
 
+    private ?string $siteId = '00000000-0000-4000-8000-000000000002';
+
     private function payload(array $clauseVersions): array
     {
         return [
-            'client_id' => '00000000-0000-4000-8000-000000000001', 'site_id' => '00000000-0000-4000-8000-000000000002',
+            'client_id' => '00000000-0000-4000-8000-000000000001', 'site_id' => $this->siteId,
             'lines' => [['price_version_id' => '00000000-0000-4000-8000-000000000004', 'quantity' => '8', 'discount_bps' => 0]],
             'family' => 'cctv', 'scope' => 'Ocho cámaras.', 'exclusions' => 'Sin obra civil.', 'payment_terms' => 'Contado.',
             'warranty' => 'Por confirmar.', 'validity_terms' => 'Vigencia de 15 días calendario.', 'validity_days' => 15,
@@ -116,6 +118,15 @@ final class QuoteEmissionTest extends TestCase
         Sanctum::actingAs($user);
 
         return $this->postJson("/api/v1/quotes/{$id}/issue", ['reason' => $reason]);
+    }
+
+    public function test_quote_without_site_is_approved_and_issued_with_official_pdf(): void
+    {
+        $this->siteId = null;
+        $id = $this->approved();
+        $this->issue($id, $this->author)->assertCreated()->assertJsonPath('data.status', 'issued');
+        $this->assertNull(DB::table('quotes')->find($id)->site_id);
+        $this->get("/api/v1/quotes/{$id}/official-pdf")->assertOk()->assertHeader('Content-Type', 'application/pdf');
     }
 
     public function test_author_issues_when_authorization_is_disabled_and_download_matches_hash(): void

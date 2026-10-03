@@ -71,11 +71,11 @@ final class CreateQuote
 
             $metadata = ['root_quote_id' => $rootId, 'previous_quote_id' => $sourceId, 'revision_number' => $number];
             $snapshot = array_merge($input, $calculation, $metadata, [
-                'id' => $id, 'created_by' => $actor->id,
+                'id' => $id, 'created_by' => $actor->id, 'site_id' => $input['site_id'] ?? null,
                 'quote_number' => $quoteNumber,
                 'version_label' => 'V'.$number,
                 'client_name' => $this->quotes->clientName($input['client_id']),
-                'site_name' => $this->quotes->siteName($input['site_id']),
+                'site_name' => ($input['site_id'] ?? null) === null ? null : $this->quotes->siteName($input['site_id']),
                 'vat_withholding' => ['applied' => $rate > 0, 'rate_bps' => $rate, 'basis' => 'tax_total'],
                 'clauses' => $clauses,
                 'status' => 'draft', 'emission_allowed' => false,
@@ -84,7 +84,7 @@ final class CreateQuote
                 'valid_until' => now('America/Bogota')->addDays($input['validity_days'])->toDateString(),
             ]);
             $this->quotes->create(array_merge($metadata, [
-                'id' => $id, 'client_id' => $input['client_id'], 'site_id' => $input['site_id'],
+                'id' => $id, 'client_id' => $input['client_id'], 'site_id' => $input['site_id'] ?? null,
                 'created_by' => $actor->id, 'status' => 'draft', 'quote_number' => $quoteNumber,
                 'snapshot' => json_encode($snapshot, JSON_THROW_ON_ERROR),
                 'created_at' => now(), 'updated_at' => now(),

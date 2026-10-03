@@ -54,7 +54,9 @@ p { margin: 0 0 8px; }
 <p class="reference">{{ $issuer['legal_name'] }}{{ $issuer['nit'] ? ' · NIT '.$issuer['nit'] : '' }}<br>{{ collect([$issuer['address'] ?? null, $issuer['phone'] ?? null, $issuer['email'] ?? null, $issuer['website'] ?? null])->filter()->implode(' · ') }}</p>
 @endif
 <h1>{{ $quote['client_name'] ?: 'Cliente registrado' }}</h1>
-<p>{{ $quote['site_name'] ?: 'Sede registrada' }}</p>
+@if (! empty($quote['site_name']))
+<p>{{ $quote['site_name'] }}</p>
+@endif
 <table class="metadata"><tr><td><span class="label">Fecha de emisión</span><br><span class="value">{{ substr($issuedAt, 0, 10) }}</span></td><td><span class="label">Válida hasta</span><br><span class="value">{{ $quote['valid_until'] }}</span></td><td><span class="label">Moneda</span><br><span class="value">Pesos colombianos (COP)</span></td></tr></table>
 <p class="reference">{{ $reference }}</p>
 <h2>Alcance</h2>

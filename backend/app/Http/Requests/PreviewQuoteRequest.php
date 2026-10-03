@@ -17,6 +17,7 @@ class PreviewQuoteRequest extends FormRequest
     {
         $rules = [
             'client_id' => ['sometimes', 'nullable', 'uuid', 'exists:clients,id'],
+            'site_id' => ['sometimes', 'nullable', 'uuid', Rule::exists('sites', 'id')->where('client_id', $this->input('client_id'))],
             'lines' => ['required', 'array', 'min:1', 'max:100'],
         ];
         $quantity = ['required', 'string', 'regex:/^\d{1,5}(\.\d{1,3})?$/D', 'not_in:0,0.0,0.00,0.000'];

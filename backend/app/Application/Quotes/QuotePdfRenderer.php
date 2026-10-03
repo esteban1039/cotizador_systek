@@ -32,7 +32,10 @@ final class QuotePdfRenderer
             'validity_terms', 'observations', 'family', 'quote_number',
         ]);
         $quote['client_name'] ??= $this->quotes->clientName($record->client_id) ?? '';
-        $quote['site_name'] ??= $this->quotes->siteName($record->site_id) ?? '';
+        if (! array_key_exists('site_name', $snapshot) && $record->site_id !== null) {
+            $quote['site_name'] = $this->quotes->siteName($record->site_id);
+        }
+        $quote['site_name'] ??= null;
         $quote['id'] = $record->id;
         $quote['status'] = $record->status;
         $quote['revision_number'] = (int) $record->revision_number;
